@@ -5,4 +5,16 @@
 
 *{
     font-family: "Poppins", serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
+
+.title-bg{
+    background: url("./assets/Login/TitleBackground.png");
+    object-fit: contain;
 }
