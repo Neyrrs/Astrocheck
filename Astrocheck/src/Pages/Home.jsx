@@ -1,9 +1,9 @@
-import React from 'react'
-import Navbar from '../Components/Navbar'
+import Navbar from "../Components/Fragments/Navigation-bar/Navbar";
+
 const Home = () => {
   return (
     <div className=''>
-     <Navbar/>
+      <Navbar />
     </div>
   )
 }

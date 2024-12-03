@@ -1,4 +1,4 @@
-import Navbar from "../Components/Navbar";
+import Navbar from "../Components/Fragments/Navigation-bar/Navbar.jsx";
 import Input from "../Components/Elements/Inputs/Input";
 import { useState } from "react";
 
