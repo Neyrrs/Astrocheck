@@ -1,5 +1,4 @@
-import React from 'react'
-import Search from "../assets/Icons/Search.png"
+import Search from "../../../assets/Icons/Search.png"
 const Input = () => {
   return (
     <>
