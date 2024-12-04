@@ -3,6 +3,7 @@ import SearchPack from "../Components/Fragments/SearchPack/SearchPack.jsx";
 import { useState } from "react";
 
 const Login = () => {
+  let numberList = 1
   const data = [
     {
       id: 1,
@@ -75,8 +76,9 @@ const Login = () => {
             <p>Alasan</p>
           </div>
           {filteredData.map((item) => (
+           
             <div key={item.id} className="border-b border-t py-2 px-5 flex">
-              <p className="mr-[2rem] w-2">{item.id}</p>
+              <p className="mr-[2rem] w-2">{(numberList++)}</p>
               <p className="mr-[15rem]">{item.nama}</p>
               <p className="mr-[10rem] w-24">{item.tanggal}</p>
               <p className="mr-[10rem] w-10">{item.jamMasuk}</p>

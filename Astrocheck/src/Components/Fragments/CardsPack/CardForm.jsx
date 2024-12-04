@@ -11,8 +11,8 @@ const CardForm = () => {
           </label>
         </div>
         <div className="mt-8">
-          <InputPack htmlFor="NISN" text="NISN" type="text" name="NISN" placeholderz="Contoh: 0123456789"/>
-          <InputPack htmlFor="password" text="Password" type="password" name="password" placeholderz="Password Anda" />
+          <InputPack htmlFor="NISN" text="NISN" type="text" name="NISN" placeholder="Contoh: 0123456789"/>
+          <InputPack htmlFor="password" text="Password" type="password" name="password" placeholder="Password Anda" />
         </div>
         <div className="mt-8">
           <PrimaryButton text="Login" path="/" width="full"/>
