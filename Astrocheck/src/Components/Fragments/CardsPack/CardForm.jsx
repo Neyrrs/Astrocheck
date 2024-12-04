@@ -1,6 +1,5 @@
-import Label from "../../Elements/Labels/Label";
-import InputForm from "../../Elements/Inputs/InputForm";
-import Button from "../../Elements/Buttons/Button";
+import PrimaryButton from "../../Elements/Buttons/PrimaryButton";
+import InputPack from "../InputPack/InputPack";
 
 const CardForm = () => {
   return (
@@ -12,13 +11,11 @@ const CardForm = () => {
           </label>
         </div>
         <div className="mt-8">
-          <Label htmlFor="NISN" text="NISN" />
-          <InputForm type="text" name="NISN" placeholderz="Contoh: 0123456789"/>
-          <Label htmlFor="password" text="Password" />
-          <InputForm type="password" name="password" placeholderz="Password Anda" />
+          <InputPack htmlFor="NISN" text="NISN" type="text" name="NISN" placeholderz="Contoh: 0123456789"/>
+          <InputPack htmlFor="password" text="Password" type="password" name="password" placeholderz="Password Anda" />
         </div>
         <div className="mt-8">
-          <Button text="Login" textColor="white" path="/"/>
+          <PrimaryButton text="Login" path="/" width="full"/>
         </div>
         <div className="mt-5 font-light text-xs">
           <p className="text-center text-gray-500">Atau login dengan <br />

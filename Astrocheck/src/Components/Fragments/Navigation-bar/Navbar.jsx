@@ -1,4 +1,4 @@
-import profileIcons from "../../../assets/Icons/Profile.png"
+import Profile from "../../Elements/Icons/Profile";
 
 const Navbar = () => {
   return (
@@ -13,7 +13,7 @@ const Navbar = () => {
         <p className="cursor-pointer">Denah</p>
         <p className="cursor-pointer">FAQ</p>
         <p className="cursor-pointer">Grafik</p>
-        <img src={profileIcons} className="cursor-pointer w-7 h-7" />
+        <Profile />
       </div>
     </div>
   );
