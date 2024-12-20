@@ -3,7 +3,7 @@ import Icons from "./Icons"
 const Profile = () => {
   return (
     <>
-        <Icons image={profileIcon} alt="Profile" size="7"/>
+        <Icons image={profileIcon} alt="Profile" className="w-7"/>
     </>
   )
 }

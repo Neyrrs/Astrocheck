@@ -1,7 +1,7 @@
 const Icons = (props) => {
   return (
     <>
-        <img src={props.image} alt={props.alt} className={`mx-3 w-${props.size}`}/>
+        <img src={props.image} alt={props.alt} {...props}/>
     </>
   )
 }

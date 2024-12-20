@@ -3,7 +3,7 @@ import Icons from "./Icons"
 const Search = () => {
   return (
     <>
-        <Icons image={searchIcon} alt="Search Icon" size="5"/>
+        <Icons image={searchIcon} alt="Search Icon" className="w-7 mx-2"/>
     </>
   )
 }
