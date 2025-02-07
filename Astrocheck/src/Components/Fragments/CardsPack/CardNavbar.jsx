@@ -1,0 +1,81 @@
+import React from "react";
+import ProfileImage from "../../Elements/Icons/ProfileImage";
+import Profile from "../../../assets/Pictures/CardNavbar/Profile.png";
+import KartuPerpustakaan from "../../../assets/Pictures/CardNavbar/KartuPerpustakaan.png";
+import RiwayatAbsen from "../../../assets/Pictures/CardNavbar/RiwayatAbsen.png";
+import Keluar from "../../../assets/Pictures/CardNavbar/Keluar.png";
+import Swal from "sweetalert2";
+
+const CardNavbar = () => {
+  const handleLogout = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Apakah anda yakin?",
+      text: "Anda akan keluar dari akun ini!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Keluar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/login";
+        localStorage.removeItem("Token");
+      }
+    });
+  };
+
+  const listItemClass =
+    "flex items-center py-1 px-2 w-full rounded-lg hover:bg-gradient-to-r hover:from-[#d0d2d896] hover:to-transparent duration-300 ease-in-out hover:translate-x-2 gap-2 cursor-pointer hover:text-black";
+
+  return (
+    <>
+      <div className="absolute right-0 mt-10 bg-white rounded-md shadow-lg p-4 w-64 z-50">
+        <div className="flex items-center gap-3 border-b pb-3">
+          <ProfileImage size="w-12 object-contain h-fit border-2 border-white" />
+          <div>
+            <p className="text-black text-sm">Biru Kheza Maharley</p>
+            <p className="text-sm text-gray-500">XI RPL 2</p>
+          </div>
+        </div>
+
+        <ul className="mt-3 gap-2 flex-col flex text-[12px] text-black">
+          <a href="/profile-menu">
+            <li className={listItemClass}>
+              <img src={Profile} className="w-6 h-6 object-contain" alt="Edit Profil" />
+              Edit Profil
+            </li>
+          </a>
+          <a href="/profile-menu">
+            <li className={listItemClass}>
+              <img
+                src={KartuPerpustakaan}
+                className="w-6 h-6 object-contain"
+                alt="Kartu Perpustakaan"
+              />
+              Kartu Perpustakaan
+            </li>
+          </a>
+          <a href="/History">
+            <li className={listItemClass}>
+              <img
+                src={RiwayatAbsen}
+                className="w-6 h-6 object-contain"
+                alt="Riwayat Absen"
+              />
+              Riwayat Absen
+            </li>
+          </a>
+          <a href="#" onClick={handleLogout}>
+            <li className={listItemClass}>
+              <img src={Keluar} className="w-6 h-6 object-contain" alt="Keluar" />
+              Keluar
+            </li>
+          </a>
+        </ul>
+      </div>
+    </>
+  );
+};
+
+export default CardNavbar;
