@@ -4,6 +4,7 @@ import "./index.css";
 import {Login, Home, Absen, History, ProfileMenu} from "./Pages/UserLevel";
 import Exp from "./Exp";
 import AdminPanel from "./Pages/AdminLevel/AdminPanel";
+import NotFound from "./Pages/NotFound";
 
 const root = document.getElementById("root");
 const token = localStorage.getItem("Token");   
@@ -23,6 +24,7 @@ ReactDOM.createRoot(root).render(
           <Route path="/Dashboard" element={<AdminPanel />} />
         </>
       )}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
 );
