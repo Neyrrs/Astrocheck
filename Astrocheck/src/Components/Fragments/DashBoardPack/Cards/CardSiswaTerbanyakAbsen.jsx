@@ -1,5 +1,3 @@
-import React from "react";
-
 const fakeDatas = [
   {
     id: 1,
@@ -63,7 +61,6 @@ const fakeDatas = [
   },
 ];
 
-// Variabel untuk reuse className
 const tablePadding = "p-3 border";
 
 const CardSiswaTerbanyakAbsen = () => {

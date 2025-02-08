@@ -1,7 +1,4 @@
-import React from "react";
-import LineChart from "./LineChart";
-import BarChart from "./BarChart";
-import DoughnutChart from "./DoughnutChart";
+import { LineChart, DoughnutChart, BarChart } from "../Charts";
 
 const DashBoardPack = () => {
   const dashboardCardStyle =

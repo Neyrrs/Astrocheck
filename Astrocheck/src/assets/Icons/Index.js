@@ -1,7 +1,7 @@
 export {default as Book} from "./Book.png";
 export {default as CheckedList } from "./CheckedList.png";
 export {default as Dasbor} from "./Dasbor.png";
-export {default as GrafikAbsen} from "./GrafikAbsen.png";
+export {default as GrafikAbsensi} from "./GrafikAbsensi.png";
 export {default as Home} from "./Home.png";
 export {default as LeftArrow} from "./LeftArrow.png";
 export {default as ManajemenAbsen} from "./ManajemenAbsen.png";

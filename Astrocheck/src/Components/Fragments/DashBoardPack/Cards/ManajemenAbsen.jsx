@@ -1,5 +1,4 @@
-import React from "react";
-import SearchPack from "../SearchPack/SearchPack";
+import SearchPack from "../../SearchPack/SearchPack";
 
 const ManajemenAbsen = () => {
   const absences = [
