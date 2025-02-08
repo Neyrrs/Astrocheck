@@ -1,20 +1,19 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
 import "./index.css";
-import {Login, Home, Absen, History, ProfileMenu} from "./Pages/UserLevel";
+import { Login, Home, Absen, History, ProfileMenu } from "./Pages/UserLevel";
 import Exp from "./Exp";
 import AdminPanel from "./Pages/AdminLevel/AdminPanel";
 import NotFound from "./Pages/NotFound";
 
 const root = document.getElementById("root");
-const token = localStorage.getItem("Token");   
+const token = localStorage.getItem("Token");
 console.log(token);
 
 ReactDOM.createRoot(root).render(
   <BrowserRouter>
     <Routes>
-      <Route path="/login" element={<Login />} />
-      {token && (
+      {token ? (
         <>
           <Route path="/" element={<Home />} />
           <Route path="/history" element={<History />} />
@@ -23,6 +22,8 @@ ReactDOM.createRoot(root).render(
           <Route path="/exp" element={<Exp />} />
           <Route path="/Dashboard" element={<AdminPanel />} />
         </>
+      ) : (
+        <Route path="/" element={<Login />} />
       )}
       <Route path="*" element={<NotFound />} />
     </Routes>

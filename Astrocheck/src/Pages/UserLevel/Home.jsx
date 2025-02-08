@@ -4,6 +4,7 @@ import {
   CardGrafik,
   CardGetApp,
 } from "../../Components/Fragments/CardsPack/Index.js";
+import { Link } from "react-router";
 import { PrimaryButton } from "../../Components/Elements/Buttons/index.js";
 import Navbar from "../../Components/Fragments/Navigation-bar/Navbar.jsx";
 import Footer from "../../Components/Fragments/Footer/Footer.jsx";
@@ -16,19 +17,21 @@ const Home = () => {
         <div className="h-[40rem] w-full flex flex-col gap-2 justify-center items-center">
           <p className="text-2xl">Absensi Buku Tamu</p>
           <p className="text-2xl">Astrolitera SMKN 1 Cibinong</p>
-          <PrimaryButton
-            text="Mulai Absen"
-            fontSize="xs"
-            width="px-[1.8rem]"
-            height="py-[0.7rem]"
-          />
+          <Link to="/absen">
+            <PrimaryButton
+              text="Mulai Absen"
+              fontSize="xs"
+              width="px-[1.8rem]"
+              height="py-[0.7rem]"
+            />
+          </Link>
         </div>
         <div className="flex flex-col mt-32 gap-20">
           <CardDenah />
           <CardFAQ />
           <CardGrafik />
           <div className="mt-[12rem]">
-          <CardGetApp />
+            <CardGetApp />
           </div>
         </div>
         <Footer />

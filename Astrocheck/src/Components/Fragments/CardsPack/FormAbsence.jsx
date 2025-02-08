@@ -54,7 +54,8 @@ const FormAbsence = () => {
               confirmButtonText: "Logout",
             }).then((result) => {
               if (result.isConfirmed) {
-                window.location.href = "/Login";
+                window.location.href = "/";
+                localStorage.removeItem("Token");
               }
             });
           }
