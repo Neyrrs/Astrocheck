@@ -1,6 +1,5 @@
-import React from "react";
-import Navbar from "../Components/Fragments/Navigation-bar/Navbar";
-import CardFormAbsence from "../Components/Fragments/CardsPack/CardFormAbsence";
+import Navbar from "../../Components/Fragments/Navigation-bar/Navbar";
+import CardFormAbsence from "../../Components/Fragments/CardsPack/CardFormAbsence";
 const Absen = () => {
   return (
     <>

@@ -1,4 +1,3 @@
-import React from "react";
 import ProfileImage from "../../Elements/Icons/ProfileImage.jsx";
 import DisabledInputPack from "../InputPack/DisabledInputPack.jsx";
 
@@ -12,41 +11,40 @@ const MyProfile = () => {
       },
       {
         id: 2,
-        htmlFor: "NISN",
-        text: "NISN",
-        placeholder: "0123456789",
-      },
-      {
-        id: 3,
-        htmlFor: "password",
-        text: "Password",
-        placeholder: "***********",
-      },
-      {
-        id: 4,
         htmlFor: "namaTampilan",
         text: "Nama Tampilan",
         placeholder: "Ezwan",
       },
       {
-        id: 5,
+        id: 3,
         htmlFor: "email",
         text: "Email",
         placeholder: "Ezwan@gmail.com",
+      },
+      {
+        id: 4,
+        htmlFor: "NISN",
+        text: "NISN",
+        placeholder: "0123456789",
+      },
+      {
+        id: 5,
+        htmlFor: "password",
+        text: "Password",
+        placeholder: "***********",
       },
   ];
 
   return (
     <>
       <div className="flex gap-5 items-center">
-        <ProfileImage className="w-16" />
-        <div className="text-base">
+        <ProfileImage className="w-24" />
+        <div className="text-lg">
           <p>Ezwan Ibnu Yassar</p>
           <p className="text-slate-500">XI RPL 2</p>
         </div>
       </div>
-      <div className="w-full mt-3 flex gap-20">
-        <div className="">
+      <div className="w-full mt-5 flex flex-col gap-3">
           {CardProfileInput.map((attribute) => (
             <DisabledInputPack
               key={attribute.id}
@@ -55,7 +53,6 @@ const MyProfile = () => {
               text={attribute.text}
             />
           ))}
-        </div>
       </div>
     </>
   );

@@ -10,7 +10,7 @@ const Navbar = (props) => {
   };
 
   return (
-    <div className="navbar-container w-full h-14 flex items-center text-white px-14 bg-[#98bddf] backdrop-blur-md fixed top-0 left-0 text-lg z-50">
+    <div className="navbar-container w-full h-14 flex items-center bg-opacity-60 text-white px-14 bg-[#98bddf] fixed top-0 left-0 text-lg z-50">
       <div className="">
         <p className="text-xl">
           <a href="/">Astrocheck</a>

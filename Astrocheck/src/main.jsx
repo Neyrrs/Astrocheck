@@ -1,11 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
 import "./index.css";
-import Home from "./Pages/Home";
-import History from "./Pages/History";
-import ProfileMenu from "./Pages/ProfileMenu";
-import Login from "./Pages/Login";
-import Absen from "./Pages/Absen";
+import {Login, Home, Absen, History, ProfileMenu} from "./Pages/UserLevel";
 import Exp from "./Exp";
 import AdminPanel from "./Pages/AdminLevel/AdminPanel";
 

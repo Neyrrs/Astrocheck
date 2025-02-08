@@ -1,6 +1,6 @@
 export {default as  CardDenah} from "./CardDenah.jsx";
 export {default as  CardFAQ} from "./CardFAQ.jsx";
-export {default as  CardForm} from "./CardForm.jsx";
+export {default as  CardLoginForm} from "./CardLoginForm.jsx";
 export {default as  CardFormAbsence} from "./CardFormAbsence.jsx";
 export {default as  CardGetApp} from "./CardGetApp.jsx";
 export {default as  CardGrafik} from "./CardGrafik.jsx";

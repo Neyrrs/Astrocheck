@@ -1,5 +1,5 @@
-import Navbar from "../Components/Fragments/Navigation-bar/Navbar.jsx";
-import SearchPack from "../Components/Fragments/SearchPack/SearchPack.jsx";
+import Navbar from "../../Components/Fragments/Navigation-bar/Navbar.jsx";
+import SearchPack from "../../Components/Fragments/SearchPack/SearchPack.jsx";
 import { useState } from "react";
 
 const Login = () => {

@@ -16,15 +16,15 @@ const CardProfile = () => {
 
   return (
     <>
-      <div className="bg-white rounded-xl w-[40rem] py-3 h-fit overflow-scroll">
-        <div className="w-full border-b-2">
-          <div className="px-10 flex text-base h-9 justify-center gap-20">
+      <div className="bg-white rounded-xl w-fit py-3 h-fit overflow-scroll">
+        <div className="w-full px-24 border-b-2">
+          <div className="flex w-full text-lg h-14 justify-center gap-14">
             <button
               value={1}
               onClick={handleShow}
               className={show === 1 ? active : ""}
             >
-              My Profile
+              Profil Saya
             </button>
             <button
               value={2}
@@ -43,7 +43,7 @@ const CardProfile = () => {
           </div>
         </div>
 
-        <div className="mx-20 my-10">
+        <div className="mx-24 my-12">
           {(show === 1 && <MyProfile />) ||
             (show === 2 && <EditProfile />) ||
             (show === 3 && <KartuPerpustakaan />) || <MyProfile />}

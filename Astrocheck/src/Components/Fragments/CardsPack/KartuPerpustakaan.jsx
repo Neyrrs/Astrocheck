@@ -1,11 +1,10 @@
-import React from "react";
 import ProfileImageSquare from "../../Elements/Icons/ProfileImageSquare";
 const KartuPerpustakaan = () => {
   return (
     <div className="w-full h-[22rem] flex justify-center">
-      <div className="h-[21rem] w-[40rem] bg-[#f5f5f5] rounded-sm shadow-xl">
-        <div className="flex justify-center border-spacing-5 border-b-2 py-2 mx-10">
-          <p className="text-lg">Kartu Perpustakaan SMKN 1 Cibinong</p>
+      <div className="h-[21rem] w-[30rem] bg-[#f5f5f5] rounded-lg">
+        <div className="flex justify-center border-spacing-5 border-b-2 py-3 mx-10">
+          <p className="text-base">Kartu Perpustakaan SMKN 1 Cibinong</p>
         </div>
         <div className="flex left-5 mt-5 px-[4rem]">
           <div>
