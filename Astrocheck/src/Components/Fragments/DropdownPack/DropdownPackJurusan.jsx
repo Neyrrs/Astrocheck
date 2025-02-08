@@ -1,14 +1,30 @@
-import React from 'react'
-import Label from '../../Elements/Labels/Label'
-import DropdownJurusan from '../../Elements/Dropdown/DropdownJurusan'
+import Label from "../../Elements/Labels/Label";
 
-const DropdownPackJurusan = () => {
+const DropdownPackJurusan = (props) => {
   return (
-    <div className='my-3'>
-        <Label htmlFor="jurusan" text="Jurusan" className="text-sm"/>
-        <DropdownJurusan />
+    <div>
+      <Label htmlFor="Jurusan" text="Jurusan" className="text-base" />
+      <select
+        name={props.name}
+        id={props.id}
+        className="focus:border-[#6384E9] hover:border-[#6384E9] font-light outline-none focus:shadow-md hover:shadow-md duration-150 ease-in text-gray-500 border-[2px] px-2 mb-2 py-[0.5rem] rounded-md text-sm w-full"
+        value={props.value}
+        onChange={props.onChange}
+      >
+        <option value="">Pilih Kelas</option>
+        <option value="RPL">RPL</option>
+        <option value="SIJA">SIJA</option>
+        <option value="TKJ">TKJ</option>
+        <option value="DKV">DKV</option>
+        <option value="DPIB">DPIB</option>
+        <option value="TOI">TOI</option>
+        <option value="TKP">TKP</option>
+        <option value="TP">TP</option>
+        <option value="TFLM">TFLM</option>
+        <option value="TKR">TKR</option>
+      </select>
     </div>
-  )
-}
+  );
+};
 
-export default DropdownPackJurusan
+export default DropdownPackJurusan;

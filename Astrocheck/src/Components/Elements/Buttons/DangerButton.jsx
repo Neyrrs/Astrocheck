@@ -1,15 +1,12 @@
-import React from "react";
-
 const DangerButton = (props) => {
   return (
     <>
-      <a href={props.path || "#"}>
-        <button type="reset"
-          className={`border-2 bg-red-600 text-white px-6 py-[2px] text-sm ease-in duration-100 w-${props.width || "20"} rounded-[4px] hover:bg-[#ff576a] border-transparent`}
-        {...props}>
-          {props.text || "Button"}
-        </button>
-      </a>
+      <button
+        type="reset"
+        className="bg-red-600 mt-2 text-white px-8 py-2 text-sm font-light ease-in duration-300 rounded-lg hover:bg-[#ff576a]"
+      >
+        {props.text || "Button"}
+      </button>
     </>
   );
 };
