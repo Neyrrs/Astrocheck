@@ -26,11 +26,15 @@ const Home = () => {
             />
           </Link>
         </div>
-        <div className="flex flex-col mt-32 gap-20">
+        <div className="flex flex-col mt-32 gap-10">
           <CardDenah />
-          <CardFAQ />
-          <CardGrafik />
-          <div className="mt-[12rem]">
+          <div className="mt-4">
+            <CardFAQ />
+          </div>
+          <div className="mt-[17rem]">
+            <CardGrafik />
+          </div>
+          <div className="mt-28">
             <CardGetApp />
           </div>
         </div>

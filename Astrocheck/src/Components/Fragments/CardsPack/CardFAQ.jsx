@@ -1,10 +1,7 @@
-import React from "react";
-import InputFAQ from "../../Elements/Inputs/InputFAQ";
-import Search from "../../Elements/Icons/Search";
-import Accordion from "../Accordion/Accordion";
-import Toga from "../../../Assets/Icons/Toga.png";
-import Book from "../../../Assets/Icons/Book.png";
-import QuestionMark from "../../../Assets/Icons/QuestionMark.png";
+import {InputFAQ} from "../../Elements/Inputs";
+import SearchPack from "../SearchPack/SearchPack";
+import {Toga, Book, QuestionMark} from "../../../assets/Icons";
+import Accordion from "../../Fragments/Accordion/Accordion";
 
 const CardFAQ = () => {
   const FAQ = [
@@ -54,10 +51,8 @@ const CardFAQ = () => {
             Astrocheck
           </p>
         </div>
-        <div className="flex justify-center mt-10">
-          <InputFAQ
-            placeholder={`Tanyakan pertanyaan ini kepada AI!`}
-          />
+        <div className="flex justify-center mt-10 px-[5rem]">
+          <SearchPack name="search" id="search" onClick={""} onChange={""} placeholder="Tanyakan pertanyaan ini kepada AI!" />
         </div>
         <div className="flex justify-center mt-20">
           <p className="text-2xl font-semibold">

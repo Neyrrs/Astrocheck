@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -65,7 +65,7 @@ const CardGrafik = () => {
   return (
     <>
       <div className="px-[15rem] flex justify-center" id="Grafik">
-        <div className="rounded-md flex justify-center items-center gap-5 py-5 px-10 bg-white w-fit h-[30rem]">
+        <div className="rounded-lg flex justify-center items-center gap-5 py-8 bg-white w-[100%] h-[25rem]">
           <Bar
             data={sixMonths ? chartData.firstSixMonths : chartData.lastSixMonths}
             options={{
@@ -87,7 +87,7 @@ const CardGrafik = () => {
             <img
               src={NextArrow}
               alt="next"
-              className={`object-contain w-5 h-5 ${sixMonths ? "rotate-180" : "-rotate-[360deg]"} duration-[0.7s] ease-in-out`}
+              className={`object-contain w-5 h-5 ${sixMonths ? "rotate-180" : "rotate-[360deg]"} duration-[0.7s] ease-in-out`}
             />
           </button>
         </div>

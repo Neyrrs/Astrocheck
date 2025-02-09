@@ -1,9 +1,6 @@
-import React from "react";
-import ProfileImage from "../../Elements/Icons/ProfileImage";
-import Profile from "../../../assets/Pictures/CardNavbar/Profile.png";
-import KartuPerpustakaan from "../../../assets/Pictures/CardNavbar/KartuPerpustakaan.png";
-import RiwayatAbsen from "../../../assets/Pictures/CardNavbar/RiwayatAbsen.png";
-import Keluar from "../../../assets/Pictures/CardNavbar/Keluar.png";
+import { Link } from "react-router";
+import {ProfileImage} from "../../Elements/Icons"
+import {KartuPerpustakaan, Keluar, RiwayatAbsen, Profile} from "../../../assets/Pictures/CardNavbar"
 import Swal from "sweetalert2";
 
 const CardNavbar = () => {
@@ -19,7 +16,7 @@ const CardNavbar = () => {
       confirmButtonText: "Keluar",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/login";
+        window.location.href = "/";
         localStorage.removeItem("Token");
       }
     });
@@ -40,13 +37,17 @@ const CardNavbar = () => {
         </div>
 
         <ul className="mt-3 gap-2 flex-col flex text-[12px] text-black">
-          <a href="/profile-menu">
+          <Link to="/profile-menu">
             <li className={listItemClass}>
-              <img src={Profile} className="w-6 h-6 object-contain" alt="Edit Profil" />
+              <img
+                src={Profile}
+                className="w-6 h-6 object-contain"
+                alt="Edit Profil"
+              />
               Edit Profil
             </li>
-          </a>
-          <a href="/profile-menu">
+          </Link>
+          <Link to="/profile-menu">
             <li className={listItemClass}>
               <img
                 src={KartuPerpustakaan}
@@ -55,8 +56,8 @@ const CardNavbar = () => {
               />
               Kartu Perpustakaan
             </li>
-          </a>
-          <a href="/History">
+          </Link>
+          <Link to="/History">
             <li className={listItemClass}>
               <img
                 src={RiwayatAbsen}
@@ -65,13 +66,17 @@ const CardNavbar = () => {
               />
               Riwayat Absen
             </li>
-          </a>
-          <a href="#" onClick={handleLogout}>
+          </Link>
+          <Link to="#" onClick={handleLogout}>
             <li className={listItemClass}>
-              <img src={Keluar} className="w-6 h-6 object-contain" alt="Keluar" />
+              <img
+                src={Keluar}
+                className="w-6 h-6 object-contain"
+                alt="Keluar"
+              />
               Keluar
             </li>
-          </a>
+          </Link>
         </ul>
       </div>
     </>

@@ -1,9 +1,9 @@
-const Input = () => {
+const SearchInput = (props) => {
   return (
     <>
-        <input type="text" className='text-base font-light outline-none' placeholder="Search"/>
+        <input type="text" name={props.name} id={props.id} onClick={props.onClick} onChange={props.onChange} className='text-base font-light outline-none w-full' placeholder={props.placeholder || "Search"}/>
     </>
   )
 }
 
-export default Input
+export default SearchInput
