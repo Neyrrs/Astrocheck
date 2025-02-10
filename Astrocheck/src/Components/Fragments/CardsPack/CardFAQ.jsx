@@ -1,5 +1,4 @@
-import {InputFAQ} from "../../Elements/Inputs";
-import SearchPack from "../SearchPack/SearchPack";
+import CardAIChat from "./CardAIChat";
 import {Toga, Book, QuestionMark} from "../../../assets/Icons";
 import Accordion from "../../Fragments/Accordion/Accordion";
 
@@ -51,9 +50,9 @@ const CardFAQ = () => {
             Astrocheck
           </p>
         </div>
-        <div className="flex justify-center mt-10 px-[5rem]">
-          <SearchPack name="search" id="search" onClick={""} onChange={""} placeholder="Tanyakan pertanyaan ini kepada AI!" />
-        </div>
+        <div className="flex relative justify-center mt-10 px-[5rem]">
+        <CardAIChat />
+      </div>
         <div className="flex justify-center mt-20">
           <p className="text-2xl font-semibold">
             <span className="text-[#3849D2]">Pertanyaan</span> yang Sering
