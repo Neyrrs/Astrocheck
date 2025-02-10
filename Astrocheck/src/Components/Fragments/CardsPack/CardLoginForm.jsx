@@ -5,27 +5,27 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const CardLoginForm = () => {
-  const [Username, setUsername] = useState("");
-  const [Password, setPassword] = useState("");
+  const [nisn, setNisn] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("Login button clicked!");
-    console.log("Username:", Username);
-    console.log("Password:", Password);
+    console.log("Username:", nisn);
+    console.log("Password:", password);
     try {
       const response = await axios.post(
-        "http://localhost:3000/Accounts/login",
+        "http://localhost:3000/login",
         {
-          Username,
-          Password,
+          nisn,
+          password,
         }
       );
       console.log("response:", response);
       localStorage.setItem("Token", true);
       Swal.fire({
         title: "Login berhasil!",
-        text: `Selamat datang, ${Username}!`,
+        text: `Selamat datang, ${nisn}!`,
         icon: "success",
       }).then(() => {
         window.location.href = "/";
@@ -34,7 +34,7 @@ const CardLoginForm = () => {
       console.log("error:", error);
       Swal.fire({
         title: "Gagal!",
-        text: "Username atau password salah!",
+        text: "NISN atau password salah!",
         icon: "error",
       });
     }
@@ -55,14 +55,14 @@ const CardLoginForm = () => {
               <Input
                 type="text"
                 placeholder="Contoh: 123456789"
-                value={Username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={nisn}
+                onChange={(e) => setNisn(e.target.value)}
               />
               <label className="block text-sm">Password</label>
               <Input
                 type="password"
                 placeholder="Password anda"
-                value={Password}
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
