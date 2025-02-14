@@ -1,9 +1,16 @@
 import { Link } from "react-router";
-import {ProfileImage} from "../../Elements/Icons"
-import {KartuPerpustakaan, Keluar, RiwayatAbsen, Profile} from "../../../assets/Pictures/CardNavbar"
+import { ProfileImage } from "../../Elements/Icons";
+import {
+  KartuPerpustakaan,
+  Keluar,
+  RiwayatAbsen,
+  Profile,
+} from "../../../assets/Pictures/CardNavbar";
 import Swal from "sweetalert2";
+import useProfile from "../../../Hooks/useProfile";
 
 const CardNavbar = () => {
+  const user = useProfile();
   const handleLogout = (e) => {
     e.preventDefault();
     Swal.fire({
@@ -24,14 +31,16 @@ const CardNavbar = () => {
 
   const listItemClass =
     "flex items-center py-1 px-2 w-full rounded-lg hover:bg-gradient-to-r hover:from-[#d0d2d896] hover:to-transparent duration-300 ease-in-out hover:translate-x-2 gap-2 cursor-pointer hover:text-black";
-
+  if (!user) {
+    return null;
+  }
   return (
     <>
       <div className="absolute right-0 mt-10 bg-white rounded-md shadow-lg p-4 w-64 z-50">
         <div className="flex items-center gap-3 border-b pb-3">
           <ProfileImage size="w-12 object-contain h-fit border-2 border-white" />
           <div>
-            <p className="text-black text-sm">Biru Kheza Maharley</p>
+            <p className="text-black text-sm">{user.fullName}</p>
             <p className="text-sm text-gray-500">XI RPL 2</p>
           </div>
         </div>
