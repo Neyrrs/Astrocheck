@@ -10,9 +10,6 @@ const CardLoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login button clicked!");
-    console.log("Username:", nisn);
-    console.log("Password:", password);
     try {
       const response = await axios.post(
         "http://localhost:3000/login",
@@ -21,11 +18,10 @@ const CardLoginForm = () => {
           password,
         }
       );
-      console.log("response:", response);
-      localStorage.setItem("Token", true);
+      localStorage.setItem("Token", response.data.token);
       Swal.fire({
         title: "Login berhasil!",
-        text: `Selamat datang, ${nisn}!`,
+        text: `Selamat datang, ${response.data.user.nickname}!`,
         icon: "success",
       }).then(() => {
         window.location.href = "/";

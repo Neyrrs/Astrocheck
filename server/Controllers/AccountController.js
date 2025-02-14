@@ -1,30 +1,85 @@
-import Account from "../Models/AccountSchema.js";
+import jwt from "jsonwebtoken";
+import User from "../models/AccountSchema.js";
 
-export const getAccounts = async (req, res) => {
+export const loginUser = async (req, res) => {
   try {
-    const account = await Account.find();
-    res.json(account);
-  } catch (e) {
-    res.status(500).json({ message: e.message });
-  }
-};
-export const getAccountById = async (req, res) => {
-  try {
-    const account = await Account.findById(req.params.id);
-    res.json(account);
-  } catch (e) {
-    res.status(500).json({ message: e.message });
-  }
-};
-export const saveAccount = async (req, res) => {
-  try {
-    const account = await Account(req.body);
-    await account.save();
-    res.status(201).json({
-      message: "Data berhasil disimpan",
+    const { nisn, password } = req.body;
+
+    // Cek apakah user ditemukan berdasarkan NISN
+    const user = await User.findOne({ nisn });
+    if (!user) {
+      return res.status(404).json({ message: "Akun tidak ditemukan!" });
+    }
+
+    // Cek password yang dimasukkan dengan yang ada di database
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Password salah!" });
+    }
+
+    // Generate token jika login berhasil
+    const token = jwt.sign(
+      { id: user._id, nisn: user.nisn, fullName: user.fullName },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES }
+    );
+
+    return res.status(200).json({
+      message: "Login berhasil!",
+      token,
+      user: {
+        nisn: user.nisn,
+        fullName: user.fullName,
+        kelas: user.kelas,
+        jurusan: user.jurusan,
+        profilePicture: user.profilePicture,
+        nickname: user.nickname || "",
+      },
     });
-  } catch (e) {
-    res.status(500).json({ message: e.message });
+  } catch (error) {
+    console.log("Error login:", error);
+    return res.status(500).json({ message: "Server error!" });
   }
 };
-export const deleteAccount = async (req, res) => {};
+
+
+export const registerUser = async (req, res) => {
+  try {
+    const { nisn, fullName, password, kelas, jurusan, nickname, profilePicture } = req.body;
+
+    const existingUser = await User.findOne({ nisn });
+    if (existingUser) return res.status(400).json({ message: "NISN sudah terdaftar!" });
+
+    const newUser = new User({ nisn, fullName, password, kelas, jurusan, nickname, profilePicture });
+    await newUser.save();
+
+    res.status(201).json({ message: "Akun berhasil dibuat!" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error!", error });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    console.log(users);
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error!", error });
+  }
+};
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId; // ID user dari token
+    const user = await User.findById(userId).select("-password"); // Ambil user tanpa password
+
+    if (!user) {
+      return res.status(404).json({ message: "User tidak ditemukan" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};

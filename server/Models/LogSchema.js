@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const presenceSchema = new mongoose.Schema({
+const logSchema = new mongoose.Schema({
   NISN: {
     type: String,
     required: true,
   },
-  nama: {
+  fullName: {     
     type: String,
     required: true,
   },
@@ -21,12 +21,7 @@ const presenceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  detailAlasan: {
-    type: String,
-    required: false,
-    default: ""
-  },
 });
 
-const Presence = mongoose.model('Presence', presenceSchema);
-export default Presence;
+const log = mongoose.model("log", logSchema);
+export default log;

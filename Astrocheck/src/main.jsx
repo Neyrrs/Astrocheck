@@ -5,10 +5,9 @@ import { Login, Home, Absen, History, ProfileMenu } from "./Pages/UserLevel";
 import Exp from "./Exp";
 import AdminPanel from "./Pages/AdminLevel/AdminPanel";
 import NotFound from "./Pages/NotFound";
-
 const root = document.getElementById("root");
+
 const token = localStorage.getItem("Token");
-console.log(token);
 
 ReactDOM.createRoot(root).render(
   <BrowserRouter>

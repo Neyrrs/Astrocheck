@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import userRoutes from "./Routes/PresenceRoute.js";
+import PresenceRoute from "./Routes/PresenceRoute.js";
 import AccountRoute from "./Routes/AccountRoute.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 mongoose
   .connect("mongodb://localhost:27017/Astrocheck")
@@ -12,8 +14,8 @@ mongoose
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(userRoutes);
 app.use(AccountRoute);
+app.use(PresenceRoute);
 
 app.listen(3000, () => {
   console.log(`Server running in port http://localhost:3000`);
