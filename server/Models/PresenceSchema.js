@@ -9,6 +9,11 @@ const presenceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
   kelas: {
     type: String,
     required: true,

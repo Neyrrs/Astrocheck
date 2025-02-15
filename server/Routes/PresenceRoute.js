@@ -1,12 +1,16 @@
 import express from 'express';
-import {getPresence, getPresenceById, savePresence, deletePresence} from '../Controllers/PresenceController.js';
+import {savePresence, getLogs, getMeminjam, getMembaca, getLainnya, getLogsLastYear, getLogsPerMonth, getLogsToday} from '../Controllers/PresenceController.js';
 
 
 const router = express.Router();
 
-router.get('/Presences', getPresence);
-router.get('/Presence/:id', getPresenceById);
 router.post('/Presence', savePresence);
-router.delete('/Presences/:id', deletePresence);
+router.get("/Presence/logKehadiran", getLogs)
+router.get("/Presence/logMeminjam", getMeminjam)
+router.get("/Presence/logMembaca", getMembaca)
+router.get("/Presence/logLainnya", getLainnya)
+router.get("/Presence/getLastYear", getLogsLastYear)
+router.get("/Presence/getPerMonth", getLogsPerMonth)
+router.get("/Presence/getToday", getLogsToday)
 
 export default router;
