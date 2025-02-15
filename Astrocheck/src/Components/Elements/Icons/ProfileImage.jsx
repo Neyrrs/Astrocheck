@@ -1,4 +1,4 @@
-import image from '../../../assets/Pictures/CircleImage.png'
+import image from '../../../assets/Pictures/Images/CircleImage.png'
 import Icons from './Icons'
 
 const ProfileImage = (props) => {

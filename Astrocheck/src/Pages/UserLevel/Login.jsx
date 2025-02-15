@@ -1,4 +1,4 @@
-import CardLoginForm from "../../Components/Fragments/CardsPack/CardLoginForm"
+import {CardLoginForm} from "../../Components/Fragments/CardsPack"
 const Login = () => {
   return (
     <div className="Login w-full h-screen justify-center items-center flex">
