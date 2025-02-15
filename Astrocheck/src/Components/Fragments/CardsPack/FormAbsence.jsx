@@ -10,16 +10,16 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 const FormAbsence = () => {
-  const [NISN, setNISN] = useState("");
-  const [nama, setNama] = useState("");
+  const [nisn, setNisn] = useState("");
+  const [fullName, setFullName] = useState("");
   const [kelas, setKelas] = useState("");
   const [alasan, setAlasan] = useState("");
   const [jurusan, setJurusan] = useState("");
   const [detailAlasan, setDetailAlasan] = useState("");
 
-  const handleSendForm = (e) => {
+  const handleSendForm = async (e) => {
     e.preventDefault();
-    if (!NISN || !nama || !kelas || !alasan || !jurusan) {
+    if (!nisn || !fullName || !kelas || !alasan || !jurusan) {
       Swal.fire({
         title: "Error",
         text: "Semua field wajib diisi!",
@@ -27,16 +27,7 @@ const FormAbsence = () => {
       });
       return;
     }
-    const formData = {
-      NISN: NISN,
-      nama: nama,
-      kelas: kelas,
-      alasan: alasan,
-      jurusan: jurusan,
-      detailAlasan: detailAlasan,
-    };
-    axios
-      .post("http://localhost:3000/Presence", formData)
+    const response = await axios.post("http://localhost:3000/Presence", { nisn, fullName, kelas, alasan, jurusan, detailAlasan })
       .then(() => {
         Swal.fire({
           title: "Data berhasil tercatat!",
@@ -46,7 +37,7 @@ const FormAbsence = () => {
           if (result.isConfirmed) {
             Swal.fire({
               title: "Absen berhasil",
-              text: `Selamat datang di perpustakaan Astrolitera, ${nama}. Anda telah berhasil melakukan absensi`,
+              text: `Selamat datang di perpustakaan Astrolitera, ${fullName}. Anda telah berhasil melakukan absensi`,
               icon: "success",
               showCancelButton: true,
               confirmButtonColor: "#d33",
@@ -89,8 +80,8 @@ const FormAbsence = () => {
               type="number"
               name="NISN"
               placeholder="Contoh: 1234567890"
-              value={NISN}
-              onChange={(e) => setNISN(e.target.value)}
+              value={nisn}
+              onChange={(e) => setNisn(e.target.value)}
             />
           </div>
           <div>
@@ -101,8 +92,8 @@ const FormAbsence = () => {
               type="text"
               name="nama"
               placeholder="Contoh: Ezwan Ibnu Yassar"
-              value={nama}
-              onChange={(e) => setNama(e.target.value)}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             />
           </div>
           <div>

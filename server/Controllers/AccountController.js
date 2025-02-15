@@ -38,6 +38,7 @@ export const loginUser = async (req, res) => {
     console.log("Error login:", error);
     return res.status(500).json({ message: "Server error!" });
   }
+  createLog(req, res);
 };
 
 export const registerUser = async (req, res) => {

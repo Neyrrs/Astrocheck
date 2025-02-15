@@ -1,20 +1,12 @@
 import mongoose from "mongoose";
 
 const logSchema = new mongoose.Schema({
-  NISN: {
-    type: String,
-    required: true,
-  },
   fullName: {     
     type: String,
     required: true,
   },
-  kelas: {
-    type: String,
-    required: true,
-  },
-  jurusan: {
-    type: String,
+  date: {
+    type: Date,
     required: true,
   },
   alasan: {

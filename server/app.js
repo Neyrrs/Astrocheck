@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import PresenceRoute from "./Routes/PresenceRoute.js";
 import AccountRoute from "./Routes/AccountRoute.js";
+import PresencesLogRoute from "./Routes/PresencesLogRoute.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -14,6 +15,7 @@ mongoose
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(PresencesLogRoute);
 app.use(AccountRoute);
 app.use(PresenceRoute);
 

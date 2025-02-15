@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const presenceSchema = new mongoose.Schema({
-  NISN: {
+  nisn: {
     type: String,
     required: true,
   },
-  nama: {
+  fullName: {
     type: String,
     required: true,
   },
