@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
-  nisn: { type: String, required: true, unique: true },
+  nisn: { type: Number, required: true, unique: true },
   fullName: {type: String, required: true},
   password: { type: String, required: true },
+  email: { type: String, required: true },
   profilePicture: { type: String, default: "" },
   kelas: { type: String, required: true },
   jurusan: { type: String, required: true },

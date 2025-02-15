@@ -27,6 +27,7 @@ export const loginUser = async (req, res) => {
       user: {
         nisn: user.nisn,
         fullName: user.fullName,
+        email: user.email,
         kelas: user.kelas,
         jurusan: user.jurusan,
         profilePicture: user.profilePicture,
@@ -44,6 +45,7 @@ export const registerUser = async (req, res) => {
     const {
       nisn,
       fullName,
+      email,
       password,
       kelas,
       jurusan,
@@ -58,6 +60,7 @@ export const registerUser = async (req, res) => {
     const newUser = new User({
       nisn,
       fullName,
+      email,
       password,
       kelas,
       jurusan,

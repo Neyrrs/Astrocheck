@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 mongoose
-  .connect("mongodb://localhost:27017/Astrocheck")
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("Koneksi berhasil ke database!"))
   .catch((err) => console.error("Koneksi gagal:", err));
 
@@ -17,6 +17,6 @@ app.use(express.json());
 app.use(AccountRoute);
 app.use(PresenceRoute);
 
-app.listen(3000, () => {
-  console.log(`Server running in port http://localhost:3000`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server running in port http://localhost:${process.env.PORT}`);
 });
