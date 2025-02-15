@@ -1,11 +1,14 @@
 import express from "express";
-import { getLogs, getMeminjam, getMembaca, getLainnya } from "../Controllers/PresencesLogController.js";
+import { getLogs, getMeminjam, getMembaca, getLainnya, getLogsLastYear, getLogsPerMonth, getLogsToday } from "../Controllers/PresencesLogController.js";
 
 const router = express.Router();
 
 router.get("/logKehadiran", getLogs)
 router.get("/logMeminjam", getMeminjam)
 router.get("/logMembaca", getMembaca)
-router.get("/logMembaca", getLainnya)
+router.get("/logLainnya", getLainnya)
+router.get("/getLastYear", getLogsLastYear)
+router.get("/getPerMonth", getLogsPerMonth)
+router.get("/getToday", getLogsToday)
 
 export default router;
