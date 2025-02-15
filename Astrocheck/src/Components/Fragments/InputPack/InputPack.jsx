@@ -4,7 +4,7 @@ const InputPack = (props) => {
   return (
     <>
         <Label htmlFor={props.htmlFor} text={props.text} className={props.className}/>
-        <Input type={props.type} name={props.name} placeholder={props.placeholder} {...props}/>
+        <Input type={props.type} onChange={props.onChange} value={props.value} name={props.name} placeholder={props.placeholder} />
     </>
   )
 }

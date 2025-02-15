@@ -38,7 +38,7 @@ const CardProfile = () => {
               onClick={handleShow}
               className={show === 3 ? active : ""}
             >
-              Kartu Perpustakaan{" "}
+              Kartu Perpustakaan
             </button>
           </div>
         </div>

@@ -97,3 +97,26 @@ export const getUserProfile = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { fullName, nickname, email, password } = req.body;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
+
+    if (fullName) user.fullName = fullName;
+    if (nickname) user.nickname = nickname;
+    if (email) user.email = email;
+    if (password) user.password = password;
+
+    await user.save();
+
+    res.status(200).json({ message: "Profil berhasil diperbarui", user });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan saat memperbarui profil", error });
+  }
+};

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const useProfile = () => {
   const [user, setUser] = useState(null);
@@ -12,7 +12,7 @@ const useProfile = () => {
         if (!token) return;
 
         const decoded = jwtDecode(token);
-        const response = await axios.get("http://localhost:3000/profile", {
+        const response = await axios.get(`http://localhost:3000/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
