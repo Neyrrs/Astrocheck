@@ -5,7 +5,7 @@ const DisabledInputPack = (props) => {
   return (
     <>
       <Label htmlFotr={props.namaLengkap || "htmlFor"} text={props.text || "Label"} className="text-base"/>
-      <DisabledInput placeholder={props.placeholder || "Placeholder"} width={props.width || "full"}/>
+      <DisabledInput value={props.value} placeholder={props.placeholder || "Placeholder"} width={props.width || "full"}/>
     </>
   )
 }
