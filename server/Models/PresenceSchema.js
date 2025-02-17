@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const presenceSchema = new mongoose.Schema({
   nisn: {
-    type: String,
+    type: Number,
     required: true,
   },
   fullName: {
