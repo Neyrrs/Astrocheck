@@ -5,7 +5,7 @@ import {savePresence, getLogs, getMeminjam, getMembaca, getLainnya, getLogsLastY
 const router = express.Router();
 
 router.post('/Presence', savePresence);
-router.get("/Presence/logKehadiran", getLogs)
+router.get("/Presence/logKehadiran/:nisn", getLogs)
 router.get("/Presence/logMeminjam", getMeminjam)
 router.get("/Presence/logMembaca", getMembaca)
 router.get("/Presence/logLainnya", getLainnya)

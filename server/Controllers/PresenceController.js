@@ -21,7 +21,8 @@ export const savePresence = async (req, res) => {
 
 export const getLogs = async (req, res) => {
   try {
-    const log = await presence.find();
+    const nisn = req.params.nisn;
+    const log = await presence.find({ nisn });
     res.json(log);
   } catch (error) {
     res.status(500).json({ message: error.message });

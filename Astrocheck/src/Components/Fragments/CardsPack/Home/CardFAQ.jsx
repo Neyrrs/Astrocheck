@@ -43,8 +43,8 @@ const CardFAQ = () => {
 
   return (
     <>
-      <div className="pt-[14rem] px-[15rem] w-full">
-        <div id="FAQ" className="h-[6rem] bg-gradient-to-l from-[#E8ECF8] to-[#A9BCED] flex items-center justify-center w-full rounded-lg drop-shadow-xl">
+      <div className="pt-44 px-52 w-full">
+        <div id="FAQ" className="h-[7rem] bg-gradient-to-l from-[#E8ECF8] to-[#A9BCED] flex items-center justify-center w-full rounded-lg drop-shadow-xl">
           <p className="text-2xl font-semibold">
             <span className="text-[#3849D2]">Pertanyaan</span> seputar
             Astrocheck
@@ -59,7 +59,6 @@ const CardFAQ = () => {
             Diajukan
           </p>
         </div>
-
         <div className="h-[50rem]">
           {FAQ.map((item, index) => (
             <div className="my-10" key={index}>
