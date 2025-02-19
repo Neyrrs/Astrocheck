@@ -2,7 +2,7 @@ import Navbar from "../../Components/Fragments/Navigation-bar/Navbar.jsx";
 import SearchPack from "../../Components/Fragments/SearchPack/SearchPack.jsx";
 import { useState } from "react";
 
-const Login = () => {
+const History = () => {
   const data = [
     { id: 1, nama: "Biru Kheza Maharley", jamMasuk: "08:00", jamKeluar: "17:00", alasan: "Membaca", tanggal: "2024-11-01" },
     { id: 2, nama: "Biru Kheza Maharley", jamMasuk: "08:00", jamKeluar: "17:00", alasan: "Meminjam", tanggal: "2024-11-01" },
@@ -58,4 +58,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default History;
