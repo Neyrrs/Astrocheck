@@ -4,13 +4,13 @@ import {savePresence, getLogs, getMeminjam, getMembaca, getLainnya, getLogsLastY
 
 const router = express.Router();
 
-router.post('/Presence', savePresence);
-router.get("/Presence/logKehadiran/:nisn", getLogs)
-router.get("/Presence/logMeminjam", getMeminjam)
-router.get("/Presence/logMembaca", getMembaca)
-router.get("/Presence/logLainnya", getLainnya)
-router.get("/Presence/getLastYear", getLogsLastYear)
-router.get("/Presence/getPerMonth", getLogsPerMonth)
-router.get("/Presence/getToday", getLogsToday)
+router.post('/', savePresence);
+router.get("/logKehadiran/:nisn", getLogs)
+router.get("/logMeminjam", getMeminjam)
+router.get("/logMembaca", getMembaca)
+router.get("/logLainnya", getLainnya)
+router.get("/getLastYear", getLogsLastYear)
+router.get("/getPerMonth", getLogsPerMonth)
+router.get("/getToday", getLogsToday)
 
 export default router;

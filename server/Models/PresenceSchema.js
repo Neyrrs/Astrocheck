@@ -10,9 +10,14 @@ const presenceSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date,
+    type: String,
     required: true,
-    default: Date.now,
+    default: () => new Date().toISOString().slice(0, 10),
+  },
+  time: {
+    type: String,
+    required: true,
+    default: () => new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
   },
   kelas: {
     type: String,
@@ -29,7 +34,7 @@ const presenceSchema = new mongoose.Schema({
   detailAlasan: {
     type: String,
     required: false,
-    default: ""
+    default: "",
   },
 });
 

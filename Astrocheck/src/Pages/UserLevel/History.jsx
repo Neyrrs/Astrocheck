@@ -68,7 +68,7 @@ const History = () => {
                   <td className="py-2 px-5">{index + 1}</td>
                   <td className="py-2 px-5">{item.fullName}</td>
                   <td className="py-2 px-5">{item.date}</td>
-                  <td className="py-2 px-5">{item.date || "-"}</td>
+                  <td className="py-2 px-5">{item.time || "-"}</td>
                   <td className="py-2 px-5">{item.jamKeluar || "-"}</td>
                   <td className="py-2 px-5">{item.alasan}</td>
                 </tr>

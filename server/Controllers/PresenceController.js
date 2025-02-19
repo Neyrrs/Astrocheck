@@ -1,72 +1,34 @@
-import presence from "../Models/PresenceSchema.js";
+import Presence from "../models/PresenceSchema.js";
 
+// ✅ Menyimpan kehadiran dengan format tanggal & waktu yang benar
 export const savePresence = async (req, res) => {
   try {
     const now = new Date();
+    const formattedDate = now.toISOString().slice(0, 10); // YYYY-MM-DD
+    const formattedTime = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }); // HH:mm
 
-    const newPresence = new presence({
+    const newPresence = new Presence({
       ...req.body,
-      date: now,
+      date: formattedDate,
+      time: formattedTime,
     });
 
     await newPresence.save();
-
-    res.status(201).json(newPresence);
+    res.status(201).json({ message: "Presensi berhasil disimpan", data: newPresence });
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Gagal menyimpan data", error: error.message });
+    res.status(400).json({ message: "Gagal menyimpan data", error: error.message });
   }
 };
 
+// ✅ Mengambil semua log berdasarkan NISN
 export const getLogs = async (req, res) => {
   try {
-    const nisn = req.params.nisn;
-    const log = await presence.find({ nisn });
-    res.json(log);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    const { nisn } = req.params;
+    const logs = await Presence.find({ nisn });
 
-export const getMeminjam = async (req, res) => {
-  try {
-    const log = await presence.find({ alasan: "Meminjam" });
-    console.log(log.length);
-    res.json(log);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getMembaca = async (req, res) => {
-  try {
-    const log = await presence.find({ alasan: "Membaca" });
-    console.log(log.length);
-    res.json(log);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getLainnya = async (req, res) => {
-  try {
-    const log = await presence.find({ alasan: "Lainnya" });
-    console.log(log.length);
-    res.json(log);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getLogsToday = async (req, res) => {
-  try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const logs = await presence.find({
-      date: { $gte: today },
-    });
+    if (!logs.length) {
+      return res.status(404).json({ message: "Tidak ada data presensi untuk NISN ini" });
+    }
 
     res.json(logs);
   } catch (error) {
@@ -74,49 +36,69 @@ export const getLogsToday = async (req, res) => {
   }
 };
 
-export const getLogsPerMonth = async (req, res) => {
+// ✅ Mengambil log berdasarkan alasan
+export const getMeminjam = async (req, res) => getLogsByReason(req, res, "Meminjam");
+export const getMembaca = async (req, res) => getLogsByReason(req, res, "Membaca");
+export const getLainnya = async (req, res) => getLogsByReason(req, res, "Lainnya");
+
+// 🔄 Fungsi helper untuk mengambil log berdasarkan alasan
+const getLogsByReason = async (req, res, reason) => {
   try {
-    const today = new Date();
-    const year = today.getFullYear();
-
-    const logsPerMonth = new Array(12).fill(0);
-
-    for (let month = 0; month < 12; month++) {
-      const startDate = new Date(year, month, 1);
-      const endDate = new Date(year, month + 1, 0, 23, 59, 59);
-
-      const count = await presence.countDocuments({
-        date: { $gte: startDate, $lte: endDate },
-      });
-
-      logsPerMonth[month] = count;
-    }
-
-    res.json({ year, logsPerMonth });
+    const logs = await Presence.find({ alasan: reason });
+    res.json({ count: logs.length, data: logs });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const getLogsLastYear = async (req, res) => {
+// ✅ Mengambil log presensi untuk hari ini
+export const getLogsToday = async (req, res) => {
   try {
-    const today = new Date();
-    const lastYear = today.getFullYear() - 1;
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const logs = await Presence.find({ date: today });
 
-    const logsPerMonth = new Array(12).fill(0);
+    res.json({ date: today, count: logs.length, data: logs });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-    for (let month = 0; month < 12; month++) {
-      const startDate = new Date(lastYear, month, 1);
-      const endDate = new Date(lastYear, month + 1, 0, 23, 59, 59);
+// ✅ Mengambil jumlah log per bulan untuk tahun ini
+export const getLogsPerMonth = async (req, res) => getLogsPerYear(req, res, new Date().getFullYear());
 
-      const count = await presence.countDocuments({
-        date: { $gte: startDate, $lte: endDate },
-      });
+// ✅ Mengambil jumlah log per bulan untuk tahun lalu
+export const getLogsLastYear = async (req, res) => getLogsPerYear(req, res, new Date().getFullYear() - 1);
 
-      logsPerMonth[month] = count;
-    }
+// 🔄 Fungsi helper untuk mendapatkan jumlah log per bulan berdasarkan tahun tertentu
+const getLogsPerYear = async (req, res, year) => {
+  try {
+    const logsPerMonth = await Presence.aggregate([
+      {
+        $match: { date: { $regex: `^${year}-` } } // Cari berdasarkan tahun (format YYYY-MM-DD)
+      },
+      {
+        $group: {
+          _id: { $substr: ["$date", 5, 2] }, // Ambil bulan dari tanggal
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 } // Urutkan berdasarkan bulan
+      }
+    ]);
 
-    res.json({ year: lastYear, logsPerMonth });
+    // Ubah format hasil agar setiap bulan memiliki nilai default 0 jika tidak ada data
+    const monthData = Array.from({ length: 12 }, (_, i) => ({
+      month: String(i + 1).padStart(2, "0"), // Format bulan "01", "02", ..., "12"
+      count: 0
+    }));
+
+    logsPerMonth.forEach(({ _id, count }) => {
+      const monthIndex = parseInt(_id, 10) - 1;
+      monthData[monthIndex].count = count;
+    });
+
+    res.json({ year, logsPerMonth: monthData });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
