@@ -4,7 +4,7 @@ import {CheckedList} from "../../../../assets/Icons";
 const CardGetApp = () => {
   return (
     <>
-      <div className="flex mt-8 justify-center">
+      <div className="flex mt-0 justify-center">
         <div className="w-[70%] py-10 px-10 flex items-center bg-gradient-to-bl from-[#A4B4E0] to-[#dfe7ff3d] h-fit rounded-lg gap-16">
           <div className="flex flex-col justify-center">
             <p className="text-white text-2xl">

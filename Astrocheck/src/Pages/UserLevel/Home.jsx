@@ -25,16 +25,18 @@ const Home = () => {
               height="py-[0.7rem]"
             />
           </Link>
-        </div>  
-        <div className="flex flex-col mt-80 gap-20">
-          <CardDenah />
-          <div className="mt-4">
+        </div>
+        <div className="flex flex-col mt-60">
+          <div className="">
+            <CardDenah />
+          </div>
+          <div className="">
             <CardFAQ />
           </div>
           <div className="mt-96">
             <CardGrafik />
           </div>
-          <div className="mt-32">
+          <div className="mt-20">
             <CardGetApp />
           </div>
         </div>
