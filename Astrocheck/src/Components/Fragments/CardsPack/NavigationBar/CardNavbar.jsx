@@ -36,7 +36,7 @@ const CardNavbar = () => {
   }
   return (
     <>
-      <div className="absolute right-0 mt-16 bg-white rounded-md shadow-lg p-4 w-64 z-50">
+      <div className="absolute right-0 mt-14 bg-white rounded-md shadow-lg p-4 w-64 z-50">
         <div className="flex items-center gap-3 border-b pb-3">
           <ProfileImage size="w-12 object-contain h-fit border-2 border-white" />
           <div>
