@@ -53,7 +53,7 @@ const FormAbsence = () => {
     }
 
     try {
-      await axios.post("http://localhost:3000/absence", formData);
+      await axios.post("http://localhost:3000/presence", formData);
       Swal.fire({
         title: "Data berhasil tercatat!",
         text: `Selamat datang di perpustakaan Astrolitera, ${formData.fullName}. Anda telah berhasil melakukan absensi.`,

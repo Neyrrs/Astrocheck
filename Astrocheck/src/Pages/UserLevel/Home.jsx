@@ -33,10 +33,10 @@ const Home = () => {
           <div className="">
             <CardFAQ />
           </div>
-          <div className="mt-96">
+          <div className="mt-[22rem]">
             <CardGrafik />
           </div>
-          <div className="mt-20">
+          <div className="mt-32">
             <CardGetApp />
           </div>
         </div>

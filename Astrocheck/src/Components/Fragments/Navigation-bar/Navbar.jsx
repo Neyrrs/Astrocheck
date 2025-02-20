@@ -1,13 +1,27 @@
 import { useState } from "react";
-import { Link } from "react-scroll";
-import {CardNavbar} from "../CardsPack";
+import { Link as ScrollLink } from "react-scroll"; // Ubah Link menjadi ScrollLink agar tidak bentrok
+import { useNavigate } from "react-router"; // Gunakan useNavigate untuk navigasi antar halaman
+import { CardNavbar } from "../CardsPack";
 import ProfileImage from "../../Elements/Icons/ProfileImage";
 
 const Navbar = ({ homePage }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
 
-  const navItems = ["Absen", "Denah", "FAQ", "Grafik"];
+  const navigate = useNavigate();
+
+  const handleNavigation = (item) => {
+    if (item.nav === "Absen") {
+      navigate("/absen"); // Navigasi ke halaman /absen
+    }
+  };
+
+  const navItems = [
+    { nav: "Absen", route: "/absen" },
+    { nav: "Denah", route: "Denah" },
+    { nav: "FAQ", route: "FAQ" },
+    { nav: "Grafik", route: "Grafik" },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 w-full h-16 flex items-center bg-[#98bddf] bg-opacity-80 text-white px-14 text-lg z-50">
@@ -17,21 +31,33 @@ const Navbar = ({ homePage }) => {
 
       <div className="flex-1 flex justify-center gap-10 text-base">
         {navItems.map((item) =>
-          homePage ? (
-            <Link
-              key={item}
-              to={item}
+          item.nav === "Absen" ? (
+            <button
+              key={item.nav}
+              onClick={() => handleNavigation(item)}
+              className="cursor-pointer hover:opacity-80 transition duration-200 bg-transparent border-none text-white"
+            >
+              {item.nav}
+            </button>
+          ) : homePage ? (
+            <ScrollLink
+              key={item.nav}
+              to={item.route}
               smooth={true}
               duration={100}
               offset={-80}
               className="cursor-pointer hover:opacity-80 transition duration-200"
             >
-              {item}
-            </Link>
+              {item.nav}
+            </ScrollLink>
           ) : (
-            <a key={item} href="/" className="cursor-pointer hover:opacity-80 transition duration-200">
-              {item}
-            </a>
+            <button
+              key={item.nav}
+              onClick={() => navigate("/")}
+              className="cursor-pointer hover:opacity-80 transition duration-200 bg-transparent border-none text-white"
+            >
+              {item.nav}
+            </button>
           )
         )}
       </div>
