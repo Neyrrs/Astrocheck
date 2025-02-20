@@ -60,7 +60,6 @@ const FormAbsence = () => {
         icon: "success",
       });
 
-      // Reset hanya `alasan` dan `detailAlasan`
       setFormData((prev) => ({
         ...prev,
         alasan: "",
@@ -69,7 +68,9 @@ const FormAbsence = () => {
     } catch (error) {
       Swal.fire({
         title: "Gagal mengirim data",
-        text: error.response?.data?.message || "Terjadi masalah saat mengirimkan data ke server.",
+        text:
+          error.response?.data?.message ||
+          "Terjadi masalah saat mengirimkan data ke server.",
         icon: "error",
       });
     }
@@ -86,13 +87,22 @@ const FormAbsence = () => {
       <div className="my-10 px-24">
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div>
-            <label htmlFor="nisn" className="text-sm">NISN</label>
+            <label htmlFor="nisn" className="text-sm">
+              NISN
+            </label>
             <Input disabled type="number" name="nisn" value={formData.nisn} />
           </div>
 
           <div>
-            <label htmlFor="fullName" className="text-sm">Nama</label>
-            <Input disabled type="text" name="fullName" value={formData.fullName} />
+            <label htmlFor="fullName" className="text-sm">
+              Nama
+            </label>
+            <Input
+              disabled
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+            />
           </div>
 
           <div>
@@ -100,20 +110,42 @@ const FormAbsence = () => {
           </div>
 
           <div>
-            <DropdownPackJurusan name="jurusan" value={formData.jurusan} disabled />
+            <DropdownPackJurusan
+              name="jurusan"
+              value={formData.jurusan}
+              disabled
+            />
           </div>
 
           <div>
-            <DropdownPackAlasan name="alasan" value={formData.alasan} onChange={handleChange} />
+            <DropdownPackAlasan
+              name="alasan"
+              value={formData.alasan}
+              onChange={handleChange}
+            />
           </div>
 
           <div>
-            <TextArea name="detailAlasan" placeholder="Tambahkan alasan spesifik anda di sini" value={formData.detailAlasan} onChange={handleChange} />
+            <TextArea
+              name="detailAlasan"
+              placeholder="Tambahkan alasan spesifik anda di sini"
+              value={formData.detailAlasan}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="flex justify-start gap-5">
             <SuccessButton text="Submit" type="submit" />
-            <DangerButton text="Reset" onClick={() => setFormData((prev) => ({ ...prev, alasan: "", detailAlasan: "" }))} />
+            <DangerButton
+              text="Reset"
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  alasan: "",
+                  detailAlasan: "",
+                }))
+              }
+            />
           </div>
         </form>
       </div>

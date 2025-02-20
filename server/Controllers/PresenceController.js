@@ -1,11 +1,10 @@
 import Presence from "../models/PresenceSchema.js";
 
-// ✅ Menyimpan kehadiran dengan format tanggal & waktu yang benar
 export const savePresence = async (req, res) => {
   try {
     const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 10); // YYYY-MM-DD
-    const formattedTime = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }); // HH:mm
+    const formattedDate = now.toISOString().slice(0, 10);
+    const formattedTime = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
 
     const newPresence = new Presence({
       ...req.body,
@@ -20,7 +19,6 @@ export const savePresence = async (req, res) => {
   }
 };
 
-// ✅ Mengambil semua log berdasarkan NISN
 export const getLogs = async (req, res) => {
   try {
     const { nisn } = req.params;
@@ -36,12 +34,10 @@ export const getLogs = async (req, res) => {
   }
 };
 
-// ✅ Mengambil log berdasarkan alasan
 export const getMeminjam = async (req, res) => getLogsByReason(req, res, "Meminjam");
 export const getMembaca = async (req, res) => getLogsByReason(req, res, "Membaca");
 export const getLainnya = async (req, res) => getLogsByReason(req, res, "Lainnya");
 
-// 🔄 Fungsi helper untuk mengambil log berdasarkan alasan
 const getLogsByReason = async (req, res, reason) => {
   try {
     const logs = await Presence.find({ alasan: reason });
@@ -51,10 +47,9 @@ const getLogsByReason = async (req, res, reason) => {
   }
 };
 
-// ✅ Mengambil log presensi untuk hari ini
 export const getLogsToday = async (req, res) => {
   try {
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const today = new Date().toISOString().slice(0, 10);
     const logs = await Presence.find({ date: today });
 
     res.json({ date: today, count: logs.length, data: logs });
@@ -63,33 +58,28 @@ export const getLogsToday = async (req, res) => {
   }
 };
 
-// ✅ Mengambil jumlah log per bulan untuk tahun ini
 export const getLogsPerMonth = async (req, res) => getLogsPerYear(req, res, new Date().getFullYear());
-
-// ✅ Mengambil jumlah log per bulan untuk tahun lalu
 export const getLogsLastYear = async (req, res) => getLogsPerYear(req, res, new Date().getFullYear() - 1);
 
-// 🔄 Fungsi helper untuk mendapatkan jumlah log per bulan berdasarkan tahun tertentu
 const getLogsPerYear = async (req, res, year) => {
   try {
     const logsPerMonth = await Presence.aggregate([
       {
-        $match: { date: { $regex: `^${year}-` } } // Cari berdasarkan tahun (format YYYY-MM-DD)
+        $match: { date: { $regex: `^${year}-` } }
       },
       {
         $group: {
-          _id: { $substr: ["$date", 5, 2] }, // Ambil bulan dari tanggal
+          _id: { $substr: ["$date", 5, 2] },
           count: { $sum: 1 }
         }
       },
       {
-        $sort: { _id: 1 } // Urutkan berdasarkan bulan
+        $sort: { _id: 1 }
       }
     ]);
 
-    // Ubah format hasil agar setiap bulan memiliki nilai default 0 jika tidak ada data
     const monthData = Array.from({ length: 12 }, (_, i) => ({
-      month: String(i + 1).padStart(2, "0"), // Format bulan "01", "02", ..., "12"
+      month: String(i + 1).padStart(2, "0"),
       count: 0
     }));
 
