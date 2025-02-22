@@ -1,31 +1,42 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 
 const useProfile = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("Token");
-        if (!token) return;
+      const token = localStorage.getItem("Token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-        const decoded = jwtDecode(token);
-        const response = await axios.get(`http://localhost:3000/profile`, {
+      try {
+        const response = await axios.get("http://localhost:3000/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         setUser(response.data);
       } catch (error) {
         console.error("Gagal mengambil data user:", error);
+        setError(error);
+
+        if (error.response && error.response.status === 403) {
+          localStorage.removeItem("Token");
+          window.location.href = "/";
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProfile();
   }, []);
 
-  return user;
+  return { user, loading, error };
 };
 
 export default useProfile;

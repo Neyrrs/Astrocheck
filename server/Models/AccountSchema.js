@@ -3,13 +3,14 @@ import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
   nisn: { type: Number, required: true, unique: true },
-  fullName: {type: String, required: true},
+  fullName: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
   profilePicture: { type: String, default: "" },
-  kelas: { type: String, required: true },
-  jurusan: { type: String, required: true },
+  kelas: { type: String, default: "" },
+  jurusan: { type: String, default: "" },
   nickname: { type: String, default: "" },
+  role: {type: String, default: "user"}
 });
 
 UserSchema.pre("save", async function (next) {

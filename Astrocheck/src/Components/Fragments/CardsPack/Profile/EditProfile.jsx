@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 const EditProfile = () => {
-  const user = useProfile();
+  const {user} = useProfile();
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       nickname: "",

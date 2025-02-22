@@ -11,23 +11,24 @@ const CardLoginForm = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:3000/login",
-        {
-          nisn,
-          password,
-        }
-      );
-      localStorage.setItem("Token", response.data.token);
+      const response = await axios.post("http://localhost:3000/login", {
+        nisn,
+        password,
+      });
+  
+      const token = response.data.token;
+      localStorage.setItem("Token", token);
+      const userData = response.data.user;
+      localStorage.setItem("Role", userData.role);
+  
       Swal.fire({
         title: "Login berhasil!",
-        text: `Selamat datang, ${response.data.user.nickname}!`,
+        text: `Selamat datang, ${userData.nickname || userData.fullName}!`,
         icon: "success",
       }).then(() => {
         window.location.href = "/";
       });
     } catch (error) {
-      console.log("error:", error);
       Swal.fire({
         title: "Gagal!",
         text: "NISN atau password salah!",
@@ -35,6 +36,7 @@ const CardLoginForm = () => {
       });
     }
   };
+  
 
   return (
     <div className="bg-[#F0F0F0] shadow-2xl w-[25rem] h-fit rounded-lg pt-14 pb-20 flex justify-center">

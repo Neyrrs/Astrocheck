@@ -32,6 +32,7 @@ export const loginUser = async (req, res) => {
         jurusan: user.jurusan,
         profilePicture: user.profilePicture,
         nickname: user.nickname || "",
+        role: user.role || "user"
       },
     });
   } catch (error) {

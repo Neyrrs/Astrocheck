@@ -5,7 +5,7 @@ import useProfile from "./useProfile";
 const usePresence = () => {
   const [presence, setPresence] = useState(null);
   const [loading, setLoading] = useState(true);
-  const user = useProfile(); 
+  const {user} = useProfile(); 
 
   useEffect(() => {
     const fetchPresence = async () => {

@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import useProfile from "../../../../Hooks/useProfile";
 
 const CardNavbar = () => {
-  const user = useProfile();
+  const {user} = useProfile();
   const handleLogout = (e) => {
     e.preventDefault();
     Swal.fire({

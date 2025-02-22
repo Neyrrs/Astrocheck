@@ -4,7 +4,7 @@ import DisabledInputPack from "../../InputPack/DisabledInputPack.jsx";
 import useProfile from "../../../../Hooks/useProfile.js";
 
 const MyProfile = () => {
-  const user = useProfile();
+  const {user} = useProfile();
 
   if (!user) {
     return <p>Loading...</p>;
