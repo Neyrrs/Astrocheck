@@ -16,7 +16,7 @@ export const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, nisn: user.nisn, fullName: user.fullName },
+      { id: user._id, nisn: user.nisn, fullName: user.fullName, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES }
     );
@@ -53,6 +53,7 @@ export const registerUser = async (req, res) => {
       jurusan,
       nickname,
       profilePicture,
+      role
     } = req.body;
 
     const existingUser = await User.findOne({ nisn });
@@ -68,6 +69,7 @@ export const registerUser = async (req, res) => {
       jurusan,
       nickname,
       profilePicture,
+      role
     });
     await newUser.save();
 

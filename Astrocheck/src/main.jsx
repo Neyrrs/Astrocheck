@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import "./index.css";
 import { Login, Home, Absen, History, ProfileMenu } from "./Pages/UserLevel";
 import Exp from "./Exp";
@@ -19,8 +19,8 @@ ReactDOM.createRoot(root).render(
         <Route path="/" element={<Login />} />
       ) : role === "admin" ? (
         <>
-          <Route path="/" element={<AdminPanel />} />
           <Route path="/dashboard" element={<AdminPanel />} />
+          <Route path="/" element={<Home />} />
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </>
       ) : (

@@ -19,7 +19,6 @@ const CardLoginForm = () => {
       const token = response.data.token;
       localStorage.setItem("Token", token);
       const userData = response.data.user;
-      localStorage.setItem("Role", userData.role);
   
       Swal.fire({
         title: "Login berhasil!",
