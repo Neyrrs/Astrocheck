@@ -31,6 +31,16 @@ const presenceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  nickname :{
+    type: String,
+    required: false,
+    default: "",
+  },
+  email : {
+    type: String,
+    required: true,
+    default: "",
+  },
   detailAlasan: {
     type: String,
     required: false,

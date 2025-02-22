@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ProfileImage from "../../Elements/Icons/ProfileImage";
 import Dasbor from "../../../assets/Icons/Dasbor.png";
 import GrafikAbsen from "../../../assets/Icons/GrafikAbsensi.png";
@@ -90,9 +90,9 @@ const ToggleSidebar = ({ setActiveContent }) => {
               </ul>
               <div className="flex flex-col gap-2">
                 <p className="text-black font-semibold">Baru-baru ini absen</p>
-                {dummyRecentPresence.map((dummy) => {
+                {dummyRecentPresence.map((dummy, index) => {
                   return (
-                    <div key={dummy.name} className="flex gap-3 items-center">
+                    <div key={index} className="flex gap-3 items-center">
                       <div className="flex gap-4">
                         <p className="text-sm w-32 truncate">{dummy.name}</p>
                         <p className="text-[10px] text-gray-500 truncate">

@@ -4,7 +4,7 @@ import DisabledInputPack from "../../InputPack/DisabledInputPack.jsx";
 import useProfile from "../../../../Hooks/useProfile.js";
 
 const MyProfile = () => {
-  const {user} = useProfile();
+  const { user } = useProfile();
 
   if (!user) {
     return <p>Loading...</p>;
@@ -16,13 +16,13 @@ const MyProfile = () => {
         id: 1,
         htmlFor: "namaLengkap",
         text: "Nama Lengkap",
-        value: user.fullName || "N/A",
+        value: user.fullName || "None",
       },
       {
         id: 2,
         htmlFor: "namaTampilan",
         text: "Nama Tampilan",
-        value: user.nickname || "N/A",
+        value: user.nickname || "None",
       },
     ],
     [
@@ -30,9 +30,9 @@ const MyProfile = () => {
         id: 3,
         htmlFor: "email",
         text: "Email",
-        value: user.email || "N/A",
+        value: user.email || "Nons",
       },
-      { id: 4, htmlFor: "NISN", text: "NISN", value: user.nisn || "N/A" },
+      { id: 4, htmlFor: "NISN", text: "NISN", value: user.nisn || "None" },
     ],
   ];
 
@@ -43,7 +43,8 @@ const MyProfile = () => {
         <div className="text-lg">
           <p>{user.fullName}</p>
           <p className="text-slate-500">
-            {user.kelas} {user.jurusan}
+            {user.kelas + "" + user.jurusan ||
+              (user.role != "admin" ? "None" : "Admin")}
           </p>
         </div>
       </div>

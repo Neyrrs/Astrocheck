@@ -1,63 +1,25 @@
+import { useEffect, useState } from "react";
 import SearchPack from "../../SearchPack/SearchPack";
+import axios from "axios";
 
 const ManajemenAbsen = () => {
-  const absences = [
-    {
-      id: 1,
-      nisn: "1234567890",
-      namaLengkap: "Biru Kheza Maharley",
-      kelas: "X",
-      jurusan: "RPL",
-      tanggalAbsen: "2024-01-15",
-      waktuMasuk: "08:00",
-      waktuKeluar: "10:00",
-      keterangan: "Membaca",
-    },
-    {
-      id: 2,
-      nisn: "1234567891",
-      namaLengkap: "Ahmad Zulfikar",
-      kelas: "XII",
-      jurusan: "DKV",
-      tanggalAbsen: "2024-01-16",
-      waktuMasuk: "09:10",
-      waktuKeluar: "11:30",
-      keterangan: "Meminjam",
-    },
-    {
-      id: 3,
-      nisn: "1234567892",
-      namaLengkap: "Bella Ramadhani",
-      kelas: "X",
-      jurusan: "DPIB",
-      tanggalAbsen: "2024-01-17",
-      waktuMasuk: "08:20",
-      waktuKeluar: "09:50",
-      keterangan: "Membaca",
-    },
-    {
-      id: 4,
-      nisn: "1234567894",
-      namaLengkap: "Chandra Wijaya",
-      kelas: "XIII",
-      jurusan: "SIJA",
-      tanggalAbsen: "2024-01-18",
-      waktuMasuk: "10:00",
-      waktuKeluar: "12:00",
-      keterangan: "Meminjam",
-    },
-    {
-      id: 5,
-      nisn: "1234567895",
-      namaLengkap: "Dedi Susanto",
-      kelas: "XI",
-      jurusan: "TKJ",
-      tanggalAbsen: "2024-01-19",
-      waktuMasuk: "07:50",
-      waktuKeluar: "09:45",
-      keterangan: "Lainnya",
-    },
-  ];
+  const [presences, setpresences] = useState([]);
+  useEffect(() => {
+    const fetchUsersPresence = async () => {
+      try {
+        const token = localStorage.getItem("Token");
+        const response = await axios.get("http://localhost:3000/Presence/allUsersPresence", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setpresences(response.data);
+      } catch (error) {
+        console.error("Gagal mengambil data presensi:", error);
+      }
+    };
+
+    fetchUsersPresence();
+  }, []);
+
   const tablePadding = "p-[10px]";
 
   return (
@@ -83,22 +45,22 @@ const ManajemenAbsen = () => {
             </tr>
           </thead>
           <tbody>
-            {absences.map((data, index) => (
+            {presences.map((data, index) => (
               <tr
                 key={index}
                 className={`whitespace-nowrap ${
                   index % 2 === 0 ? "bg-white" : "bg-[#f0f0f0]"
                 }`}
               >
-                <td className={`${tablePadding} text-center`}>{data.id}</td>
-                <td className={tablePadding}>{data.nisn}</td>
-                <td className={tablePadding}>{data.namaLengkap}</td>
-                <td className={tablePadding}>{data.kelas}</td>
-                <td className={tablePadding}>{data.jurusan}</td>
-                <td className={tablePadding}>{data.tanggalAbsen}</td>
-                <td className={tablePadding}>{data.waktuMasuk}</td>
-                <td className={tablePadding}>{data.waktuKeluar}</td>
-                <td className={tablePadding}>{data.keterangan}</td>
+                <td className={`${tablePadding} text-center`}>{index + 1}</td>
+                <td className={tablePadding}>{data.nisn || "None"}</td>
+                <td className={tablePadding}>{data.fullName || "None"}</td>
+                <td className={tablePadding}>{data.kelas || "None"}</td>
+                <td className={tablePadding}>{data.jurusan || "None"}</td>
+                <td className={tablePadding}>{data.date || "None"}</td>
+                <td className={tablePadding}>{data.time || "None"}</td>
+                <td className={tablePadding}>{data.waktuKeluar || "None"}</td>
+                <td className={tablePadding}>{data.alasan || "None"}</td>
               </tr>
             ))}
           </tbody>

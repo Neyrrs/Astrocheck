@@ -11,11 +11,13 @@ import axios from "axios";
 import useProfile from "../../../../Hooks/useProfile";
 
 const FormAbsence = () => {
-  const user = useProfile();
+  const {user} = useProfile();
 
   const [formData, setFormData] = useState({
     nisn: "",
     fullName: "",
+    nickname: "",
+    email : "",
     kelas: "",
     jurusan: "",
     alasan: "",
@@ -29,6 +31,8 @@ const FormAbsence = () => {
         fullName: user.fullName || "",
         kelas: user.kelas || "",
         jurusan: user.jurusan || "",
+        email: user.email,
+        nickname: user.nickname,
         alasan: "",
         detailAlasan: "",
       });

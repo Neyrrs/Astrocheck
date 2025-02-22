@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import useProfile from "../../../../Hooks/useProfile";
 
 const CardNavbar = () => {
-  const {user} = useProfile();
+  const { user } = useProfile();
   const handleLogout = (e) => {
     e.preventDefault();
     Swal.fire({
@@ -41,7 +41,7 @@ const CardNavbar = () => {
           <ProfileImage size="w-12 object-contain h-fit border-2 border-white" />
           <div>
             <p className="text-black text-sm">{user.fullName}</p>
-            <p className="text-sm text-gray-500">XI RPL 2</p>
+            <p className="text-sm text-gray-500">{user.kelas || (user.role === "admin" && `Admin Astrocheck`)}</p>
           </div>
         </div>
 
@@ -76,6 +76,18 @@ const CardNavbar = () => {
               Riwayat Absen
             </li>
           </Link>
+          {user.role === "admin" && (
+            <Link to="/dashboard">
+              <li className={listItemClass}>
+                <img
+                  src={Keluar}
+                  className="w-6 h-6 object-contain"
+                  alt="Kartu Perpustakaan"
+                />
+                Dashboard
+              </li>
+            </Link>
+          )}
           <Link to="#" onClick={handleLogout}>
             <li className={listItemClass}>
               <img
