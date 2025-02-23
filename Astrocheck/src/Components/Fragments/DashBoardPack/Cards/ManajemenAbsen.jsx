@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
 import SearchPack from "../../SearchPack/SearchPack";
-import axios from "axios";
+import { useAllPresence } from "../../../../Hooks/usePresence";
 
 const ManajemenAbsen = () => {
-  const [presences, setpresences] = useState([]);
-  useEffect(() => {
-    const fetchUsersPresence = async () => {
-      try {
-        const token = localStorage.getItem("Token");
-        const response = await axios.get("http://localhost:3000/Presence/allUsersPresence", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setpresences(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data presensi:", error);
-      }
-    };
+  const {allPresences} = useAllPresence();
+  const presences = allPresences?.presence;
 
-    fetchUsersPresence();
-  }, []);
 
   const tablePadding = "p-[10px]";
 
@@ -45,7 +31,7 @@ const ManajemenAbsen = () => {
             </tr>
           </thead>
           <tbody>
-            {presences.map((data, index) => (
+            {presences?.map((data, index) => (
               <tr
                 key={index}
                 className={`whitespace-nowrap ${
@@ -62,7 +48,7 @@ const ManajemenAbsen = () => {
                 <td className={tablePadding}>{data.waktuKeluar || "None"}</td>
                 <td className={tablePadding}>{data.alasan || "None"}</td>
               </tr>
-            ))}
+            ))|| (<p>Loading...</p>)}
           </tbody>
         </table>
       </div>

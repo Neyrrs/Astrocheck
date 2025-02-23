@@ -116,8 +116,13 @@ const getLogsPerYear = async (req, res, year) => {
 
 export const getAllUsersPresence = async (req, res) => {
   try {
+    const [membaca, meminjam, lainnya] = await Promise.all([
+      (await Presence.find({ alasan: "Membaca" })).length,
+      (await Presence.find({ alasan: "Meminjam" })).length,
+      (await Presence.find({ alasan: "Lainnya" })).length
+    ]);
     const presence = await Presence.find().sort({date : -1});
-    res.json(presence);
+    res.json({presence, count: {membaca, meminjam, lainnya}});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

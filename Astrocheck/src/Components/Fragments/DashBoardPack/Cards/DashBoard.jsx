@@ -2,8 +2,10 @@ import { LineChart, DoughnutChart, BarChart } from "../Charts";
 import { useAllPresence } from "../../../../Hooks/usePresence.js";
 
 const DashBoardPack = () => {
-  const { presence, fullYear } = useAllPresence();
-  const datas = fullYear?.logsPerMonth?.map(item => item.count) ?? [];
+  const { presence, fullYear, allPresences } = useAllPresence();
+  const fullYearData = fullYear?.logsPerMonth?.map(item => item.count) ?? [];
+  const allDataPresences = [allPresences?.count.membaca, allPresences?.count.meminjam, allPresences?.count.lainnya];
+  
   
   const dashboardCardStyle =
     "w-[21rem] h-[14rem] rounded-md bg-[#4253] px-8 pt-10 pb-52 text-white ";
@@ -40,14 +42,14 @@ const DashBoardPack = () => {
           </div>
         </div>
         <div className="bg-white w-full h-80 rounded-lg px-32 py-10">
-          <LineChart data={datas}/>
+          <LineChart data={fullYearData}/>
         </div>
         <div className="flex gap-10">
           <div className="bg-white w-full h-80 rounded-lg p-6">
             <BarChart />
           </div>
           <div className="bg-white w-96 h-80 rounded-lg py-14">
-            <DoughnutChart />
+            <DoughnutChart data={allDataPresences }/>
           </div>
         </div>
       </div>
