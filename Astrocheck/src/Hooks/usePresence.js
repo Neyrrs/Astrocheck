@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import useProfile from "./useProfile";
-import {user} from "./useProfile";
 
 const useFetchPresence = (endpoint) => {
   const [data, setData] = useState(null);
@@ -39,7 +38,10 @@ const useFetchPresence = (endpoint) => {
   return { data, loading, error };
 };
 
-export const usePresence = () => useFetchPresence(`logKehadiran/${user.nisn}`);
+export const usePresence = () => {
+  const { user } = useProfile();
+  useFetchPresence(`logKehadiran/${user.nisn}`);
+};
 export const useDailyPresence = () => useFetchPresence("getToday");
 export const useFullYearPresence = () => useFetchPresence("getPerMonth");
 export const useAllPresences = () => useFetchPresence("allUsersPresence");
@@ -49,11 +51,11 @@ export const useAllPresence = () => {
   const fullYear = useFullYearPresence();
   const allUsers = useAllPresences();
 
-  return { 
-    presence: daily.data, 
-    fullYear: fullYear.data, 
+  return {
+    presence: daily.data,
+    fullYear: fullYear.data,
     allPresences: allUsers.data,
     loading: daily.loading || fullYear.loading || allUsers.loading,
-    error: daily.error || fullYear.error || allUsers.error
+    error: daily.error || fullYear.error || allUsers.error,
   };
 };
