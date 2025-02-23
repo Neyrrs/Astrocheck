@@ -5,6 +5,7 @@ import {
   Keluar,
   RiwayatAbsen,
   Profile,
+  AdminPanel,
 } from "../../../../assets/Pictures/CardNavbar";
 import Swal from "sweetalert2";
 import useProfile from "../../../../Hooks/useProfile";
@@ -80,11 +81,11 @@ const CardNavbar = () => {
             <Link to="/dashboard">
               <li className={listItemClass}>
                 <img
-                  src={Keluar}
+                  src={AdminPanel}
                   className="w-6 h-6 object-contain"
                   alt="Kartu Perpustakaan"
                 />
-                Dashboard
+                Admin Panel
               </li>
             </Link>
           )}
