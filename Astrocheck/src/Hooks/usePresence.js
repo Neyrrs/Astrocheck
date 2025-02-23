@@ -1,160 +1,59 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import useProfile from "./useProfile";
+import {user} from "./useProfile";
 
-export const usePresence = () => {
-  const [presence, setPresence] = useState(null);
+const useFetchPresence = (endpoint) => {
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {user} = useProfile(); 
+  const [error, setError] = useState(null);
+  const { user } = useProfile();
+
+  const fetchData = useCallback(async () => {
+    if (!user || !user.nisn) return;
+
+    try {
+      const token = localStorage.getItem("Token");
+      if (!token) {
+        throw new Error("Token tidak ditemukan");
+      }
+
+      const response = await axios.get(
+        `http://localhost:3000/Presence/${endpoint}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setData(response.data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Gagal mengambil data presensi:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [user, endpoint]);
 
   useEffect(() => {
-    const fetchPresence = async () => {
-      if (!user || !user.nisn) return;
+    fetchData();
+  }, [fetchData]);
 
-      try {
-        const token = localStorage.getItem("Token");
-        if (!token) {
-          console.error("Token tidak ditemukan");
-          return;
-        }
-
-        const response = await axios.get(
-          `http://localhost:3000/Presence/logKehadiran/${user.nisn}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        setPresence(response);
-      } catch (error) {
-        console.error("Gagal mengambil data presensi:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPresence();
-  }, [user]);
-
-  return { presence, loading };
+  return { data, loading, error };
 };
 
-export const DailyPresence = () => {
-  const [presence, setPresence] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const {user} = useProfile(); 
-
-  useEffect(() => {
-    const fetchPresence = async () => {
-      if (!user || !user.nisn) return;
-
-      try {
-        const token = localStorage.getItem("Token");
-        if (!token) {
-          console.error("Token tidak ditemukan");
-          return;
-        }
-
-        const response = await axios.get(
-          `http://localhost:3000/Presence/getToday`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        setPresence(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data presensi:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPresence();
-  }, [user]);
-
-  return { presence, loading };
-};
-
-export const FullYearPresence = () => {
-  const [fullYear, setFullYear] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const {user} = useProfile(); 
-
-  useEffect(() => {
-    const fetchPresence = async () => {
-      if (!user || !user.nisn) return;
-
-      try {
-        const token = localStorage.getItem("Token");
-        if (!token) {
-          console.error("Token tidak ditemukan");
-          return;
-        }
-
-        const response = await axios.get(
-          `http://localhost:3000/Presence/getPerMonth`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        setFullYear(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data presensi:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPresence();
-  }, [user]);
-
-  return { fullYear, loading };
-};
-
-export const AllPresences = () => {
-  const [allPresences, setAllPresences] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const {user} = useProfile(); 
-
-  useEffect(() => {
-    const fetchPresence = async () => {
-      if (!user || !user.nisn) return;
-
-      try {
-        const token = localStorage.getItem("Token");
-        if (!token) {
-          console.error("Token tidak ditemukan");
-          return;
-        }
-
-        const response = await axios.get(
-          `http://localhost:3000/Presence/allUsersPresence`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        setAllPresences(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data presensi:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPresence();
-  }, [user]);
-
-  return { allPresences, loading };
-};
+export const usePresence = () => useFetchPresence(`logKehadiran/${user.nisn}`);
+export const useDailyPresence = () => useFetchPresence("getToday");
+export const useFullYearPresence = () => useFetchPresence("getPerMonth");
+export const useAllPresences = () => useFetchPresence("allUsersPresence");
 
 export const useAllPresence = () => {
-  const { presence } = DailyPresence();
-  const { fullYear } = FullYearPresence();
-  const { allPresences } = AllPresences();
+  const daily = useDailyPresence();
+  const fullYear = useFullYearPresence();
+  const allUsers = useAllPresences();
 
-  return { presence, fullYear, allPresences };
+  return { 
+    presence: daily.data, 
+    fullYear: fullYear.data, 
+    allPresences: allUsers.data,
+    loading: daily.loading || fullYear.loading || allUsers.loading,
+    error: daily.error || fullYear.error || allUsers.error
+  };
 };
-

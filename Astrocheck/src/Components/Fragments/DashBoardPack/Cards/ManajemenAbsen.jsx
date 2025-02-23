@@ -5,7 +5,6 @@ const ManajemenAbsen = () => {
   const {allPresences} = useAllPresence();
   const presences = allPresences?.presence;
 
-
   const tablePadding = "p-[10px]";
 
   return (
