@@ -1,4 +1,3 @@
-import React from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -21,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = () => {
+const LineChart = (props) => {
 
   const lineChartDatas = {
     labels: [
@@ -40,8 +39,8 @@ const LineChart = () => {
     ],
     datasets: [
       {
-        label: "Absen Harian",
-        data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        label: "Absen Bulanan",
+        data: props.data,
         borderColor: "#2eb1f0",
         backgroundColor : "#2eb1f0",
         pointStyle: "circle", 

@@ -63,8 +63,14 @@ export const getLogsToday = async (req, res) => {
   try {
     const today = new Date().toISOString().slice(0, 10);
     const logs = await Presence.find({ date: today });
+    const [membaca, meminjam, lainnya] = await Promise.all([
+      Presence.find({ date: today, alasan: "Membaca" }),
+      Presence.find({ date: today, alasan: "Meminjam" }),
+      Presence.find({ date: today, alasan: "Lainnya" })
+  ]);
+    const jumlah = {Total : logs.length, Membaca : membaca.length, Meminjam : meminjam.length, Lainnya : lainnya.length};
 
-    res.json({ date: today, count: logs.length, data: logs });
+    res.json({ date: today, count: jumlah, data: {membaca, meminjam, lainnya} });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

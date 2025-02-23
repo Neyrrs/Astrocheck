@@ -1,4 +1,3 @@
-import React from "react";
 import { Doughnut } from "react-chartjs-2"; // Import Doughnut
 import {
   Chart as ChartJS,
@@ -7,21 +6,8 @@ import {
   Legend,
 } from "chart.js";
 
-// Register Chart.js plugins
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const doughnutChartData = {
-  labels: ["Membaca", "Meminjam", "Lainnya"], 
-  datasets: [
-    {
-      label: "Absen Kegiatan",
-      data: [60, 60, 40],
-      backgroundColor: ["#ff565a", "#24afee", "#ff8c52"], 
-      borderColor: "#fff", 
-      borderWidth: 2, 
-    },
-  ],
-};
 
 const doughnutChartOptions = {
   responsive: true,
@@ -36,17 +22,29 @@ const doughnutChartOptions = {
       },
     },
     tooltip: {
-      enabled: true, // Menampilkan tooltip
+      enabled: true, 
       callbacks: {
         label: function (tooltipItem) {
-          return `${tooltipItem.label}: ${tooltipItem.raw}%`; // Menampilkan data persentase dalam tooltip
+          return `${tooltipItem.label}: ${tooltipItem.raw}%`;
         },
       },
     },
   },
 };
 
-const DoughnutChart = () => {
+const DoughnutChart = (props) => {
+  const doughnutChartData = {
+    labels: ["Membaca", "Meminjam", "Lainnya"], 
+    datasets: [
+      {
+        label: "Absen Kegiatan",
+        data: props.data,
+        backgroundColor: ["#ff565a", "#24afee", "#ff8c52"], 
+        borderColor: "#fff", 
+        borderWidth: 2, 
+      },
+    ],
+  };
   return (
     <>
       <div className="w-full h-full">

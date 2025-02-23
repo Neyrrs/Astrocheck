@@ -1,7 +1,7 @@
 import Navbar from "../../Components/Fragments/Navigation-bar/Navbar.jsx";
 import SearchPack from "../../Components/Fragments/SearchPack/SearchPack.jsx";
 import { useState } from "react";
-import usePresence from "../../Hooks/usePresence.js";
+import {usePresence} from "../../Hooks/usePresence.js";
 
 const History = () => {
   const { presence, loading } = usePresence();
