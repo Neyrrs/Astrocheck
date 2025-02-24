@@ -38,24 +38,30 @@ const useFetchPresence = (endpoint) => {
   return { data, loading, error };
 };
 
-export const usePresence = () => {
-  const { user } = useProfile();
-  useFetchPresence(`logKehadiran/${user.nisn}`);
-};
 export const useDailyPresence = () => useFetchPresence("getToday");
+
 export const useFullYearPresence = () => useFetchPresence("getPerMonth");
+
 export const useAllPresences = () => useFetchPresence("allUsersPresence");
+
+export const useUserPresence = () => {
+  const { user } = useProfile();
+  const endpoint = user ? `logKehadiran/${user.nisn}` : null;
+  return useFetchPresence(endpoint);
+};
 
 export const useAllPresence = () => {
   const daily = useDailyPresence();
   const fullYear = useFullYearPresence();
   const allUsers = useAllPresences();
+  const userPresence = useUserPresence();
 
   return {
     presence: daily.data,
     fullYear: fullYear.data,
     allPresences: allUsers.data,
-    loading: daily.loading || fullYear.loading || allUsers.loading,
-    error: daily.error || fullYear.error || allUsers.error,
+    userPresence: userPresence.data,
+    loading: daily.loading || fullYear.loading || allUsers.loading || userPresence.loading,
+    error: daily.error || fullYear.error || allUsers.error || userPresence.error,
   };
 };

@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAllPresence } from "./Hooks/usePresence"; // Pastikan path ini benar
 
 const Exp = () => {
+  const { presence, fullYear, allPresences, loading, error } = useAllPresence();
+
+  useEffect(() => {
+    console.log("=== Data Presensi ===");
+    console.log("Semua Presensi Pengguna:", allPresences);
+  }, [presence, fullYear, allPresences, loading, error]);
+
   const [show, setShow] = useState(false);
   const [tunjukan, setTunjukan] = useState(false);
 
   const toggleFirst = () => {
     setShow(!show);
   };
+
   const toggleSecond = () => {
     setTunjukan(!tunjukan);
   };
@@ -14,9 +23,9 @@ const Exp = () => {
   return (
     <div className="p-5 bg-blue-100 w-full max-w-md mx-auto">
       {/* First Accordion */}
-      <div className="mb-4 bg-rose-500">
+      <div className="mb-4 bg-rose-500 mt-4">
         <button
-          className="px-4 py-2 rounded-md w-full text-left"
+          className="px-4 py-2 rounded-md w-full text-left text-white font-semibold"
           onClick={toggleFirst}
         >
           Aku suka (1)
@@ -26,7 +35,7 @@ const Exp = () => {
             show ? "max-h-40" : "max-h-0"
           }`}
         >
-          <p className="mt-2 px-2">Tentu aku keren!</p>
+          <p className="mt-2 px-2 text-white">Tentu aku keren!</p>
         </div>
       </div>
 
