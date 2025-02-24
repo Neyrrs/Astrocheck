@@ -39,7 +39,7 @@ const CardAdminPanel = () => {
           </div>
         </div>
       </div>
-      <div className="dashboard-container h-fit flex-col gap-10 flex px-28 bg-[#f0f0f0] py-5">
+      <div className="dashboard-container h-auto flex-col gap-10 flex px-28 bg-[#f0f0f0] py-5">
         {renderContent()}
       </div>
     </div>

@@ -8,14 +8,14 @@ const ManajemenAbsen = () => {
   const tablePadding = "p-[10px]";
 
   return (
-    <div className="h-screen">
+    <div className="h-fit">
       <div className="relative w-[full] h-[80px]">
         <div className="absolute w-80 top-5 right-0">
           <SearchPack width="fit" />
         </div>
       </div>
       <div className="overflow-scroll border-t-2 border-spacing-9 py-5 border-slate-400">
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse h-fit">
           <thead>
             <tr className="whitespace-nowrap pb-5 text-gray-500 text-base ">
               <td className={tablePadding}>ID</td>
