@@ -6,7 +6,7 @@ const Exp = () => {
 
   useEffect(() => {
     console.log("=== Data Presensi ===");
-    console.log("Semua Presensi Pengguna:", allPresences);
+    console.log("Semua Presensi Pengguna:", allPresences.presence);
   }, [presence, fullYear, allPresences, loading, error]);
 
   const [show, setShow] = useState(false);

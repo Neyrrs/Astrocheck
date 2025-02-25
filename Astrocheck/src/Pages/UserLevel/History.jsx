@@ -1,17 +1,23 @@
+import { useState } from "react";
 import Navbar from "../../Components/Fragments/Navigation-bar/Navbar.jsx";
 import SearchPack from "../../Components/Fragments/SearchPack/SearchPack.jsx";
-import { useState } from "react";
-// import {usePresence} from "../../Hooks/usePresence.js";
+import { useAllPresence } from "../../Hooks/usePresence.js";
 
 const History = () => {
-  const { presence, loading } = usePresence();
+  const { userPresence } = useAllPresence();
+
+  const presenceArray = Array.isArray(userPresence)
+    ? userPresence
+    : userPresence
+    ? [userPresence]
+    : [];
 
   const [filter, setFilter] = useState("All");
-  const presenceData = presence || [];
+
   const filteredData =
     filter === "All"
-      ? presenceData
-      : presenceData.filter((item) => item.alasan === filter);
+      ? presenceArray
+      : presenceArray.filter((item) => item.alasan === filter);
 
   return (
     <div>
@@ -21,23 +27,26 @@ const History = () => {
       </div>
 
       <div className="px-14">
+        {/* Search Input */}
         <div className="relative w-full h-[80px]">
           <div className="absolute w-80 top-5 right-0">
             <SearchPack width="fit" />
           </div>
         </div>
-        <div className="border-b-2 flex gap-10 py-2 px-5">
+
+        {/* Filter Buttons */}
+        <div className="border-b-2 flex gap-5 py-2 px-5">
           {["All", "Membaca", "Meminjam", "Lainnya"].map((type) => (
             <button key={type} onClick={() => setFilter(type)}>
               {type} (
               {type === "All"
-                ? presenceData.length
-                : presenceData.filter((item) => item.alasan === type).length}
+                ? presenceArray.length
+                : presenceArray.filter((item) => item.alasan === type).length}
               )
             </button>
           ))}
         </div>
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse mt-4">
           <thead>
             <tr className="text-gray-500 border-b">
               {[
@@ -56,13 +65,7 @@ const History = () => {
           </thead>
 
           <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="6" className="text-center py-4">
-                  Loading...
-                </td>
-              </tr>
-            ) : filteredData.length > 0 ? (
+            {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
                 <tr key={item.id || `presence-${index}`} className="border-b">
                   <td className="py-2 px-5">{index + 1}</td>
