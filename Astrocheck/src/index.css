@@ -10,22 +10,20 @@
   scroll-behavior: smooth;
 }
 
-.dashboard-container {
-  .Membaca {
-    background: url("./assets/Backgrounds/DashboardMembaca.png");
-    object-fit: cover;
-    background-size: cover;
-  }
-  .Meminjam {
-    background: url("./assets/Backgrounds/DashboardMeminjam.png");
-    object-fit: cover;
-    background-size: cover;
-  }
-  .Lainnya {
-    background: url("./assets/Backgrounds/DashboardLainnya.png");
-    object-fit: cover;
-    background-size: cover;
-  }
+.Membaca {
+  background: url("./assets/Backgrounds/DashboardMembaca.png");
+  object-fit: cover;
+  background-size: cover;
+}
+.Meminjam {
+  background: url("./assets/Backgrounds/DashboardMeminjam.png");
+  object-fit: cover;
+  background-size: cover;
+}
+.Lainnya {
+  background: url("./assets/Backgrounds/DashboardLainnya.png");
+  object-fit: cover;
+  background-size: cover;
 }
 
 .Home {

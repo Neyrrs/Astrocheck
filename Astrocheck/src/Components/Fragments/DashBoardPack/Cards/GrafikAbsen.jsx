@@ -2,9 +2,7 @@ import { DoughnutChart, BarMonthsChart, LineChartThree } from "../Charts";
 import CardSiswaTerbanyakAbsen from "./CardSiswaTerbanyakAbsen";
 import { useAllPresence } from "../../../../Hooks/usePresence";
 
-
 // TODO Selesaiin grafik kotak yang card (buat jadi komponen)
-
 
 const GrafikAbsen = () => {
   const { averages, allPresences, fullYear, presence } = useAllPresence();
@@ -41,7 +39,7 @@ const GrafikAbsen = () => {
   ];
 
   const grafikAbsensiCardStyle =
-    "w-[21rem] h-[15rem] rounded-md px-8 pt-10 pb-[9rem] text-white ";
+    "w-[21rem] h-[15rem] rounded-md px-8 pt-10 pb-[9rem] text-white";
   const lineChartStyle = "bg-white w-[45rem] h-[15rem] rounded-lg px-10 py-2";
   const doughnutChartStyle = "bg-white w-70 h-[20rem] rounded-lg py-16";
 
