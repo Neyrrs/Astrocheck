@@ -5,7 +5,7 @@ import { useAllPresence } from "../../../../Hooks/usePresence";
 
 const GrafikAbsen = () => {
   const {averages} = useAllPresence();
-  console.log(averages?.logsPerMonth??[]);
+  const barDataAverage = averages?.logsPerMonth.map((item) => item.rataRata) || [];
   
   // Styles
   const grafikAbsensiCardStyle =
@@ -23,7 +23,7 @@ const GrafikAbsen = () => {
             Rata-rata kehadiran setiap bulan
           </h1>
           <div className="bg-white w-full h-80 rounded-lg px-10 py-10">
-            <BarMonthsChart data/>
+            <BarMonthsChart data={barDataAverage}/>
           </div>
         </div>
         <div className="flex-col flex gap-16">
@@ -33,7 +33,7 @@ const GrafikAbsen = () => {
             </h1>
             <div className="flex flex-col gap-5">
               {cardData.map((card, index) => (
-                <>
+                <div key={index}>
                   <h1 className="text-xl font-semibold">Absen {card}</h1>
                   <div
                     className={`flex gap-10 ${
@@ -44,7 +44,6 @@ const GrafikAbsen = () => {
                       <LineChartThree />
                     </div>
                     <div
-                      key={index}
                       className={`${
                         card === "Membaca"
                           ? "Membaca"
@@ -60,7 +59,7 @@ const GrafikAbsen = () => {
                       <p className="mt-8">Hari ini !</p>
                     </div>
                   </div>
-                </>
+                </div>
               ))}
             </div>
           </div>

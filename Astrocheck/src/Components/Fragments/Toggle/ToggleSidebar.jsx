@@ -1,19 +1,13 @@
 import { useState } from "react";
 import ProfileImage from "../../Elements/Icons/ProfileImage";
-import Dasbor from "../../../assets/Icons/Dasbor.png";
-import GrafikAbsen from "../../../assets/Icons/GrafikAbsensi.png";
-import ManajemenAbsen from "../../../assets/Icons/ManajemenAbsen.png";
-import ManajemenAkun from "../../../assets/Icons/ManajemenAkun.png";
+import {ManajemenAbsen, ManajemenAkun, Dasbor, GrafikAbsensi} from "../../../assets/Icons";
+import useProfile from "../../../Hooks/useProfile";
+import { useAllPresence } from "../../../Hooks/usePresence";
 
 const ToggleSidebar = ({ setActiveContent }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const dummyRecentPresence = [
-    { name: "Biru Kheza Maharley", timeAgo: "1d yang lalu" },
-    { name: "Ezwan Ibnu Yassar", timeAgo: "2m yang lalu" },
-    { name: "R. M. Rizki Hidayat", timeAgo: "3m yang lalu" },
-    { name: "Ezwan Ibnu Yassar", timeAgo: "3m yang lalu" },
-  ];
+  const {user} = useProfile();
+  const {allPresences} = useAllPresence();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -36,7 +30,7 @@ const ToggleSidebar = ({ setActiveContent }) => {
             <div className="flex h-fit pb-4 gap-5 items-center border-b-2">
               <ProfileImage size="w-[4rem] h-[4rem]" />
               <div className="h-fit flex flex-col">
-                <p className="text-sm text-black">Ezwan Ibnu Yassar</p>
+                <p className="text-sm text-black">{user?.fullName}</p>
                 <p className="text-xs text-gray-500">Admin Astrocheck</p>
               </div>
             </div>
@@ -59,7 +53,7 @@ const ToggleSidebar = ({ setActiveContent }) => {
                   onClick={() => setActiveContent("Grafik Absensi")}
                 >
                   <img
-                    src={GrafikAbsen}
+                    src={GrafikAbsensi}
                     alt="Grafik"
                     className={sidebarContentStyle[1]}
                   />
@@ -90,13 +84,13 @@ const ToggleSidebar = ({ setActiveContent }) => {
               </ul>
               <div className="flex flex-col gap-2">
                 <p className="text-black font-semibold">Baru-baru ini absen</p>
-                {dummyRecentPresence.map((dummy, index) => {
+                {allPresences?.presence.slice(0, 5).map((latestPresence, index) => {
                   return (
                     <div key={index} className="flex gap-3 items-center">
                       <div className="flex gap-4">
-                        <p className="text-sm w-32 truncate">{dummy.name}</p>
+                        <p className="text-sm w-32 truncate">{latestPresence.fullName}</p>
                         <p className="text-[10px] text-gray-500 truncate">
-                          {dummy.timeAgo}
+                          {latestPresence.alasan}
                         </p>
                       </div>
                     </div>
