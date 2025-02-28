@@ -2,6 +2,10 @@ import { DoughnutChart, BarMonthsChart, LineChartThree } from "../Charts";
 import CardSiswaTerbanyakAbsen from "./CardSiswaTerbanyakAbsen";
 import { useAllPresence } from "../../../../Hooks/usePresence";
 
+
+// TODO Selesaiin grafik kotak yang card (buat jadi komponen)
+
+
 const GrafikAbsen = () => {
   const { averages, allPresences, fullYear, presence } = useAllPresence();
 
