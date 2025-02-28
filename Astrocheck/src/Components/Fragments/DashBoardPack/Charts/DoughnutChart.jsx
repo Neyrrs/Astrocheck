@@ -34,12 +34,12 @@ const doughnutChartOptions = {
 
 const DoughnutChart = (props) => {
   const doughnutChartData = {
-    labels: ["Membaca", "Meminjam", "Lainnya"], 
+    labels: props.labels || ["Membaca", "Meminjam", "Lainnya"], 
     datasets: [
       {
         label: "Absen Kegiatan",
         data: props.data,
-        backgroundColor: ["#ff565a", "#24afee", "#ff8c52"], 
+        backgroundColor: props.colors, 
         borderColor: "#fff", 
         borderWidth: 2, 
       },

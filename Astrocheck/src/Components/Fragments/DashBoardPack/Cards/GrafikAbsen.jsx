@@ -2,11 +2,31 @@ import { DoughnutChart, BarMonthsChart, LineChartThree } from "../Charts";
 import CardSiswaTerbanyakAbsen from "./CardSiswaTerbanyakAbsen";
 import { useAllPresence } from "../../../../Hooks/usePresence";
 
-
 const GrafikAbsen = () => {
-  const {averages} = useAllPresence();
-  const barDataAverage = averages?.logsPerMonth.map((item) => item.rataRata) || [];
-  
+  const { averages, allPresences, fullYear, presence } = useAllPresence();
+  const barDataAverage =
+    averages?.logsPerMonth.map((item) => item.rataRata) || [];
+  console.log(fullYear.logsPerMonth.map((item) => item.count));
+  // TODO : Filtered presence dari index 1 - akhir
+  const presences = allPresences?.presence.map((item) => item.alasan) || [];
+  const filteredPresence = [
+    {
+      alasan: "Membaca",
+      data: [presence?.count?.Membaca, presence?.count?.Meminjam, presence?.count?.Lainnya],
+      color: "#98bddf",
+    },
+    {
+      alasan: "Meminjam",
+      data: presences.filter((item) => item === "Meminjam").length,
+      color: "#ff6b6b",
+    },
+    {
+      alasan: "Lainnya",
+      data: presences.filter((item) => item === "Lainnya").length,
+      color: "#ff9f43",
+    },
+  ];
+
   // Styles
   const grafikAbsensiCardStyle =
     "w-[21rem] h-[15rem] rounded-md px-8 pt-10 pb-[9rem] text-white ";
@@ -23,7 +43,7 @@ const GrafikAbsen = () => {
             Rata-rata kehadiran setiap bulan
           </h1>
           <div className="bg-white w-full h-80 rounded-lg px-10 py-10">
-            <BarMonthsChart data={barDataAverage}/>
+            <BarMonthsChart data={barDataAverage} />
           </div>
         </div>
         <div className="flex-col flex gap-16">
@@ -66,13 +86,11 @@ const GrafikAbsen = () => {
           <div className="flex flex-col gap-10">
             <h1 className="text-2xl font-semibold">Total kehadiran absen</h1>
             <div className="flex gap-10 justify-between">
-              {Array(3)
-                .fill(null)
-                .map((_, index) => (
-                  <div key={index} className={doughnutChartStyle}>
-                    <DoughnutChart />
-                  </div>
-                ))}
+              {filteredPresence.map((presence, index) => (
+                <div key={index} className={doughnutChartStyle}>
+                  <DoughnutChart data={presence.data} colors={[presence.color]} labels={[presence.alasan]} />
+                </div>
+              ))}
             </div>
           </div>
           <div className="flex flex-col gap-6">

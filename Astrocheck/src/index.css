@@ -30,8 +30,6 @@
 
 .Home {
   background: url("./assets/Backgrounds/HomeBackground.png");
-  object-fit: cover;
-  background-size: cover;
 }
 
 .Login {

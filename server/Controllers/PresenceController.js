@@ -106,9 +106,9 @@ export const getLogsToday = async (req, res) => {
       Presence.find({ date: today, alasan: "Meminjam" }),
       Presence.find({ date: today, alasan: "Lainnya" })
   ]);
-    const jumlah = {Total : logs.length, Membaca : membaca.length, Meminjam : meminjam.length, Lainnya : lainnya.length};
+    const jumlah = {Membaca : membaca.length, Meminjam : meminjam.length, Lainnya : lainnya.length};
 
-    res.json({ date: today, count: jumlah, data: {membaca, meminjam, lainnya} });
+    res.json({ date: today, count: jumlah,  Total : logs.length,data: {membaca, meminjam, lainnya} });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
