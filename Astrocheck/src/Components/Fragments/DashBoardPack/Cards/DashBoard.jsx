@@ -3,10 +3,31 @@ import { useAllPresence } from "../../../../Hooks/usePresence.js";
 
 const DashBoardPack = () => {
   const { presence, fullYear, allPresences } = useAllPresence();
-  const fullYearData = fullYear?.logsPerMonth?.map(item => item.count) ?? [];
-  const allDataPresences = [allPresences?.count.membaca, allPresences?.count.meminjam, allPresences?.count.lainnya];
-  
-  
+  const fullYearData = fullYear?.logsPerMonth?.map((item) => item.count) ?? [];
+  const allDataPresences = [
+    allPresences?.membaca,
+    allPresences?.meminjam,
+    allPresences?.lainnya,
+  ];
+
+  const LineChartData = {
+    labels: [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ],
+    datasets: [{ label: "Absen Bulanan", data: fullYearData}],
+  };
+
   const dashboardCardStyle =
     "w-[21rem] h-[14rem] rounded-md bg-[#4253] px-8 pt-10 pb-52 text-white ";
   return (
@@ -42,14 +63,14 @@ const DashBoardPack = () => {
           </div>
         </div>
         <div className="bg-white w-full h-80 rounded-lg px-32 py-10">
-          <LineChart data={fullYearData}/>
+          <LineChart data={LineChartData?.datasets[0]?.data} labels={LineChartData?.labels} label={LineChartData?.datasets[0]?.label} />
         </div>
         <div className="flex gap-10">
           <div className="bg-white w-full h-80 rounded-lg p-6">
             <BarChart />
           </div>
           <div className="bg-white w-96 h-80 rounded-lg py-14">
-            <DoughnutChart data={allDataPresences }/>
+            <DoughnutChart data={allDataPresences} colors={["#98bddf", "#ff6b6b", "#ff9f43"]} />
           </div>
         </div>
       </div>

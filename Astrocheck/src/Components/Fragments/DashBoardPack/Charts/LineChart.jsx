@@ -23,23 +23,10 @@ ChartJS.register(
 const LineChart = (props) => {
 
   const lineChartDatas = {
-    labels: [
-      "Januari",
-      "Februari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Agustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
-    ],
+    labels: props.labels,
     datasets: [
       {
-        label: "Absen Bulanan",
+        label : props.label,
         data: props.data,
         borderColor: "#2eb1f0",
         backgroundColor : "#2eb1f0",
