@@ -36,8 +36,46 @@ export const getLogs = async (req, res) => {
         .status(404)
         .json({ message: "Tidak ada data presensi untuk NISN ini" });
     }
-
     res.json(logs);
+  } catch (error) {
+    res.status(500).json({ message: "ora bisa wir" });
+  }
+};
+
+export const getAverageTotalLogsPerMonth = async (req, res) => {
+  try {
+    const year = new Date().getFullYear();
+
+    const logsPerMonth = await Presence.aggregate([
+      {
+        $match: { date: { $regex: `^${year}-` } },
+      },
+      {
+        $group: {
+          _id: { month: { $substr: ["$date", 5, 2] } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { "_id.month": 1 },
+      },
+    ]);
+
+    const monthData = Array.from({ length: 12 }, (_, i) => {
+      const daysInMonth = new Date(year, i + 1, 0).getDate();
+      return {
+        month: String(i + 1).padStart(2, "0"),
+        rataRata: 0,
+        daysInMonth,
+      };
+    });
+
+    logsPerMonth.forEach(({ _id, count }) => {
+      const monthIndex = parseInt(_id.month, 10) - 1;
+      monthData[monthIndex].rataRata = Math.round(count / monthData[monthIndex].daysInMonth);
+    });
+
+    res.json({ year, logsPerMonth: monthData.map(({ month, rataRata }) => ({ month, rataRata })) });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

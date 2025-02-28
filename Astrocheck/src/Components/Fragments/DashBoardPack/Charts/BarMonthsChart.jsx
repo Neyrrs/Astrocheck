@@ -1,4 +1,3 @@
-import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -19,13 +18,13 @@ ChartJS.register(
   Legend
 );
 
-const BarMonthsChart = () => {
+const BarMonthsChart = (props) => {
   const barChartData = {
     labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
     datasets: [
       {
         label: "Rata-rata Absen",
-        data: [90, 89, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78],
+        data: props.data,
         backgroundColor: "#98bddf",
         borderColor: "#fff",
         borderWidth: 2,

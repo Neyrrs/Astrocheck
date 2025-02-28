@@ -4,7 +4,7 @@ import SearchPack from "../../Components/Fragments/SearchPack/SearchPack.jsx";
 import { useAllPresence } from "../../Hooks/usePresence.js";
 
 const History = () => {
-  const { userPresence } = useAllPresence();
+  const { userPresence, error } = useAllPresence();
 
   const presenceArray = Array.isArray(userPresence)
     ? userPresence
@@ -27,14 +27,12 @@ const History = () => {
       </div>
 
       <div className="px-14">
-        {/* Search Input */}
         <div className="relative w-full h-[80px]">
           <div className="absolute w-80 top-5 right-0">
             <SearchPack width="fit" />
           </div>
         </div>
 
-        {/* Filter Buttons */}
         <div className="border-b-2 flex gap-5 py-2 px-5">
           {["All", "Membaca", "Meminjam", "Lainnya"].map((type) => (
             <button key={type} onClick={() => setFilter(type)}>
@@ -57,7 +55,7 @@ const History = () => {
                 "Jam Keluar",
                 "Alasan",
               ].map((header, index) => (
-                <th key={index} className="text-left font-light py-4 px-5">
+                <th key={index} className="text-left font-light py-2 px-5">
                   {header}
                 </th>
               ))}
@@ -79,7 +77,7 @@ const History = () => {
             ) : (
               <tr>
                 <td colSpan="6" className="text-center py-4">
-                  Tidak ada data
+                  {error? "Data tidak ditemukan" : "Loading..."}
                 </td>
               </tr>
             )}

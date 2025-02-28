@@ -1,8 +1,12 @@
 import { DoughnutChart, BarMonthsChart, LineChartThree } from "../Charts";
 import CardSiswaTerbanyakAbsen from "./CardSiswaTerbanyakAbsen";
+import { useAllPresence } from "../../../../Hooks/usePresence";
 
 
 const GrafikAbsen = () => {
+  const {averages} = useAllPresence();
+  console.log(averages?.logsPerMonth??[]);
+  
   // Styles
   const grafikAbsensiCardStyle =
     "w-[21rem] h-[15rem] rounded-md px-8 pt-10 pb-[9rem] text-white ";
@@ -19,7 +23,7 @@ const GrafikAbsen = () => {
             Rata-rata kehadiran setiap bulan
           </h1>
           <div className="bg-white w-full h-80 rounded-lg px-10 py-10">
-            <BarMonthsChart />
+            <BarMonthsChart data/>
           </div>
         </div>
         <div className="flex-col flex gap-16">

@@ -8,7 +8,8 @@ import {
   getLogsLastYear,
   getLogsPerMonth,
   getLogsToday,
-  getAllUsersPresence
+  getAllUsersPresence,
+  getAverageTotalLogsPerMonth
 } from "../Controllers/PresenceController.js";
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.get("/getLastYear", getLogsLastYear);
 router.get("/getPerMonth", getLogsPerMonth);
 router.get("/getToday", getLogsToday);
 router.get("/allUsersPresence", getAllUsersPresence);
+router.get("/avaragePresence", getAverageTotalLogsPerMonth);
 
 export default router;

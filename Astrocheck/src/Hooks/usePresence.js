@@ -9,7 +9,7 @@ const useFetchPresence = (endpoint) => {
   const { user } = useProfile();
 
   const fetchData = useCallback(async () => {
-    if (!user || !user.nisn) return;
+    if (!user) return;
 
     try {
       const token = localStorage.getItem("Token");
@@ -22,10 +22,10 @@ const useFetchPresence = (endpoint) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      if(!response) return;
       setData(response.data);
     } catch (err) {
-      setError(err.message);
-      console.error("Gagal mengambil data presensi:", err);
+      setError("Eror euy", err);
     } finally {
       setLoading(false);
     }
@@ -39,29 +39,31 @@ const useFetchPresence = (endpoint) => {
 };
 
 export const useDailyPresence = () => useFetchPresence("getToday");
-
 export const useFullYearPresence = () => useFetchPresence("getPerMonth");
+export const useAvaragePresenceMonths = () => useFetchPresence("avaragePresence");
 
 export const useAllPresences = () => useFetchPresence("allUsersPresence");
 
 export const useUserPresence = () => {
   const { user } = useProfile();
-  const endpoint = user ? `logKehadiran/${user.nisn}` : null;
+  const endpoint = user ? `logKehadiran/123456789` : null;
   return useFetchPresence(endpoint);
 };
 
 export const useAllPresence = () => {
+  const average = useAvaragePresenceMonths();
   const daily = useDailyPresence();
   const fullYear = useFullYearPresence();
   const allUsers = useAllPresences();
   const userPresence = useUserPresence();
 
   return {
+    averages: average.data,
     presence: daily.data,
     fullYear: fullYear.data,
     allPresences: allUsers.data,
     userPresence: userPresence.data,
-    loading: daily.loading || fullYear.loading || allUsers.loading || userPresence.loading,
-    error: daily.error || fullYear.error || allUsers.error || userPresence.error,
+    loading: daily.loading || fullYear.loading || allUsers.loading || userPresence.loading || average.loading,
+    error: daily.error || fullYear.error || allUsers.error || userPresence.error || average.error,
   };
 };
