@@ -1,8 +1,9 @@
 import { DoughnutChart, BarMonthsChart, LineChartThree } from "../Charts";
 import CardSiswaTerbanyakAbsen from "./CardSiswaTerbanyakAbsen";
 import { useAllPresence } from "../../../../Hooks/usePresence";
+import { CardMembaca, CardMeminjam, CardLainnya } from "./CardPresences";
 
-// TODO Selesaiin grafik kotak yang card (buat jadi komponen)
+// TODO Implementasikan component baru yang dibuat di CardPresences ke sini dan ke page DashBoard
 
 const GrafikAbsen = () => {
   const { averages, allPresences, fullYear, presence } = useAllPresence();
@@ -61,29 +62,30 @@ const GrafikAbsen = () => {
           <h1 className="text-2xl font-semibold">
             Grafik absen kategori membaca, meminjam, dan lainnya
           </h1>
-          <div className="flex flex-col gap-5">
-            {cardData.map((card, index) => (
-              <div key={index}>
-                <h1 className="text-xl font-semibold">Absen {card}</h1>
-                <div
-                  className={`flex gap-10 ${
-                    card === "Meminjam" ? "flex-row-reverse" : ""
-                  }`}
-                >
+          {[CardMembaca, CardMeminjam, CardLainnya].map((Card, index) => (
+            <div key={index} className="flex flex-col gap-5">
+              <h1
+                className={`text-xl font-semibold ${
+                  index === 1 && `text-right`
+                }`}
+              >
+                Absen {cardData[index]}
+              </h1>
+              <div className="flex gap-5">
+                {index === 1 && (
                   <div className={lineChartStyle}>
                     <LineChartThree />
                   </div>
-                  <div className={`${card} ${grafikAbsensiCardStyle}`}>
-                    <div className="flex flex-col gap-3">
-                      <p className="text-base">Absensi {card}</p>
-                      <p className="text-3xl font-semibold">546 Orang</p>
-                    </div>
-                    <p className="mt-8">Hari ini !</p>
+                )}
+                <Card />
+                {index !== 1 && (
+                  <div className={lineChartStyle}>
+                    <LineChartThree />
                   </div>
-                </div>
+                )}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
         <div className="flex flex-col gap-10">
@@ -111,14 +113,18 @@ const GrafikAbsen = () => {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-2xl font-semibold">Urutan jurusan terbanyak absen</h1>
+          <h1 className="text-2xl font-semibold">
+            Urutan jurusan terbanyak absen
+          </h1>
           <div className="bg-white w-full h-80 rounded-lg px-10 py-10">
             <BarMonthsChart />
           </div>
         </div>
 
         <div className="flex flex-col gap-5">
-          <h1 className="text-2xl font-semibold">Urutan siswa/i terbanyak absen</h1>
+          <h1 className="text-2xl font-semibold">
+            Urutan siswa/i terbanyak absen
+          </h1>
           <CardSiswaTerbanyakAbsen />
         </div>
       </div>
