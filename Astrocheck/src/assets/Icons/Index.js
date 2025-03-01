@@ -13,3 +13,5 @@ export {default as QuestionMark} from "./QuestionMark.png";
 export {default as RightArrow} from "./RightArrow.png";
 export {default as Search} from "./Search.png";
 export {default as Toga} from "./Toga.png";
+export {default as Eye} from "./Eye.png";
+export {default as SlashedEye} from "./SlashedEye.png";

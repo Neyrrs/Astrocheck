@@ -10,7 +10,7 @@ const Login = () => {
   const handleLoginTypeChanges = () => {
     sestSudentLogin(!studentLogin);
   };
-  
+
   return (
     <div className="Login w-full h-screen justify-center items-center flex">
       <div className="bg-[#F0F0F0] shadow-2xl w-[25rem] h-fit rounded-lg pt-14 pb-20 flex justify-center">
@@ -26,7 +26,7 @@ const Login = () => {
               onClick={handleLoginTypeChanges}
               className="text-center text-xs text-gray-500"
             >
-              Login sebagai siswa
+              Login Sebagai {studentLogin ? "Siswa" : "Guru/Pendatang"}
             </button>
           </div>
         </div>

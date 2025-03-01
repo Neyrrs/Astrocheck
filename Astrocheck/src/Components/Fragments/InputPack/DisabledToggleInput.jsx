@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Label from "../../Elements/Labels/Label";
 import DisabledInput from '../../Elements/Inputs/DisabledInput';
+import { Eye, SlashedEye } from "../../../assets/Icons";
 
 
 const ToggleInput = (props) => {
@@ -26,7 +27,7 @@ const ToggleInput = (props) => {
           onClick={togglePasswordVisibility}
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
         >
-          {showPassword ? "👁️" : "👁️‍🗨️"}
+          <img src={showPassword ? Eye : SlashedEye} className="w-6 h-6" alt="" />
         </button>
       </div>
     </div>

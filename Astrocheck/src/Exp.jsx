@@ -1,6 +1,7 @@
 // import { useState, useEffect } from "react";
 // import { useAllPresence } from "./Hooks/usePresence"; // Pastikan path ini benar
 import {CardMembaca} from "./Components/Fragments/DashBoardPack/Cards/CardPresences"
+import {Eye, Book, SlashedEye} from "./assets/Icons"
 
 const Exp = () => {
   // const { presence, fullYear, allPresences, loading, error } = useAllPresence();
@@ -58,7 +59,11 @@ const Exp = () => {
     //   </div>
     // </div>
     <div className="flex items-center justify-center">
-      <CardMembaca />
+      {/* <CardMembaca /> */}
+      <img src={SlashedEye} alt="" />
+      <img src={Eye} alt="" />
+      {/* <img src={Eye} /> */}
+      {/* <img src={SlashedEye} /> */}
     </div>
   );
 };

@@ -143,8 +143,7 @@ const FormAbsence = () => {
             <DangerButton
               text="Reset"
               onClick={() =>
-                setFormData((prev) => ({
-                  ...prev,
+                setFormData(() => ({
                   alasan: "",
                   detailAlasan: "",
                 }))
