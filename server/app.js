@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import PresenceRoute from "./Routes/PresenceRoute.js";
 import AccountRoute from "./Routes/AccountRoute.js";
 import dotenv from "dotenv";
+import helmet from "helmet";
 dotenv.config();
 
 mongoose
@@ -13,6 +14,7 @@ mongoose
 
 const app = express();
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 app.use(AccountRoute);
 app.use("/presence", PresenceRoute);
