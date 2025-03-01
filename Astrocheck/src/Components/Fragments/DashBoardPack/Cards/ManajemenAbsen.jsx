@@ -47,7 +47,7 @@ const ManajemenAbsen = () => {
                 <td className={tablePadding}>{data.waktuKeluar || "None"}</td>
                 <td className={tablePadding}>{data.alasan || "None"}</td>
               </tr>
-            ))|| (<p>Loading...</p>)}
+            ))|| (<tr><td colSpan={9} className="text-center">Loading...</td></tr>)}
           </tbody>
         </table>
       </div>

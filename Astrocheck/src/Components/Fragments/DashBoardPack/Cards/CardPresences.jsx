@@ -4,7 +4,7 @@ import { useAllPresence } from "../../../../Hooks/usePresence";
 const styleCard =
   "w-[21rem] h-[15rem] rounded-md px-8 pt-10 pb-[9rem] text-white";
 
-const usePresenceData = () => {
+const usePresenceData = (category) => {
   const { fullYear, presence } = useAllPresence();
   const [presencesIndex, setPresencesIndex] = useState(0);
   const [currentMonthData, setCurrentMonthData] = useState(0);
@@ -15,10 +15,10 @@ const usePresenceData = () => {
       const currentMonth = new Date().getMonth() + 1;
       const currentMonthStr = currentMonth.toString().padStart(2, "0");
       const currentData = data.find((item) => item.month === currentMonthStr);
-      setCurrentMonthData(currentData?.membaca || 0);
+      setCurrentMonthData(currentData?.[category] || 0);
     };
     fetchData();
-  }, [fullYear]);
+  }, [fullYear, category]);
 
   const handleChange = () => {
     setPresencesIndex((prevIndex) => (prevIndex < 2 ? prevIndex + 1 : 0));
@@ -27,14 +27,18 @@ const usePresenceData = () => {
   return {
     presencesIndex,
     handleChange,
-    presenceData: [currentMonthData, fullYear?.membaca, presence?.membaca],
+    presenceData: [
+      presence?.[category] || 0, // Data harian (default)
+      currentMonthData, // Data bulanan
+      fullYear?.[category] || 0, // Data tahunan
+    ],
     labels: ["Hari ini", "Bulan ini", "Tahun ini"],
   };
 };
 
-const CardPresence = ({ title }) => {
+const CardPresence = ({ title, category }) => {
   const { presencesIndex, handleChange, presenceData, labels } =
-    usePresenceData();
+    usePresenceData(category);
 
   return (
     <div className={`${title} ${styleCard}`}>
@@ -49,6 +53,6 @@ const CardPresence = ({ title }) => {
   );
 };
 
-export const CardMembaca = () => <CardPresence title="Membaca" />;
-export const CardMeminjam = () => <CardPresence title="Meminjam" />;
-export const CardLainnya = () => <CardPresence title="Lainnya" />;
+export const CardMembaca = () => <CardPresence title="Membaca" category="membaca" />;
+export const CardMeminjam = () => <CardPresence title="Meminjam" category="meminjam" />;
+export const CardLainnya = () => <CardPresence title="Lainnya" category="lainnya" />;

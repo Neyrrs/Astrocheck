@@ -94,17 +94,17 @@
     try {
       const logs = await Presence.find({ alasan: reason });
       const count = logs.length;
-      const [membaca, meminjam, lainnya] = await getPresenceCounts();
-
-      res.json({ count, membaca, meminjam, lainnya, data: logs });
+  
+      res.json({ count, data: logs }); 
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   };
-
+  
   export const getMeminjam = async (req, res) => getLogsByReason(req, res, "Meminjam");
   export const getMembaca = async (req, res) => getLogsByReason(req, res, "Membaca");
   export const getLainnya = async (req, res) => getLogsByReason(req, res, "Lainnya");
+  
 
   export const getLogsToday = async (req, res) => {
     try {

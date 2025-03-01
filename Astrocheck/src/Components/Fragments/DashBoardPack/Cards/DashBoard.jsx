@@ -1,8 +1,9 @@
 import { LineChart, DoughnutChart, BarChart } from "../Charts";
 import { useAllPresence } from "../../../../Hooks/usePresence.js";
+import { CardLainnya, CardMembaca, CardMeminjam } from "./CardPresences.jsx";
 
 const DashBoardPack = () => {
-  const { presence, fullYear, allPresences } = useAllPresence();
+  const {fullYear, allPresences } = useAllPresence();
   const fullYearData = fullYear?.logsPerMonth?.map((item) => item.count) ?? [];
   const allDataPresences = [
     allPresences?.membaca,
@@ -27,40 +28,16 @@ const DashBoardPack = () => {
     ],
     datasets: [{ label: "Absen Bulanan", data: fullYearData}],
   };
-
-  const dashboardCardStyle =
-    "w-[21rem] h-[14rem] rounded-md bg-[#4253] px-8 pt-10 pb-52 text-white ";
+  
   return (
     <div>
       <div className="dashboard-container flex-col gap-10 flex bg-[#f0f0f0]">
         <div className="flex items-center justify-between">
-          <div className={`Membaca ${dashboardCardStyle}`}>
-            <div className="flex flex-col gap-3 ">
-              <p className="text-base">Absen Membaca</p>
-              <p className="text-3xl font-semibold">
-                {presence?.count?.Membaca ?? 0} Orang
-              </p>
+        {[CardMembaca, CardMeminjam, CardLainnya].map((Card, index) => (
+            <div key={index}>
+                <Card />
             </div>
-            <p className="mt-8">Hari ini !</p>
-          </div>
-          <div className={`Meminjam ${dashboardCardStyle}`}>
-            <div className="flex flex-col gap-3 ">
-              <p className="text-base">Absen Meminjam</p>
-              <p className="text-3xl font-semibold">
-                {presence?.count?.Meminjam ?? 0} Orang
-              </p>
-            </div>
-            <p className="mt-8">Hari ini !</p>
-          </div>
-          <div className={`Lainnya ${dashboardCardStyle}`}>
-            <div className="flex flex-col gap-3 ">
-              <p className="text-base">Absen Lainnya</p>
-              <p className="text-3xl font-semibold">
-                {presence?.count?.Lainnya ?? 0} Orang
-              </p>
-            </div>
-            <p className="mt-8">Hari ini !</p>
-          </div>
+          ))}
         </div>
         <div className="bg-white w-full h-80 rounded-lg px-32 py-10">
           <LineChart data={LineChartData?.datasets[0]?.data} labels={LineChartData?.labels} label={LineChartData?.datasets[0]?.label} />
