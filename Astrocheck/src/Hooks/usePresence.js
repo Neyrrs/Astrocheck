@@ -46,7 +46,7 @@ export const useAllPresences = () => useFetchPresence("allUsersPresence");
 
 export const useUserPresence = () => {
   const { user } = useProfile();
-  const endpoint = user ? `logKehadiran/123456789` : null;
+  const endpoint = user ? `logKehadiran/${user?.nisn}` : null;
   return useFetchPresence(endpoint);
 };
 

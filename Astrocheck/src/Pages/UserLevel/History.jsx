@@ -5,11 +5,11 @@ import { useAllPresence } from "../../Hooks/usePresence.js";
 
 const History = () => {
   const { userPresence, error } = useAllPresence();
-
-  const presenceArray = Array.isArray(userPresence)
-    ? userPresence
-    : userPresence
-    ? [userPresence]
+  
+  const presenceArray = Array.isArray(userPresence?.logs)
+    ? userPresence.logs
+    : userPresence.logs
+    ? [userPresence.logs]
     : [];
 
   const [filter, setFilter] = useState("All");
