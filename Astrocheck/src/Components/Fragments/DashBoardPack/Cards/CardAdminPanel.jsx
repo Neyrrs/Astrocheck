@@ -4,7 +4,7 @@ import DashBoard from "./DashBoard";
 import GrafikAbsen from "./GrafikAbsen";
 import ManajemenAkun from "./ManajemenAkun";
 import ManajemenAbsen from "./ManajemenAbsen";
-import Home from "../../../../assets/Icons/Home.png";
+import {Home} from "../../../../assets/Icons";
 
 const CardAdminPanel = () => {
   const [activeContent, setActiveContent] = useState("Dasbor");
