@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { jwtDecode } from "jwt-decode";
 import "./index.css";
 import { Login, Home, Absen, History, ProfileMenu } from "./Pages/UserLevel";
-import Exp from "./Exp";
 import AdminPanel from "./Pages/AdminLevel/AdminPanel";
 import NotFound from "./Pages/NotFound";
 
@@ -23,7 +22,6 @@ ReactDOM.createRoot(root).render(
           <Route path="/history" element={<History />} />
           <Route path="/profile-menu" element={<ProfileMenu />} />
           <Route path="/Absen" element={<Absen />} />
-          <Route path="/exp" element={<Exp />} />
           {role === "admin" && <Route path="/dashboard" element={<AdminPanel />} />}
           <Route path="*" element={<NotFound />} />
         </>
