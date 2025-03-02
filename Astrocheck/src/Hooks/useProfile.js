@@ -15,7 +15,7 @@ const useProfile = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:3000/profile", {
+        const response = await axios.get(`${import.meta.env.BACKEND_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
