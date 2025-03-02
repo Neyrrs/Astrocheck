@@ -1,5 +1,5 @@
 import Navbar from "../../Components/Fragments/Navigation-bar/Navbar";
-import {CardProfile} from "@/Components/Fragments/CardsPack";
+import {CardProfile} from "../../Components/Fragments/CardsPack";
 const ProfilMenu = () => {
   
   return (
