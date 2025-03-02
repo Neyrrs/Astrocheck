@@ -1,12 +1,13 @@
-import ProfileImage from "../../../Elements/Icons/ProfileImage"; 
-import SuccessButton from "../../../Elements/Buttons/SuccessButton";
-import useProfile from "../../../../Hooks/useProfile";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Swal from "sweetalert2";
+import ProfileImage from "../../../Elements/Icons/ProfileImage";
+import SuccessButton from "../../../Elements/Buttons/SuccessButton";
+import useProfile from "../../../../Hooks/useProfile";
 
 const EditProfile = () => {
-  const {user} = useProfile();
+  const { user } = useProfile();
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       nickname: "",
@@ -27,11 +28,26 @@ const EditProfile = () => {
     }
   }, [user, reset]);
 
-  const onSubmit = (data) => {
-    const token = localStorage.getItem("Token");
-    axios.put("http://localhost:3000/profile/update", data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const onSubmit = async (data) => {
+    try {
+      const token = localStorage.getItem("Token");
+      await axios.put("http://localhost:3000/profile/update", data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Profil berhasil diperbarui",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal memperbarui profil",
+        text: error.response?.data?.message || "Terjadi kesalahan",
+      });
+    }
   };
 
   const inputFields = [
