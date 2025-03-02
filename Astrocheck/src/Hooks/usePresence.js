@@ -18,7 +18,7 @@ const useFetchPresence = (endpoint) => {
       }
 
       const response = await axios.get(
-        `${import.meta.env.BACKEND_URL}/Presence/${endpoint}`,
+        `http://localhost:3000/Presence/${endpoint}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
