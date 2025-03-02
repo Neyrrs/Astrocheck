@@ -1,12 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const presenceSchema = new mongoose.Schema({
   nisn: {
     type: Number,
-    required: true,
-  },
-  fullName: {
-    type: String,
     required: true,
   },
   date: {
@@ -17,29 +13,15 @@ const presenceSchema = new mongoose.Schema({
   time: {
     type: String,
     required: true,
-    default: () => new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-  },
-  kelas: {
-    type: String,
-    required: true,
-  },
-  jurusan: {
-    type: String,
-    required: true,
+    default: () =>
+      new Date().toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
   },
   alasan: {
     type: String,
     required: true,
-  },
-  nickname :{
-    type: String,
-    required: false,
-    default: "",
-  },
-  email : {
-    type: String,
-    required: true,
-    default: "",
   },
   detailAlasan: {
     type: String,
@@ -48,5 +30,5 @@ const presenceSchema = new mongoose.Schema({
   },
 });
 
-const Presence = mongoose.model('Presence', presenceSchema);
+const Presence = mongoose.model("Presence", presenceSchema);
 export default Presence;

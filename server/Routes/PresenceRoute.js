@@ -14,7 +14,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", savePresence);
+router.post("/:nisn", savePresence);
 router.get("/logKehadiran/:nisn", getLogs);
 router.get("/logMeminjam", getMeminjam);
 router.get("/logMembaca", getMembaca);

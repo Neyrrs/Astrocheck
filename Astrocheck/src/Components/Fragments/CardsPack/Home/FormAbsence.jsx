@@ -15,27 +15,16 @@ const FormAbsence = () => {
 
   const [formData, setFormData] = useState({
     nisn: "",
-    fullName: "",
-    nickname: "",
-    email : "",
-    kelas: "",
-    jurusan: "",
     alasan: "",
     detailAlasan: "",
   });
 
   useEffect(() => {
     if (user) {
-      setFormData({
-        nisn: user.nisn || "",
-        fullName: user.fullName || "",
-        kelas: user.kelas || "",
-        jurusan: user.jurusan || "",
-        email: user.email,
-        nickname: user.nickname,
-        alasan: "",
-        detailAlasan: "",
-      });
+      setFormData((prev) => ({
+        ...prev,
+      nisn: user.nisn,
+      }));
     }
   }, [user]);
 
@@ -46,7 +35,7 @@ const FormAbsence = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.alasan) {
       Swal.fire({
         title: "Error",
@@ -55,20 +44,25 @@ const FormAbsence = () => {
       });
       return;
     }
-
+  
     try {
-      await axios.post("http://localhost:3000/presence", formData);
+      console.log(user.nisn, formData.alasan, formData.detailAlasan);
+      
+      await axios.post(`http://localhost:3000/presence/${user?.nisn}`, {
+        alasan: formData.alasan,
+        detailAlasan: formData.detailAlasan,
+      });
+  
       Swal.fire({
         title: "Data berhasil tercatat!",
-        text: `Selamat datang di perpustakaan Astrolitera, ${formData.fullName}. Anda telah berhasil melakukan absensi.`,
+        text: `Selamat datang di perpustakaan Astrolitera, ${user?.fullName}. Anda telah berhasil melakukan absensi.`,
         icon: "success",
       });
-
-      setFormData((prev) => ({
-        ...prev,
+  
+      setFormData({
         alasan: "",
         detailAlasan: "",
-      }));
+      });
     } catch (error) {
       Swal.fire({
         title: "Gagal mengirim data",
@@ -79,10 +73,10 @@ const FormAbsence = () => {
       });
     }
   };
+  
 
   return (
     <div className="bg-[#f9f9f9] rounded-xl w-[40rem] shadow-2xl py-10 mt-5 h-fit overflow-scroll">
-      {/* Header */}
       <div className="px-10 pb-10 text-base h-fit border-spacing-40 text-center gap-20 border-b-2">
         <p className="text-3xl font-medium">Form Absen</p>
         <p className="text-xl">Astrolitera</p>
@@ -94,7 +88,7 @@ const FormAbsence = () => {
             <label htmlFor="nisn" className="text-sm">
               NISN
             </label>
-            <Input disabled type="number" name="nisn" value={formData.nisn} />
+            <Input disabled type="number" name="nisn" value={user?.nisn || ""} />
           </div>
 
           <div>
@@ -105,18 +99,18 @@ const FormAbsence = () => {
               disabled
               type="text"
               name="fullName"
-              value={formData.fullName}
+              value={user?.fullName || ""}
             />
           </div>
 
           <div>
-            <DropdownPackKelas name="kelas" value={formData.kelas} disabled />
+            <DropdownPackKelas name="kelas" value={user?.kelas || ""} disabled />
           </div>
 
           <div>
             <DropdownPackJurusan
               name="jurusan"
-              value={formData.jurusan}
+              value={user?.jurusan || ""}
               disabled
             />
           </div>

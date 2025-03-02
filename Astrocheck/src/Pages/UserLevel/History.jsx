@@ -5,11 +5,11 @@ import { useAllPresence } from "../../Hooks/usePresence.js";
 
 const History = () => {
   const { userPresence, error } = useAllPresence();
-  
-  const presenceArray = Array.isArray(userPresence?.logs)
-    ? userPresence.logs
-    : userPresence.logs
-    ? [userPresence.logs]
+  const usePresenceArray = userPresence?.logs;
+  const presenceArray = Array.isArray(usePresenceArray)
+    ? usePresenceArray
+    : usePresenceArray
+    ? [usePresenceArray]
     : [];
 
   const [filter, setFilter] = useState("All");
@@ -65,19 +65,21 @@ const History = () => {
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
-                <tr key={item.id || `presence-${index}`} className="border-b">
+                <tr key={item._id || `presence-${index}`} className="border-b">
                   <td className="py-2 px-5">{index + 1}</td>
-                  <td className="py-2 px-5">{item.fullName}</td>
+                  <td className="py-2 px-5">
+                    {item.fullName || "Tidak diketahui"}
+                  </td>
                   <td className="py-2 px-5">{item.date}</td>
                   <td className="py-2 px-5">{item.time || "-"}</td>
-                  <td className="py-2 px-5">{item.jamKeluar || "-"}</td>
+                  <td className="py-2 px-5">{"-"}</td>
                   <td className="py-2 px-5">{item.alasan}</td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td colSpan="6" className="text-center py-4">
-                  {error? "Data tidak ditemukan" : "Loading..."}
+                  {error ? "Data tidak ditemukan" : "Loading..."}
                 </td>
               </tr>
             )}
