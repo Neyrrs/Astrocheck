@@ -1,7 +1,7 @@
 // import { useState, useEffect } from "react";
 // import { useAllPresence } from "./Hooks/usePresence"; // Pastikan path ini benar
 import {CardMembaca} from "./Components/Fragments/DashBoardPack/Cards/CardPresences"
-import {Eye, Book, SlashedEye} from "@/assets/Icons"
+import {Eye, Book, SlashedEye} from "./assets/Icons"
 
 const Exp = () => {
   // const { presence, fullYear, allPresences, loading, error } = useAllPresence();

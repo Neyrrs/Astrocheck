@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url)); // 🔥 Fix untu
 export default defineConfig({
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), // ✅ Alias tetap bisa digunakan
+      '/': path.resolve(__dirname, 'src'), // ✅ Alias tetap bisa digunakan
     },
   },
 });
