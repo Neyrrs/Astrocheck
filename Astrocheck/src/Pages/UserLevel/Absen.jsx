@@ -1,5 +1,5 @@
 import Navbar from "../../Components/Fragments/Navigation-bar/Navbar";
-import FormAbsence from "../../Components/Fragments/CardsPack/Home/FormAbsence";
+import FormAbsence from "../../Components/Fragments/CardsPack";
 
 const Absen = () => {
   return (
