@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SearchPack from "../../SearchPack/SearchPack";
+import SearchPack from "@/Components/Fragments/SearchPack/SearchPack";
 
 const CardAIChat = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,7 +1,7 @@
-import ProfileImage from "../../../Elements/Icons/ProfileImage.jsx";
-import DisabledToggleInput from "../../InputPack/DisabledToggleInput.jsx";
-import DisabledInputPack from "../../InputPack/DisabledInputPack.jsx";
-import useProfile from "../../../../Hooks/useProfile.js";
+import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
+import DisabledToggleInput from "@/Components/Fragments/InputPack/DisabledToggleInput.jsx";
+import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack.jsx";
+import useProfile from "@/Hooks/useProfile.js";
 
 const MyProfile = () => {
   const { user } = useProfile();

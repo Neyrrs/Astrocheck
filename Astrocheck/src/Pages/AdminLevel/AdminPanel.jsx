@@ -1,5 +1,5 @@
-import Navbar from "../../Components/Fragments/Navigation-bar/Navbar";
-import CardAdminPanel from "../../Components/Fragments/DashBoardPack/Cards/CardAdminPanel";
+import Navbar from "@/Components/Fragments/Navigation-bar/Navbar";
+import CardAdminPanel from "@/Components/Fragments/DashBoardPack/Cards/CardAdminPanel";
 const Dashbord = () => {
   return (
     <>

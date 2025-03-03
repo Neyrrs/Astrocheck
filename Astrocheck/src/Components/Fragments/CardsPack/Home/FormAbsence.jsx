@@ -8,7 +8,7 @@ import {
 } from "../../DropdownPack";
 import Swal from "sweetalert2";
 import axios from "axios";
-import useProfile from "../../../../Hooks/useProfile";
+import useProfile from "@/Hooks/useProfile";
 
 const FormAbsence = () => {
   const {user} = useProfile();

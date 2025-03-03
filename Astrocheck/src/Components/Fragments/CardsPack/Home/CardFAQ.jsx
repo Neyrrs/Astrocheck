@@ -1,6 +1,6 @@
 import CardAIChat from "./CardAIChat";
-import {Toga, Book, QuestionMark} from "../../../../assets/Icons";
-import Accordion from "../../Accordion/Accordion";
+import {Toga, Book, QuestionMark} from "@/assets/Icons";
+import Accordion from "@/Components/Fragments/Accordion/Accordion";
 
 const CardFAQ = () => {
   const FAQ = [

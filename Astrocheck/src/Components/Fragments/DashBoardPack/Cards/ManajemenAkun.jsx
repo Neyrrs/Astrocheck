@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SearchPack from "../../SearchPack/SearchPack";
+import SearchPack from "@/Components/Fragments/SearchPack/SearchPack";
 import axios from "axios";
 
 const ManajemenAkun = () => {

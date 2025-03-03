@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link as ScrollLink } from "react-scroll"; // Ubah Link menjadi ScrollLink agar tidak bentrok
 import { useNavigate } from "react-router"; // Gunakan useNavigate untuk navigasi antar halaman
-import { CardNavbar } from "../CardsPack";
-import ProfileImage from "../../Elements/Icons/ProfileImage";
+import { CardNavbar } from "@/Components/Fragments/CardsPack";
+import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 
 const Navbar = ({ homePage }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);

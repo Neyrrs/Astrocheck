@@ -1,5 +1,5 @@
-import SearchPack from "../../SearchPack/SearchPack";
-import { useAllPresence } from "../../../../Hooks/usePresence";
+import SearchPack from "@/Components/Fragments/SearchPack/SearchPack";
+import { useAllPresence } from "@/Hooks/usePresence";
 
 const ManajemenAbsen = () => {
   const {allPresences} = useAllPresence();

@@ -1,4 +1,4 @@
-import Label from "../../Elements/Labels/Label";
+import Label from "@/Components/Elements/Labels/Label";
 
 const DropdownPackAlasan = (props) => {
   return (

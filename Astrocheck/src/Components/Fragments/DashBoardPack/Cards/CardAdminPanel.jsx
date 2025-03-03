@@ -1,10 +1,10 @@
 import { useState } from "react";
-import ToggleSidebar from "../../Toggle/ToggleSidebar";
+import ToggleSidebar from "@/Components/Fragments/Toggle/ToggleSidebar";
 import DashBoard from "./DashBoard";
 import GrafikAbsen from "./GrafikAbsen";
 import ManajemenAkun from "./ManajemenAkun";
 import ManajemenAbsen from "./ManajemenAbsen";
-import {Home} from "../../../../assets/Icons";
+import {Home} from "@/assets/Icons";
 
 const CardAdminPanel = () => {
   const [activeContent, setActiveContent] = useState("Dasbor");

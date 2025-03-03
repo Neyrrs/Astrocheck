@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
-import ProfileImage from "../../../Elements/Icons/ProfileImage";
-import SuccessButton from "../../../Elements/Buttons/SuccessButton";
-import useProfile from "../../../../Hooks/useProfile";
+import {ProfileImage} from "@/Components/Elements/Icons";
+import SuccessButton from "@/Components/Elements/Buttons/SuccessButton";
+import useProfile from "@/Hooks/useProfile";
 
 const EditProfile = () => {
   const { user } = useProfile();

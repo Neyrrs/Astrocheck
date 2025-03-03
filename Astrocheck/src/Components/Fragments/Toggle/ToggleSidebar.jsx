@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ProfileImage from "../../Elements/Icons/ProfileImage";
-import {ManajemenAbsen, ManajemenAkun, Dasbor, GrafikAbsensi} from "../../../assets/Icons";
-import useProfile from "../../../Hooks/useProfile";
-import { useAllPresence } from "../../../Hooks/usePresence";
+import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
+import {ManajemenAbsen, ManajemenAkun, Dasbor, GrafikAbsensi} from "@/assets/Icons";
+import useProfile from "@/Hooks/useProfile";
+import { useAllPresence } from "@/Hooks/usePresence";
 
 const ToggleSidebar = ({ setActiveContent }) => {
   const [isOpen, setIsOpen] = useState(false);

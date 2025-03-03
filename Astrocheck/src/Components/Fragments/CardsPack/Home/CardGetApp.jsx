@@ -1,5 +1,5 @@
-import SecondaryButton from "../../../Elements/Buttons/SecondaryButton";
-import {CheckedList} from "../../../../assets/Icons";
+import {SecondaryButton} from "@/Components/Elements/Buttons";
+import {CheckedList} from "@/assets/Icons";
 
 const CardGetApp = () => {
   return (

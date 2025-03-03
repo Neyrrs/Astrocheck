@@ -8,7 +8,7 @@ import {
   AdminPanel,
 } from "../../../../assets/Pictures/CardNavbar";
 import Swal from "sweetalert2";
-import useProfile from "../../../../Hooks/useProfile";
+import useProfile from "@/Hooks/useProfile";
 
 const CardNavbar = () => {
   const { user } = useProfile();

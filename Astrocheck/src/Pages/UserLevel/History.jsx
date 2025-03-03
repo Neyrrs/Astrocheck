@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Navbar from "../../Components/Fragments/Navigation-bar/Navbar.jsx";
-import SearchPack from "../../Components/Fragments/SearchPack/SearchPack.jsx";
+import Navbar from "@/Components/Fragments/Navigation-bar/Navbar.jsx";
+import SearchPack from "@/Components/Fragments/SearchPack/SearchPack.jsx";
 import { useAllPresence } from "../../Hooks/usePresence.js";
 
 const History = () => {
