@@ -1,6 +1,7 @@
 import { LineChart, DoughnutChart, BarChart } from "@/Components/Fragments/DashBoardPack/Charts";
-import { useAllPresence } from ".@/Hooks/usePresence.js";
+import { useAllPresence } from "@/Hooks/usePresence.js";
 import { CardLainnya, CardMembaca, CardMeminjam } from "./CardPresences.jsx";
+
 
 const DashBoardPack = () => {
   const {fullYear, allPresences } = useAllPresence();
