@@ -1,4 +1,4 @@
-import OpenedBook from "@/Assets/Icons/OpenedBook.png";
+import {OpenedBook} from "@/Assets/Icons";
 
 const Footer = () => {
   return (
