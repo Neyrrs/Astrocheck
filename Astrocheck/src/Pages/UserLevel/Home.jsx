@@ -3,9 +3,9 @@ import {
   CardFAQ,
   CardGrafik,
   CardGetApp,
-} from "../../Components/Fragments/CardsPack/Index.js";
+} from "@/Components/Fragments/CardsPack/Index.js";
 import { Link } from "react-router";
-import { PrimaryButton } from "../../Components/Elements/Buttons/index.js";
+import { PrimaryButton } from "@/Components/Elements/Buttons/index.js";
 import Navbar from "@/Components/Fragments/Navigation-bar/Navbar.jsx";
 import Footer from "@/Components/Fragments/Footer/Footer.jsx";
 

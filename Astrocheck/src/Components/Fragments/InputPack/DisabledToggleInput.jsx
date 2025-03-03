@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Label from "@/Components/Elements/Labels/Label";
-import DisabledInput from '../../Elements/Inputs/DisabledInput';
-import { Eye, SlashedEye } from "../../../assets/Icons";
+import DisabledInput from '@/Components/Elements/Inputs/DisabledInput';
+import { Eye, SlashedEye } from "@/assets/Icons";
 
 
 const ToggleInput = (props) => {

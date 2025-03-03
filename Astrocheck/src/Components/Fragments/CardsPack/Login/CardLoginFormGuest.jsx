@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { LoginButton } from "../../../Elements/Buttons";
-import { Input } from "../../../Elements/Inputs";
+import { LoginButton } from "@/Components/Elements/Buttons";
+import { Input } from "@/Components/Elements/Inputs";
 import Swal from "sweetalert2";
 import axios from "axios";
 

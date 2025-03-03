@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAllPresence } from "../../../../Hooks/usePresence";
+import { useAllPresence } from "@/Hooks/usePresence";
 
 const styleCard =
   "w-[21rem] h-[15rem] rounded-md px-8 pt-10 pb-[9rem] text-white";

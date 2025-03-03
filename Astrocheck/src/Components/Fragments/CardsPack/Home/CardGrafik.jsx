@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import {NextArrow} from "../../../../assets/Icons";
+import {NextArrow} from "@/assets/Icons";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const CardGrafik = () => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {RightArrow} from "../../../../Assets/Icons";
+import {RightArrow} from "@/Assets/Icons";
 import {
   Denah,
   Lobby,
@@ -9,7 +9,7 @@ import {
   TempatMembaca,
   TempatMembacaBelakang,
   TempatPenyimpananBuku,
-} from "../../../../assets/Pictures/Denah";
+} from "@/assets/Pictures/Denah";
 
 const CardDenah = () => {
   const images = [

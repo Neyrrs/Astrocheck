@@ -1,4 +1,4 @@
-import profileIcon from "../../../assets/Icons/Profile.png"
+import profileIcon from "@/assets/Icons/Profile.png"
 import Icons from "./Icons"
 const Profile = () => {
   return (

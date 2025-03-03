@@ -1,5 +1,5 @@
-import Label from "../../Elements/Labels/Label"
-import Input from "../../Elements/Inputs/Input"
+import Label from "@/Components/Elements/Labels/Label"
+import Input from "@/Components/Elements/Inputs/Input"
 const InputPack = (props) => {
   return (
     <>

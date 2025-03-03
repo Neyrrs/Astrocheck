@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Label from "@/Elements/Labels/Label";
-import { Input } from "../../Elements/Inputs";
+import Label from "@/Components/Elements/Labels/Label";
+import { Input } from "@/Components/Elements/Inputs";
 
 const ToggleInput = (props) => {
   const [showPassword, setShowPassword] = useState(false);

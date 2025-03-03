@@ -1,7 +1,7 @@
 import {
   CardLoginForm,
   CardLoginFormGuest,
-} from "../../Components/Fragments/CardsPack/Login";
+} from "@/Components/Fragments/CardsPack/Login";
 import { useState } from "react";
 
 const Login = () => {

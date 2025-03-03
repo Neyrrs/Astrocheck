@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Input, TextArea } from "../../../Elements/Inputs";
-import { DangerButton, SuccessButton } from "../../../Elements/Buttons";
+import { Input, TextArea } from "@/Components/Elements/Inputs";
+import { DangerButton, SuccessButton } from "@/Components/Elements/Buttons";
 import {
   DropdownPackKelas,
   DropdownPackAlasan,
   DropdownPackJurusan,
-} from "../../DropdownPack";
+} from "@/Components/Fragments/DropdownPack";
 import Swal from "sweetalert2";
 import axios from "axios";
 import useProfile from "@/Hooks/useProfile";

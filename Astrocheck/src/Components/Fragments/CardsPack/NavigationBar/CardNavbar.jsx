@@ -1,12 +1,12 @@
 import { Link } from "react-router";
-import { ProfileImage } from "../../../Elements/Icons";
+import { ProfileImage } from "@Components/Elements/Icons";
 import {
   KartuPerpustakaan,
   Keluar,
   RiwayatAbsen,
   Profile,
   AdminPanel,
-} from "../../../../assets/Pictures/CardNavbar";
+} from "@/assets/Pictures/CardNavbar";
 import Swal from "sweetalert2";
 import useProfile from "@/Hooks/useProfile";
 

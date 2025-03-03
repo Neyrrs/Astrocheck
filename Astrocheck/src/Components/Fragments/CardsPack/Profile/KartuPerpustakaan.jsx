@@ -1,4 +1,5 @@
-import {ProfileImageSquare} from "../../../Elements/Icons";
+import {ProfileImageSquare} from "@/Components/Elements/Icons";
+
 const KartuPerpustakaan = () => {
   return (
     <div className="w-full h-[22rem] flex justify-center">

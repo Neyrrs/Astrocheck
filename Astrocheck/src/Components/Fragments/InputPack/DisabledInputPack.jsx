@@ -1,5 +1,5 @@
-import DisabledInput from '../../Elements/Inputs/DisabledInput';
-import Label from '../../Elements/Labels/Label';
+import DisabledInput from '@/Components/Elements/Inputs/DisabledInput';
+import Label from '@/Components/Elements/Labels/Label';
 
 const DisabledInputPack = (props) => {
   return (
