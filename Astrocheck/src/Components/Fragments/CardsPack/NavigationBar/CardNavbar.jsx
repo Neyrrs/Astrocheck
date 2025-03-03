@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { ProfileImage } from "@Components/Elements/Icons";
+import { ProfileImage } from "@/Components/Elements/Icons";
 import {
   KartuPerpustakaan,
   Keluar,
