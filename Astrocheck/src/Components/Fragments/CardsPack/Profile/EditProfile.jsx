@@ -11,7 +11,6 @@ const EditProfile = () => {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       nickname: "",
-      kelas: "",
       email: "",
       password: "",
     },
@@ -22,7 +21,6 @@ const EditProfile = () => {
       reset({
         nickname: user.nickname || "",
         email: user.email || "",
-        kelas: user.kelas || "",
         password: "",
       });
     }
@@ -62,12 +60,7 @@ const EditProfile = () => {
         <ProfileImage className="w-24" />
         <div className="text-lg">
           <p>{user?.fullName}</p>
-          <input
-            {...register("kelas")}
-            className="text-slate-500 outline-none text-lg"
-            type="text"
-            placeholder="Tekan profil untuk edit"
-          />
+          <p className="text-gray-500">{user?.kelas}</p>
         </div>
       </div>
 
