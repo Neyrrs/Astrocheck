@@ -28,9 +28,9 @@ const usePresenceData = (category) => {
     presencesIndex,
     handleChange,
     presenceData: [
-      presence?.[category] || 0, // Data harian (default)
-      currentMonthData, // Data bulanan
-      fullYear?.[category] || 0, // Data tahunan
+      presence?.[category] || 0, 
+      currentMonthData, 
+      fullYear?.[category] || 0, 
     ],
     labels: ["Hari ini", "Bulan ini", "Tahun ini"],
   };
