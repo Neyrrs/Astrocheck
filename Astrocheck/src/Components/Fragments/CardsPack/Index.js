@@ -6,6 +6,7 @@ export {default as  CardGrafik} from "./Home/CardGrafik.jsx";
 export {default as  CardNavbar} from "./NavigationBar/CardNavbar.jsx";
 export {default as  CardProfile} from "./Profile/CardProfile.jsx";
 export {default as  EditProfile} from "./Profile/EditProfile.jsx";
-export {default as  FormAbsence} from "./Home/FormAbsence.jsx";
+export {default as  FormAbsenceStudents} from "./Home/FormAbsenceStudents.jsx";
+export {default as  FormAbsenceGuest} from "./Home/FormAbsenceGuest.jsx";
 export {default as  KartuPerpustakaan} from "./Profile/KartuPerpustakaan.jsx";
 export {default as  MyProfile} from "./Profile/MyProfile.jsx";
