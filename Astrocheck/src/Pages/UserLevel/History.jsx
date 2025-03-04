@@ -28,12 +28,12 @@ const History = () => {
 
       <div className="px-14">
         <div className="relative w-full h-[80px]">
-          <div className="absolute w-80 top-5 right-0">
+          <div className="absolute w-72 top-5 right-0">
             <SearchPack width="fit" />
           </div>
         </div>
 
-        <div className="border-b-2 flex gap-5 py-2 px-5">
+        <div className="border-b-2 flex gap-5 py-3 px-5">
           {["All", "Membaca", "Meminjam", "Lainnya"].map((type) => (
             <button key={type} onClick={() => setFilter(type)}>
               {type} (
@@ -52,8 +52,8 @@ const History = () => {
                 "Nama",
                 "Tanggal Absen",
                 "Jam Masuk",
-                "Jam Keluar",
                 "Alasan",
+                "Detail Alasan"
               ].map((header, index) => (
                 <th key={index} className="text-left font-light py-2 px-5">
                   {header}
@@ -72,8 +72,8 @@ const History = () => {
                   </td>
                   <td className="py-2 px-5">{item.date}</td>
                   <td className="py-2 px-5">{item.time || "-"}</td>
-                  <td className="py-2 px-5">{"-"}</td>
                   <td className="py-2 px-5">{item.alasan}</td>
+                  <td className="py-2 px-5">{item.detailAlasan}</td>
                 </tr>
               ))
             ) : (

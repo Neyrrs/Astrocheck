@@ -43,7 +43,7 @@ const MyProfile = () => {
         <div className="text-lg">
           <p>{user.fullName}</p>
           <p className="text-slate-500">
-            {user.kelas + "" + user.jurusan ||
+            {user.kelas + " " + user.jurusan ||
               (user.role != "admin" ? "None" : "Admin")}
           </p>
         </div>
