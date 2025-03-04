@@ -10,7 +10,7 @@ const Accordion = (props) => {
 
   return (
     <>
-      <div className="h-fit py-5 bg-[#DFE5F6]  px-8 rounded-lg shadow-xl">
+      <div className="h-fit py-5 bg-[#DFE5F6]  px-8 rounded-lg shadow-xl cursor-pointer" onClick={toggle}>
         <div className="flex items-center gap-5">
           <img
             src={props.image}
@@ -18,7 +18,7 @@ const Accordion = (props) => {
             alt={props.alt}
           />
           <p className="mr-auto px-5">{props.question}</p>
-          <button onClick={toggle}>
+          <button>
             <img
               src={DownArrow}
               className={`w-8 h-8 object-contain ease-in-out duration-[0.4s] ${
