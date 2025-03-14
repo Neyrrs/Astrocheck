@@ -4,7 +4,7 @@ import EditProfile from "./EditProfile";
 import KartuPerpustakaan from "./KartuPerpustakaan";
 
 const CardProfile = () => {
-  const [show, setShow] = useState(0);
+  const [show, setShow] = useState(1);
   const [active, setActive] = useState("");
 
   const handleShow = (e) => {

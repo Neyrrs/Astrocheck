@@ -60,7 +60,7 @@ const ManajemenAkun = () => {
                     <td className={tablePadding}>{data.fullName}</td>
                     <td className={tablePadding}>{data.nickname || "None"}</td>
                     <td className={`${tablePadding} text-center`}>
-                      {data.kelas || "Admin"}
+                      {data.kelas || "None"}
                     </td>
                     <td className={tablePadding}>{data.jurusan || "None"}</td>
                     <td className={`${tablePadding} text-left`}>
