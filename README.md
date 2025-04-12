@@ -1,21 +1,35 @@
-# AstroCheck  
+# AstroCheck 🚀
 
-AstroCheck adalah aplikasi absensi digital untuk perpustakaan yang dirancang untuk menggantikan sistem absensi manual berbasis kertas. Aplikasi ini memberikan solusi modern dan efisien dalam mencatat kehadiran pengunjung perpustakaan melalui teknologi berbasis barcode.  
+AstroCheck adalah aplikasi absensi digital untuk perpustakaan yang dirancang untuk menggantikan sistem absensi manual berbasis kertas. Aplikasi ini memberikan solusi modern dan efisien dalam mencatat kehadiran pengunjung perpustakaan melalui teknologi berbasis barcode.
 
-## Tujuan Proyek  
-Meningkatkan efisiensi dan akurasi sistem absensi perpustakaan dengan menghilangkan kebutuhan akan dokumen fisik, sehingga mempermudah pengelolaan data pengunjung.  
+## Tujuan Proyek
+Meningkatkan efisiensi dan akurasi sistem absensi perpustakaan dengan menghilangkan kebutuhan akan dokumen fisik, sehingga mempermudah pengelolaan data pengunjung.
 
-## Fitur Utama  
+## Fitur Utama
 - **Scan Barcode**: Pengguna dapat melakukan login otomatis menggunakan barcode pada kartu anggota perpustakaan.  
 - **Denah Perpustakaan**: Denah interaktif untuk membantu pengguna menemukan lokasi buku atau area tertentu.  
 - **Riwayat Absensi**: Menyediakan informasi detail riwayat kehadiran pengguna.  
-- **FAQ**: Daftar pertanyaan umum untuk membantu pengguna memahami aplikasi.  
+- **FAQ**: Daftar pertanyaan umum untuk membantu pengguna memahami aplikasi.
 
-## Teknologi yang Digunakan  
-- **Frontend**:  
-  - ReactJS  
-  - TailwindCSS  
+## Teknologi yang Digunakan
 
-- **Backend**:  
-  - NodeJS  
-  - MongoDB  
+- **Frontend**:
+  - Next.js
+  - React
+  - React DOM
+  - Tailwind CSS
+  - React Hook Form
+  - React Scroll
+  - React Chart.js 2
+  - Chart.js
+  - SweetAlert2
+  - Axios
+
+- **Backend**:
+  - Node.js
+  - MongoDB
+
+---
+
+Jika ada tambahan fitur atau teknologi lainnya, beri tahu aku, Wan. Dengan stack yang kamu pakai, AstroCheck sudah tampak sangat modern dan powerful untuk keperluan perpustakaan digital! 📖💻
+
