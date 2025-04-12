@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import DownArrow from "@/Assets/Icons/DownArrow.png";
 
@@ -20,7 +22,7 @@ const Accordion = (props) => {
           <p className="mr-auto px-5">{props.question}</p>
           <button>
             <img
-              src={DownArrow}
+              src={DownArrow.src}
               className={`w-8 h-8 object-contain ease-in-out duration-[0.4s] ${
                 show ? "rotate-180" : ""
               }`}

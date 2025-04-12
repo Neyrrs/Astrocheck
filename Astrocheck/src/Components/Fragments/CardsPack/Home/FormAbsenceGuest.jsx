@@ -1,3 +1,5 @@
+  'use client';
+  
   import { useEffect, useState } from "react";
   import { DisabledInput, TextArea } from "@/Components/Elements/Inputs";
   import { DangerButton, SuccessButton } from "@/Components/Elements/Buttons";

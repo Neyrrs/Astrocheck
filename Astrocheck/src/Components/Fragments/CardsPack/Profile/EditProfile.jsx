@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -28,8 +30,9 @@ const EditProfile = () => {
 
   const onSubmit = async (data) => {
     try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
-      await axios.put("http://localhost:3000/profile/update", data, {
+      await axios.put(`${backendUrl}/profile/update`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -70,7 +73,7 @@ const EditProfile = () => {
             <label className="w-full text-left">{field.label}</label>
             <input
               type={field.type}
-              className="focus:border-[#6384E9] hover:border-[#6384E9] focus:shadow-md hover:shadow-md duration-150 ease-in outline-none border-[2px] px-3 mb-2 py-[1rem] h-[2rem] w-full text-sm rounded-[5px] font-light"
+              className="focus:border-[#6384E9] hover:border-[#6384E9] border-gray-300 focus:shadow-md hover:shadow-md duration-150 ease-in outline-none border-[2px] px-3 mb-2 py-[1rem] h-[2rem] w-full text-sm rounded-[5px] font-light"
               {...register(field.name)}
               placeholder={field.placeholder}
             />

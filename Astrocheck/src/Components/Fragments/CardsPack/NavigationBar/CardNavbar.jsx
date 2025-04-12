@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import Link from "next/link";
 import { ProfileImage } from "@/Components/Elements/Icons";
 import {
   KartuPerpustakaan,
@@ -9,6 +9,7 @@ import {
 } from "@/assets/Pictures/CardNavbar";
 import Swal from "sweetalert2";
 import useProfile from "@/Hooks/useProfile";
+import Image from "next/image";
 
 const CardNavbar = () => {
   const { user } = useProfile();
@@ -38,7 +39,7 @@ const CardNavbar = () => {
   return (
     <>
       <div className="absolute right-0 mt-14 bg-white rounded-md shadow-lg p-4 w-64 z-50">
-        <Link to="/profile-menu">
+        <Link href={"/profile-menu"}>
           <div className="flex items-center gap-3 border-b pb-3">
             <ProfileImage size="w-12 object-contain h-fit border-2 border-white" />
             <div>
@@ -51,9 +52,11 @@ const CardNavbar = () => {
         </Link>
 
         <ul className="mt-3 gap-2 flex-col flex text-[12px] text-black">
-          <Link to="/profile-menu">
+          <Link href={"/profile"}>
             <li className={listItemClass}>
-              <img
+              <Image
+              width={25}
+              height={25}
                 src={Profile}
                 className="w-6 h-6 object-contain"
                 alt="Edit Profil"
@@ -61,9 +64,11 @@ const CardNavbar = () => {
               Edit Profil
             </li>
           </Link>
-          <Link to="/profile-menu">
+          <Link href={{ pathname: "/profile", query: { show: 3 } }}>
             <li className={listItemClass}>
-              <img
+              <Image
+              width={25}
+              height={25}
                 src={KartuPerpustakaan}
                 className="w-6 h-6 object-contain"
                 alt="Kartu Perpustakaan"
@@ -71,9 +76,11 @@ const CardNavbar = () => {
               Kartu Perpustakaan
             </li>
           </Link>
-          <Link to="/History">
+          <Link href={"/history"}>
             <li className={listItemClass}>
-              <img
+              <Image
+              width={25}
+              height={25}
                 src={RiwayatAbsen}
                 className="w-6 h-6 object-contain"
                 alt="Riwayat Absen"
@@ -82,9 +89,11 @@ const CardNavbar = () => {
             </li>
           </Link>
           {user.role === "admin" && (
-            <Link to="/dashboard">
+            <Link href={"/dashboard"}>
               <li className={listItemClass}>
-                <img
+                <Image
+                width={25}
+                height={25}
                   src={AdminPanel}
                   className="w-6 h-6 object-contain"
                   alt="Kartu Perpustakaan"
@@ -93,9 +102,11 @@ const CardNavbar = () => {
               </li>
             </Link>
           )}
-          <Link to="#" onClick={handleLogout}>
+          <Link href={"#"} onClick={handleLogout}>
             <li className={listItemClass}>
-              <img
+              <Image
+              width={25}
+              height={25}
                 src={Keluar}
                 className="w-6 h-6 object-contain"
                 alt="Keluar"

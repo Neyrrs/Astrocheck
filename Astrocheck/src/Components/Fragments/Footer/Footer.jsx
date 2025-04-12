@@ -1,11 +1,12 @@
-import {OpenedBook} from "@/assets/Icons";
+import OpenedBook from "@/assets/Icons/OpenedBook.png";
+import Image from "next/image";
 
 const Footer = () => {
   return (
     <>
       <div className="h-96 flex flex-col py-[4rem] px-20">
         <div className="h-12 flex items-center gap-5">
-          <img src={OpenedBook} alt="" className="w-[3rem] h-fit object-contain" />
+          <Image width={60} height={60} src={OpenedBook.src} alt="" className="w-[3rem] h-fit object-contain" />
           <p className="text-[40px] font-light text-white">Astrolitera</p>
         </div>
         <div className="text-white text-[16px] font-light mt-10 flex flex-col gap-2 justify-center">

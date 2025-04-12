@@ -1,11 +1,11 @@
 import CardAIChat from "./CardAIChat";
-import {Toga, Book, QuestionMark} from "@/assets/Icons";
+import {Toga, QuestionMark} from "@/assets/Icons/Index";
 import Accordion from "@/Components/Fragments/Accordion/Accordion";
 
 const CardFAQ = () => {
   const FAQ = [
     {
-      imageIcon: Toga,
+      imageIcon: Toga.src,
       imageAlt: "toga",
       listType: "list-decimal",
       question: "Bagaimana cara melakukan absensi di website ini?",
@@ -17,7 +17,7 @@ const CardFAQ = () => {
         "Setelah berhasil, Anda akan diarahkan ke halaman rekomendasi tempat duduk yang tersedia.",
     },
     {
-      imageIcon: Book,
+      imageIcon: Toga.src,
       imageAlt: "book",
       listType: "list-disc",
       question: "Bagaimana cara melihat riwayat absensi saya?",
@@ -27,7 +27,7 @@ const CardFAQ = () => {
         "Di halaman Profil, Anda akan menemukan tabel riwayat absensi lengkap dengan tanggal, jam masuk, jam keluar, dan alasan kunjungan.",
     },
     {
-      imageIcon: QuestionMark,
+      imageIcon: QuestionMark.src,
       imageAlt: "questionMark",
       listType: "list-disc",
       question:

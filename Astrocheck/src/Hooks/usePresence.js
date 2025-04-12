@@ -12,20 +12,21 @@ const useFetchPresence = (endpoint) => {
     if (!user) return;
 
     try {
+      const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
       if (!token) {
         throw new Error("Token tidak ditemukan");
       }
 
       const response = await axios.get(
-        `http://localhost:3000/Presence/${endpoint}`,
+        `${BACKEND_URL}/Presence/${endpoint}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if(!response) return;
       setData(response.data);
     } catch (err) {
-      setError("Eror euy", err);
+      setError("Terjadi kesalahan", err);
     } finally {
       setLoading(false);
     }

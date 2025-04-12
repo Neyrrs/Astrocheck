@@ -1,10 +1,13 @@
+"use client";
+
 import { useState } from "react";
 import ToggleSidebar from "@/Components/Fragments/Toggle/ToggleSidebar";
 import DashBoard from "./DashBoard";
 import GrafikAbsen from "./GrafikAbsen";
 import ManajemenAkun from "./ManajemenAkun";
 import ManajemenAbsen from "./ManajemenAbsen";
-import {Home} from "@/assets/Icons";
+import {Home} from "@/assets/Icons/Index";
+import Image from "next/image";
 
 const CardAdminPanel = () => {
   const [activeContent, setActiveContent] = useState("Dasbor");
@@ -29,7 +32,7 @@ const CardAdminPanel = () => {
       <div className="px-12 mt-14 bg-white flex items-center h-14 relative z-40">
         <ToggleSidebar setActiveContent={setActiveContent} />
         <div className="px-10 flex text-slate-500 h-[2rem] items-center gap-2">
-          <img src={Home} alt="Home" className=" w-6 h-fit object-contain" />
+          <Image width={30} height={30} src={Home} alt="Home" className=" w-6 h-fit object-contain" />
           <div className="">
             <p className="flex pt-2 items-center h-[40px]">
               {activeContent === "Dasbor"

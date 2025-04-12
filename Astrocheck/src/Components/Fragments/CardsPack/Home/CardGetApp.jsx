@@ -1,5 +1,6 @@
 import {SecondaryButton} from "@/Components/Elements/Buttons";
-import {CheckedList} from "@/assets/Icons";
+import {CheckedList} from "@/assets/Icons/Index";
+import Image from "next/image";
 
 const CardGetApp = () => {
   return (
@@ -34,8 +35,10 @@ const CheckList = (props) => {
         <>
         <p className="flex gap-2">
         <span>
-          <img
-            src={CheckedList}
+          <Image
+            width={20}
+            height={20}
+            src={CheckedList.src}
             className="w-5 h-5 object-contain"
             alt=""
           />

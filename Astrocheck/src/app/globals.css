@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+
+.Membaca {
+  background: url("../assets/Backgrounds/DashboardMembaca.png");
+  object-fit: cover;
+  background-size: cover;
+}
+.Meminjam {
+  background: url("../assets/Backgrounds/DashboardMeminjam.png");
+  object-fit: cover;
+  background-size: cover;
+}
+.Lainnya {
+  background: url("../assets/Backgrounds/DashboardLainnya.png");
+  object-fit: cover;
+  background-size: cover;
+}
+
+.Home {
+  background: url("../assets/Backgrounds/HomeBackground.png");
+  object-fit: cover;
+  background-size: cover;
+}
+
+.Login {
+  background: url("../assets/Backgrounds/LoginBackground.png");
+  object-fit: cover;
+  background-size: cover;
+}
+
+.profileMenu {
+  background: url("../assets/Backgrounds/ProfileMenuBackground.png");
+  object-fit: cover;
+  background-size: cover;
+}
+
+.Absen {
+  background: url("../assets/Backgrounds/ProfileMenuBackground.png");
+  object-fit: cover;
+  background-size: cover;
+}
+
+.title-bg {
+  background: url("../assets/Backgrounds/TItleBackground.png");
+  object-fit: contain;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

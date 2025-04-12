@@ -1,10 +1,9 @@
-import Navbar from "@/Components/Fragments/Navigation-bar/Navbar";
-import {CardProfile} from "@/Components/Fragments/CardsPack";
-const ProfilMenu = () => {
-  
+import { CardProfile } from "@/Components/Fragments/CardsPack/Index";
+import React from "react";
+
+const Profile = () => {
   return (
     <div className="profileMenu w-screen h-sceen py-24 justify-center items-center flex">
-      <Navbar />
       <div className="flex items-center justify-center ">
         <CardProfile />
       </div>
@@ -12,4 +11,4 @@ const ProfilMenu = () => {
   );
 };
 
-export default ProfilMenu;
+export default Profile;

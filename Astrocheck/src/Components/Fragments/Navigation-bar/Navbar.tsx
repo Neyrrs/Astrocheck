@@ -1,37 +1,45 @@
-import { useState } from "react";
-import { Link as ScrollLink } from "react-scroll"; // Ubah Link menjadi ScrollLink agar tidak bentrok
-import { useNavigate } from "react-router"; // Gunakan useNavigate untuk navigasi antar halaman
-import { CardNavbar } from "@/Components/Fragments/CardsPack";
-import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
+'use client';
 
-const Navbar = ({ homePage }) => {
+import { useState } from 'react';
+import { Link as ScrollLink } from 'react-scroll';
+import { useRouter } from 'next/navigation';
+import {CardNavbar} from '@/Components/Fragments/CardsPack/Index';
+import ProfileImage from '@/Components/Elements/Icons/ProfileImage';
+
+interface NavbarProps {
+  homePage?: boolean;
+}
+
+const Navbar = ({ homePage = false }: NavbarProps) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const router = useRouter();
+
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
 
-  const navigate = useNavigate();
-
-  const handleNavigation = (item) => {
-    if (item.nav === "Absen") {
-      navigate("/absen"); // Navigasi ke halaman /absen
+  const handleNavigation = (item: { nav: string; route: string }) => {
+    if (item.nav === 'Absen') {
+      router.push('/absen');
+    } else {
+      router.push('/');
     }
   };
 
   const navItems = [
-    { nav: "Absen", route: "/absen" },
-    { nav: "Denah", route: "Denah" },
-    { nav: "FAQ", route: "FAQ" },
-    { nav: "Grafik", route: "Grafik" },
+    { nav: 'Absen', route: '/absen' },
+    { nav: 'Denah', route: 'Denah' },
+    { nav: 'FAQ', route: 'FAQ' },
+    { nav: 'Grafik', route: 'Grafik' },
   ];
 
   return (
     <nav className="fixed top-0 left-0 w-full h-16 flex items-center bg-[#98bddf] bg-opacity-80 text-white px-14 text-lg z-50">
       <p className="text-xl">
-        <a href="/">Astrocheck</a>
+        <a href={"/"}>Astrocheck</a>
       </p>
 
       <div className="flex-1 flex justify-center gap-10 text-base">
         {navItems.map((item) =>
-          item.nav === "Absen" ? (
+          item.nav === 'Absen' ? (
             <button
               key={item.nav}
               onClick={() => handleNavigation(item)}
@@ -53,7 +61,7 @@ const Navbar = ({ homePage }) => {
           ) : (
             <button
               key={item.nav}
-              onClick={() => navigate("/")}
+              onClick={() => router.push('/')}
               className="cursor-pointer hover:opacity-80 transition duration-200 bg-transparent border-none text-white"
             >
               {item.nav}

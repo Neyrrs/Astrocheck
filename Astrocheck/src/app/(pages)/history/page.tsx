@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
-import Navbar from "@/Components/Fragments/Navigation-bar/Navbar.jsx";
 import SearchPack from "@/Components/Fragments/SearchPack/SearchPack.jsx";
 import { useAllPresence } from "@/Hooks/usePresence.js";
+import AuthGuard from "@/Components/AuthGuard/AuthGuard";
 
 const History = () => {
   const { userPresence, error } = useAllPresence();
@@ -20,12 +22,10 @@ const History = () => {
       : presenceArray.filter((item) => item.alasan === filter);
 
   return (
-    <div>
-      <Navbar />
+    <AuthGuard>
       <div className="title-bg mt-14 h-20 px-14 flex w-full items-center">
         <p className="text-black text-xl">Riwayat Absen</p>
       </div>
-
       <div className="px-14">
         <div className="relative w-full h-[80px]">
           <div className="absolute w-72 top-5 right-0">
@@ -33,7 +33,7 @@ const History = () => {
           </div>
         </div>
 
-        <div className="border-b-2 flex gap-5 py-3 px-5">
+        <div className="border-b-2 border-gray-300 flex gap-5 py-3 px-5">
           {["All", "Membaca", "Meminjam", "Lainnya"].map((type) => (
             <button key={type} onClick={() => setFilter(type)}>
               {type} (
@@ -44,7 +44,7 @@ const History = () => {
             </button>
           ))}
         </div>
-        <table className="w-full border-collapse mt-4">
+        <table className="w-full border-collapse mt-2">
           <thead>
             <tr className="text-gray-500 border-b">
               {[
@@ -78,7 +78,7 @@ const History = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center py-4">
+                <td colSpan={6} className="text-center py-4">
                   {error ? "Data tidak ditemukan" : "Loading..."}
                 </td>
               </tr>
@@ -86,7 +86,7 @@ const History = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    </AuthGuard>
   );
 };
 

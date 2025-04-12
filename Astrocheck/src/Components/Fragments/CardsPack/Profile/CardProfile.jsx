@@ -1,11 +1,22 @@
-import { useState } from "react";
+'use client';
+
+import { useEffect, useState } from "react";
 import MyProfile from "./MyProfile";
 import EditProfile from "./EditProfile";
 import KartuPerpustakaan from "./KartuPerpustakaan";
+import { useSearchParams } from "next/navigation";
 
 const CardProfile = () => {
+  const searchParams = useSearchParams();
+  const showQuery = searchParams.get('show');
   const [show, setShow] = useState(1);
   const [active, setActive] = useState("");
+
+  useEffect(() => {
+    if (showQuery) {
+      setShow(Number(showQuery));
+    }
+  }, [showQuery]);
 
   const handleShow = (e) => {
     setShow(Number(e.target.value));
@@ -17,7 +28,7 @@ const CardProfile = () => {
   return (
     <>
       <div className="bg-white rounded-xl w-fit py-3 h-fit overflow-scroll">
-        <div className="w-full px-24 border-b-2">
+        <div className="w-full px-24 border-b-2 border-gray-300">
           <div className="flex w-full text-lg h-14 justify-center gap-14">
             <button
               value={1}

@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -13,9 +15,10 @@ const useProfile = () => {
         setLoading(false);
         return;
       }
-
+      
       try {
-        const response = await axios.get(`http://localhost:3000/profile`, {
+        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const response = await axios.get(`${BACKEND_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from "react";
 import { Input } from "@/Components/Elements/Inputs";
 import { LoginButton } from "@/Components/Elements/Buttons";

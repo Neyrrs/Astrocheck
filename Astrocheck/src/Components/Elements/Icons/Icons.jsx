@@ -1,7 +1,9 @@
+import Image from "next/image"
+
 const Icons = (props) => {
   return (
     <>
-        <img src={props.image} alt={props.alt} {...props}/>
+        <Image src={props.image} alt={props.alt} {...props}/>
     </>
   )
 }

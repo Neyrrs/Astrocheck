@@ -1,5 +1,7 @@
+'use client';
+
 import { useState, useEffect } from "react";
-import {RightArrow} from "@/Assets/Icons";
+import {RightArrow} from "@/Assets/Icons/Index";
 import {
   Denah,
   Lobby,
@@ -10,6 +12,7 @@ import {
   TempatMembacaBelakang,
   TempatPenyimpananBuku,
 } from "@/assets/Pictures/Denah";
+import Image from "next/image";
 
 const CardDenah = () => {
   const images = [
@@ -71,14 +74,18 @@ const CardDenah = () => {
           className="w-10 h-10 bg-white outline-none rounded-full shadow-md flex items-center justify-center"
           onClick={() => handleChange("prev")}
         >
-          <img
-            src={RightArrow}
+          <Image
+          width={20}
+          height={20}
+            src={RightArrow.src}
             className="w-5 h-5 rotate-180"
             alt="Left Arrow"
           />
         </button>
         <div className="bg-[#f0f4fd] py-10 px-10 w-[55rem] h-[30rem] rounded-2xl overflow-hidden shadow-lg flex items-center justify-center">
-          <img
+          <Image
+            width={500}
+            height={500}
             src={images[imageIndex].image}
             alt={`Denah ${imageIndex + 1}`}
             className="w-full h-full object-contain"
@@ -88,7 +95,7 @@ const CardDenah = () => {
           className="w-10 h-10 bg-white outline-none rounded-full shadow-md flex items-center justify-center"
           onClick={() => handleChange("next")}
         >
-          <img src={RightArrow} className="w-5 h-5" alt="Right Arrow" />
+          <img src={RightArrow.src} className="w-5 h-5" alt="Right Arrow" />
         </button>
       </div>
     </div>

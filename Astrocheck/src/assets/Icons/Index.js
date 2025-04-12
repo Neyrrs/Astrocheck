@@ -1,4 +1,3 @@
-export {default as Book} from "./Book.png";
 export {default as CheckedList } from "./CheckedList.png";
 export {default as Dasbor} from "./Dasbor.png";
 export {default as GrafikAbsensi} from "./GrafikAbsensi.png";

@@ -7,8 +7,9 @@ const ManajemenAkun = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
         const token = localStorage.getItem("Token");
-        const response = await axios.get("http://localhost:3000/all-users", {
+        const response = await axios.get(`${backendUrl}/all-users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(response.data);

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -8,7 +10,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import {NextArrow} from "@/assets/Icons";
+import {NextArrow} from "@/assets/Icons/Index";
+import Image from "next/image";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const CardGrafik = () => {
@@ -81,10 +84,12 @@ const CardGrafik = () => {
           />
           <button
             onClick={handleSixMonths}
-            className="rounded-full border-2 w-10 h-10 bg-[#aec9ff] flex justify-center items-center"
+            className="rounded-full border-2 border-gray-400 w-10 h-10 bg-[#aec9ff] flex justify-center items-center"
           >
-            <img
-              src={NextArrow}
+            <Image
+              width={20}
+              height={20}
+              src={NextArrow.src}
               alt="next"
               className={`object-contain w-5 h-5 ${sixMonths ? "rotate-180" : "rotate-[360deg]"} duration-[0.7s] ease-in-out`}
             />
