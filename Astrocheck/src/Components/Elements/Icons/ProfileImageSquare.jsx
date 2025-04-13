@@ -1,4 +1,4 @@
-import SquareImage from "@/Assets/Pictures/Images/SquareImage.png";
+import {SquareImage} from "@/Assets/Pictures/Images";
 import Icons from "./Icons";
 
 const ProfileImageSquare = () => {

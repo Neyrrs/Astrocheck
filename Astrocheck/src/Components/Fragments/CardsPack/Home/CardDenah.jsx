@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import {RightArrow} from "@/Assets/Icons/Index";
+import {RightArrow} from "@/Assets/Icons/Index.js";
 import {
   Denah,
   Lobby,
