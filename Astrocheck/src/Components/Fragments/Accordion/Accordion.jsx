@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
-import {DownArrow} from "@/Assets/Icons/Index.js";
+import DownArrow from "@/Assets/Icons/DownArrow.png";
 
 const Accordion = (props) => {
   const [show, setShow] = useState(false);
