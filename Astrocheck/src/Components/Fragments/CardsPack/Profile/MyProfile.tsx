@@ -18,21 +18,15 @@ const MyProfile = () => {
         text: "Nama Lengkap",
         value: user.fullName || "None",
       },
-      {
-        id: 2,
-        htmlFor: "namaTampilan",
-        text: "Nama Tampilan",
-        value: user.nickname || "None",
-      },
     ],
     [
       {
-        id: 3,
-        htmlFor: "email",
-        text: "Email",
-        value: user.email || "Nons",
+        id: 2,
+        htmlFor: "password",
+        text: "Password",
+        value: user.password || "Nons",
       },
-      { id: 4, htmlFor: "NISN", text: "NISN", value: user.nisn || "None" },
+      { id: 3, htmlFor: "NISN", text: "NISN", value: user.nisn || "None" },
     ],
   ];
 
@@ -40,9 +34,9 @@ const MyProfile = () => {
     <>
       <div className="flex gap-5 items-center">
         <ProfileImage className="w-24" />
-        <div className="text-lg">
+        <div className="text-lg font-normal">
           <p>{user.fullName}</p>
-          <p className="text-slate-500">
+          <p className="text-gray-400">
             {user.kelas + " " + user.jurusan ||
               (user.role != "admin" ? "None" : "Admin")}
           </p>

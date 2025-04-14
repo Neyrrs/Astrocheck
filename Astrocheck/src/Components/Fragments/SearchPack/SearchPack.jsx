@@ -1,6 +1,6 @@
 "use client";
 
-import Search from "@/Components/Elements/Icons/Search.jsx";
+import Search from "@/Components/Elements/Icons/Search.tsx";
 import SearchInput from "@/Components/Elements/Inputs/SearchInput";
 import { useState } from "react";
 

@@ -16,7 +16,7 @@ const ToggleInput = (props) => {
 
   return (
     <div className="relative w-full flex flex-col gap-2">
-      <Label htmlFor={props.namaLengkap || "htmlFor"} text={props.text || "Label"} className="text-base" />
+      <Label htmlFor={props.namaLengkap || "htmlFor"} text={props.text || "Label"} className="text-base font-normal" />
 
       <div className="relative">
         <DisabledInput

@@ -27,7 +27,7 @@ const CardProfile = () => {
 
   return (
     <>
-      <div className="bg-white rounded-xl w-fit py-3 h-fit overflow-scroll">
+      <div className="bg-white rounded-xl w-fit py-3 h-fit overflow-scroll font-semibold">
         <div className="w-full px-24 border-b-2 border-gray-300">
           <div className="flex w-full text-lg h-14 justify-center gap-14">
             <button

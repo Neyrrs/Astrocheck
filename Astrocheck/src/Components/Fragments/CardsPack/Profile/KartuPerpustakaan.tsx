@@ -1,34 +1,80 @@
-import {ProfileImageSquare} from "@/Components/Elements/Icons";
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { ProfileImageSquare } from "@/Components/Elements/Icons";
 
 const KartuPerpustakaan = () => {
+  const [show, setShow] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        setShow(false);
+      }
+    };
+
+    if (show) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [show]);
+
   return (
-    <div className="w-full h-[22rem] flex justify-center">
-      <div className="h-[21rem] w-[30rem] bg-[#f5f5f5] rounded-lg">
-        <div className="flex justify-center border-spacing-5 border-b-2 border-gray-300 py-3 mx-10">
-          <p className="text-base">Kartu Perpustakaan SMKN 1 Cibinong</p>
-        </div>
-        <div className="flex left-5 mt-5 px-[4rem]">
-          <div>
-            <ProfileImageSquare />
-          </div>
-          <div className="mx-7 font-base">
-            <p className="">Nama</p>
-            <p className="">Ezwan Ibnu Yassar</p>
-            <p className="">NIS</p>
-            <p className="">1234567890</p>
-            <p className="">Kelas</p>
-            <p className="">XI RPL 2</p>
-          </div>
-        </div>
-        <div className="flex justify-center">
-          <div className="bg-gray-300 h-8 mt-5 w-[15rem]"></div>
-        </div>
-        <div className="flex justify-center mt-5">
-          <p className="text-sm">Copyright Easy Library</p>
-        </div>
+    <div className="w-full h-fit flex flex-col items-center gap-4">
+      <div
+        className="cursor-pointer h-fit pb-4 w-130 bg-[#f5f5f5] border border-gray-300 rounded-lg"
+        onClick={() => setShow(true)}
+      >
+        <Kartu />
       </div>
+
+      <p className="font-normal text-center">Klik untuk memperbesar</p>
+
+      {show && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50">
+          <div
+            ref={popupRef}
+            className="bg-[#f5f5f5] border border-gray-400 rounded-lg shadow-lg p-4 w-[500px]"
+          >
+            <Kartu />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default KartuPerpustakaan;
+
+const Kartu = () => {
+  return (
+    <div>
+      <div className="flex justify-center border-b border-[#A8A8A8] py-4">
+        <p className="text-lg font-medium">Kartu Perpustakaan SMKN 1 Cibinong</p>
+      </div>
+      <div className="flex gap-5 justify-center mt-5">
+        <ProfileImageSquare />
+        <div>
+          <p className="font-medium">Nama</p>
+          <p className="font-normal">Ezwan Ibnu Yassar</p>
+          <p className="font-medium">NIS</p>
+          <p className="font-normal">1234567890</p>
+          <p className="font-medium">Kelas</p>
+          <p className="font-normal">XI RPL 2</p>
+        </div>
+      </div>
+      <div className="flex justify-center">
+        <div className="bg-gray-300 h-8 mt-2 w-50"></div>
+      </div>
+      <div className="flex justify-center mt-5">
+        <p className="text-sm font-normal">Copyright Easy Library</p>
+      </div>
+    </div>
+  );
+};

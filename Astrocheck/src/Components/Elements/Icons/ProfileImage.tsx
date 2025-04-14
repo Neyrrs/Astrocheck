@@ -4,7 +4,7 @@ import Icons from './Icons'
 const ProfileImage = (props) => {
   return (
     <>
-        <Icons image={image} alt="Profile picture" className={`rounded-full ${props.size || ""}`} {...props}/>
+        <Icons image={image} alt="Profile picture" className={`rounded-full ${props.size || ""} object-cover`} {...props}/>
     </>
   )
 }

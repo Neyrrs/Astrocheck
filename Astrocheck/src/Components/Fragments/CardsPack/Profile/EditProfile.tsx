@@ -51,37 +51,27 @@ const EditProfile = () => {
     }
   };
 
-  const inputFields = [
-    { name: "nickname", label: "Nama Tampilan", type: "text", placeholder: "Masukkan nama tampilan" },
-    { name: "email", label: "Email", type: "email", placeholder: "Masukkan email" },
-    { name: "password", label: "Password", type: "password", placeholder: "Masukkan password baru" },
-  ];
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex gap-5 items-center">
-        <ProfileImage className="w-24" />
-        <div className="text-lg">
+        <ProfileImage className="w-24 hover:w-25 duration-150 ease-in-out" />
+        <div className="text-lg font-normal">
           <p>{user?.fullName}</p>
           <p className="text-gray-500">{user?.kelas}</p>
         </div>
       </div>
-
       <div className="w-full mt-5 flex flex-col">
-        {inputFields.map((field, index) => (
-          <div key={index} className="flex flex-col gap-2">
-            <label className="w-full text-left">{field.label}</label>
+          <div  className="flex flex-col gap-2 font-normal">
+            <label className="w-full text-left">Password</label>
             <input
-              type={field.type}
+              type={'password'}
               className="focus:border-[#6384E9] hover:border-[#6384E9] border-gray-300 focus:shadow-md hover:shadow-md duration-150 ease-in outline-none border-[2px] px-3 mb-2 py-[1rem] h-[2rem] w-full text-sm rounded-[5px] font-normal"
-              {...register(field.name)}
-              placeholder={field.placeholder}
+              {...register('password')}
+              placeholder={'Masukkan password baru'}
             />
           </div>
-        ))}
       </div>
-
-      <div className="mt-5">
+      <div className="mt-2">
         <SuccessButton text="Simpan" type="submit" />
       </div>
     </form>
