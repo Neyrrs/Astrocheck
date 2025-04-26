@@ -39,7 +39,7 @@ const CardNavbar = () => {
   return (
     <>
       <div className="absolute right-0 mt-14 bg-white rounded-md shadow-lg p-4 w-64 z-50">
-        <Link href={"/profile-menu"}>
+        <Link href={{ pathname: "/profile", query: { show: 1 } }}>
           <div className="flex items-center gap-3 border-b pb-3">
             <ProfileImage size="w-12 object-contain h-fit border-2 border-white" />
             <div>
@@ -52,7 +52,7 @@ const CardNavbar = () => {
         </Link>
 
         <ul className="mt-3 gap-2 flex-col flex text-[12px] text-black">
-          <Link href={"/profile"}>
+          <Link href={{ pathname: "/profile", query: { show: 2 } }}>
             <li className={listItemClass}>
               <Image
               width={25}

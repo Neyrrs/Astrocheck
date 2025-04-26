@@ -20,13 +20,13 @@ const MyProfile = () => {
       },
     ],
     [
+      { id: 2, htmlFor: "NISN", text: "NISN", value: user.nisn || "None" },
       {
-        id: 2,
+        id: 3,
         htmlFor: "password",
         text: "Password",
         value: user.password || "Nons",
       },
-      { id: 3, htmlFor: "NISN", text: "NISN", value: user.nisn || "None" },
     ],
   ];
 

@@ -57,7 +57,7 @@ const CardProfile = () => {
         <div className="mx-24 my-12">
           {(show === 1 && <MyProfile />) ||
             (show === 2 && <EditProfile />) ||
-            (show === 3 && <KartuPerpustakaan />) || <MyProfile />}
+            (show === 3 && <KartuPerpustakaan />)}
         </div>
       </div>
     </>

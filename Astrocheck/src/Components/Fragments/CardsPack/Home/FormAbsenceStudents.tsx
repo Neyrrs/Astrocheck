@@ -14,6 +14,8 @@ import useProfile from "@/Hooks/useProfile";
 import { useRouter } from "next/navigation";
 
 const showToast = (icon = "success", title = "", onClose = () => {}) => {
+  let clicked = false;
+
   const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -21,7 +23,11 @@ const showToast = (icon = "success", title = "", onClose = () => {}) => {
     timer: 3000,
     timerProgressBar: true,
     didOpen: (toast) => {
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
+      toast.addEventListener("click", () => {
+        clicked = true;
+        Swal.stopTimer();
+        Swal.close();
+      });
     },
   });
 
@@ -29,11 +35,12 @@ const showToast = (icon = "success", title = "", onClose = () => {}) => {
     icon,
     title,
   }).then((result) => {
-    if (result.dismiss === Swal.DismissReason.timer) {
+    if (result.dismiss === Swal.DismissReason.timer && !clicked) {
       onClose();
     }
   });
 };
+
 
 const FormAbsence = () => {
   const { user } = useProfile();
@@ -77,8 +84,8 @@ const FormAbsence = () => {
         "success",
         "Absen berhasil, akun akan otomatis logout",
         () => {
-          localStorage.removeItem("Token");
           navigate("/login");
+          localStorage.removeItem("Token");
         }
       );
 
