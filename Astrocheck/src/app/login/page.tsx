@@ -46,11 +46,12 @@ const Login = () => {
         className="bg-[#F0F0F0] shadow-2xl w-[24rem] h-fit rounded-lg pt-14 pb-20 flex justify-center"
       >
         <div className="gap-5 flex flex-col">
-            <div className="text-center">
-              <label className="text-[30px] font-semibold">Login</label>
-            </div>
-            <div className="mt-4 w-[18rem]">
-              <label className="block text-sm">NISN</label>
+          <div className="text-center">
+            <label className="text-3xl font-semibold">Login</label>
+          </div>
+          <div className="mt-4 w-70">
+            <div className="flex flex-col gap-1 w-full h-fit">
+              <label className="block text-base">NISN</label>
               <Input
                 type="text"
                 placeholder="Contoh: 123456789"
@@ -59,7 +60,9 @@ const Login = () => {
                   setNisn(e.target.value)
                 }
               />
-              <label className="block text-sm mt-2">Password</label>
+            </div>
+            <div className="flex flex-col gap-1 w-full h-fit">
+              <label className="block text-base">Password</label>
               <Input
                 type="password"
                 placeholder="Password anda"
@@ -69,8 +72,9 @@ const Login = () => {
                 }
               />
             </div>
-            <LoginButton text="Login" width="full" />
           </div>
+          <LoginButton text="Login" width="full" />
+        </div>
       </form>
     </div>
   );

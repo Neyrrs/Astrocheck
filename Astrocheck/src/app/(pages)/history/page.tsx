@@ -78,7 +78,7 @@ const History = () => {
             </div>
           </div>
 
-          <table className="w-full border-collapse mt-4">
+          <table className="w-full border-collapse mt-3">
             <thead>
               <tr className="text-black border-[#e5e5e5] border-1 bg-[#fafafa]">
                 {[
@@ -101,18 +101,18 @@ const History = () => {
                 currentItems.map((item, index) => (
                   <tr
                     key={item._id || `presence-${index}`}
-                    className="border-b font-normal border-y-2 border-[#e5e5e5]"
+                    className="border-b font-normal text-lg border-y-2 border-[#e5e5e5]"
                   >
-                    <td className="py-5 px-5">
+                    <td className="py-3 px-5">
                       {indexOfFirstItem + index + 1}
                     </td>
-                    <td className="py-5 px-5">
+                    <td className="py-3 px-5">
                       {item.fullName || "Tidak diketahui"}
                     </td>
-                    <td className="py-5 px-5">{item.date}</td>
-                    <td className="py-5 px-5">{item.time || "-"}</td>
-                    <td className="py-5 px-5">{item.alasan}</td>
-                    <td className="py-5 px-5">{item.detailAlasan}</td>
+                    <td className="py-3 px-5">{item.date}</td>
+                    <td className="py-3 px-5">{item.time || "-"}</td>
+                    <td className="py-3 px-5">{item.alasan}</td>
+                    <td className="py-3 px-5">{item.detailAlasan}</td>
                   </tr>
                 ))
               ) : (
