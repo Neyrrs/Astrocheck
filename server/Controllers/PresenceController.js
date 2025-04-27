@@ -1,4 +1,4 @@
-import Presence from "../models/PresenceSchema.js";
+import Presence from "../Models/PresenceSchema.js";
 import User from "../Models/AccountSchema.js";
 
 export const savePresence = async (req, res) => {
@@ -8,7 +8,6 @@ export const savePresence = async (req, res) => {
   try {
     const { nisn } = req.params;
 
-    // ✅ Pastikan nisn adalah Number
     const user = await User.findOne({ nisn: Number(nisn) });
     if (!user) {
       return res
@@ -24,7 +23,7 @@ export const savePresence = async (req, res) => {
     });
 
     const newPresence = new Presence({
-      nisn: user.nisn, // ✅ Simpan langsung sebagai Number
+      nisn: user.nisn,
       ...req.body,
       date: formattedDate,
       time: formattedTime,

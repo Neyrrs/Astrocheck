@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import PresenceRoute from "./Routes/PresenceRoute.js";
 import AccountRoute from "./Routes/AccountRoute.js";
+import MajorRoute from "./Routes/MajorRoute.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -15,6 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(AccountRoute);
+app.use("/majors", MajorRoute);
 app.use("/presence", PresenceRoute);
 
 app.listen(process.env.PORT, () => {
