@@ -14,10 +14,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:4000/login", {
-        nisn,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/login",
+        {
+          nisn,
+          password,
+        }
+      );
 
       const token = response.data.token;
       localStorage.setItem("Token", token);

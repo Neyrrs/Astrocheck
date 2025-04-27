@@ -45,7 +45,7 @@ const CardNavbar = () => {
             <div>
               <p className="text-black text-sm">{user.fullName}</p>
               <p className="text-sm text-gray-500">
-                {user.kelas || (user.role === "admin" && `Admin Astrocheck`)}
+                {user.grade || (user.role === "admin" && `Admin Astrocheck`)}
               </p>
             </div>
           </div>

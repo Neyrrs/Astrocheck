@@ -9,6 +9,8 @@ const MyProfile = () => {
   if (!user) {
     return <p>Loading...</p>;
   }
+  console.log(user);
+  
 
   const CardProfileInput = [
     [
@@ -37,7 +39,7 @@ const MyProfile = () => {
         <div className="text-lg font-normal">
           <p>{user.fullName}</p>
           <p className="text-gray-400">
-            {user.kelas + " " + user.jurusan ||
+            {user.grade + " " + user?.idMajor?.major_name ||
               (user.role != "admin" ? "None" : "Admin")}
           </p>
         </div>

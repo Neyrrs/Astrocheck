@@ -22,13 +22,13 @@ export const loginUser = async (req, res) => {
         nisn: user.nisn,
         fullName: user.fullName,
         role: user.role,
-        major: user.idMajor ? user.idMajor.major_name : null, // Ambil nama jurusan saja
+        major: user.idMajor ? user.idMajor.major_name : null,
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES }
     );
 
-    return res.status(200).json({response : {
+    return res.status(200).json({
       message: "Login berhasil!",
       token,
       user: {
@@ -41,13 +41,12 @@ export const loginUser = async (req, res) => {
         nickname: user.nickname || "",
         role: user.role || "student",
       },
-    }});
+    });
   } catch (error) {
     console.log("Error login:", error);
     return res.status(500).json({ message: "Server error!" });
   }
 };
-
 
 export const registerUser = async (req, res) => {
   try {
@@ -77,19 +76,19 @@ export const registerUser = async (req, res) => {
       password,
       profilePicture,
       grade,
-      idMajor: Idmajor._id, // Menyimpan _id dari Major
+      idMajor: Idmajor._id,
       role,
     });
 
     await newUser.save();
 
-    res.status(201).json({ message: "Akun berhasil dibuat!", response: newUser });
+    res
+      .status(201)
+      .json({ message: "Akun berhasil dibuat!", response: newUser });
   } catch (error) {
     res.status(500).json({ message: "Server error!", error });
   }
 };
-
-
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -107,8 +106,11 @@ export const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId)
-      .select("-password")
-      .populate("major", "major_code major_name");
+      .select("-password") // Jangan kirim password
+      .populate({
+        path: "idMajor",
+        select: "major_code major_name -_id", // Hanya ambil nama & kode jurusan, buang _id
+      });
 
     if (!user) {
       return res.status(404).json({ message: "User tidak ditemukan" });
