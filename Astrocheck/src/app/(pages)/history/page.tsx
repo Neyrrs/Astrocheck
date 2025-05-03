@@ -111,8 +111,8 @@ const History = () => {
                     </td>
                     <td className="py-3 px-5">{item.date}</td>
                     <td className="py-3 px-5">{item.time || "-"}</td>
-                    <td className="py-3 px-5">{item.alasan}</td>
-                    <td className="py-3 px-5">{item.detailAlasan}</td>
+                    <td className="py-3 px-5">{item.reason}</td>
+                    <td className="py-3 px-5">{item.detailReason}</td>
                   </tr>
                 ))
               ) : (

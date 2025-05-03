@@ -106,10 +106,10 @@ export const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId)
-      .select("-password") // Jangan kirim password
+      .select("-password")
       .populate({
         path: "idMajor",
-        select: "major_code major_name -_id", // Hanya ambil nama & kode jurusan, buang _id
+        select: "major_code major_name -_id", 
       });
 
     if (!user) {
@@ -124,9 +124,7 @@ export const getUserProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { fullName, nickname, email, password } = req.body;
-    const userId = req.user.id;
-
-    const user = await User.findById(userId);
+    const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
 
     if (fullName) user.fullName = fullName;
@@ -141,5 +139,23 @@ export const updateProfile = async (req, res) => {
     res
       .status(500)
       .json({ message: "Terjadi kesalahan saat memperbarui profil", error });
+  }
+};
+
+export const deletePresence = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!presence) {
+      return res.status(404).json({ message: "Data user tidak ditemukan" });
+    }
+
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Tidak memiliki akses untuk menghapus data ini" });
+    }
+
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "Akun berhasil dihapus" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

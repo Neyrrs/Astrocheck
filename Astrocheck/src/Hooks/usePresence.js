@@ -18,12 +18,11 @@ const useFetchPresence = (endpoint) => {
         throw new Error("Token tidak ditemukan");
       }
 
-      const response = await axios.get(
-        `${BACKEND_URL}/Presence/${endpoint}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await axios.get(`${BACKEND_URL}/presence/${endpoint}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      if(!response) return;
+      if (!response) return;
       setData(response.data);
     } catch (err) {
       setError("Terjadi kesalahan", err);
@@ -41,15 +40,12 @@ const useFetchPresence = (endpoint) => {
 
 export const useDailyPresence = () => useFetchPresence("getToday");
 export const useFullYearPresence = () => useFetchPresence("getPerMonth");
-export const useAvaragePresenceMonths = () => useFetchPresence("avaragePresence");
+export const useAvaragePresenceMonths = () =>
+  useFetchPresence("avaragePresence");
 
 export const useAllPresences = () => useFetchPresence("allUsersPresence");
 
-export const useUserPresence = () => {
-  const { user } = useProfile();
-  const endpoint = user ? `logKehadiran/${user?.nisn}` : null;
-  return useFetchPresence(endpoint);
-};
+export const useUserPresence = () => useFetchPresence("logKehadiran");
 
 export const useAllPresence = () => {
   const average = useAvaragePresenceMonths();
@@ -64,7 +60,17 @@ export const useAllPresence = () => {
     fullYear: fullYear.data,
     allPresences: allUsers.data,
     userPresence: userPresence.data,
-    loading: daily.loading || fullYear.loading || allUsers.loading || userPresence.loading || average.loading,
-    error: daily.error || fullYear.error || allUsers.error || userPresence.error || average.error,
+    loading:
+      daily.loading ||
+      fullYear.loading ||
+      allUsers.loading ||
+      userPresence.loading ||
+      average.loading,
+    error:
+      daily.error ||
+      fullYear.error ||
+      allUsers.error ||
+      userPresence.error ||
+      average.error,
   };
 };

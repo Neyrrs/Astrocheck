@@ -1,3 +1,5 @@
+"use client"
+
 import {
   CardDenah,
   CardFAQ,
@@ -9,8 +11,32 @@ import { PrimaryButton } from "@/Components/Elements/Buttons/index.js";
 import Navbar from "@/Components/Fragments/Navigation-bar/Navbar.tsx";
 import Footer from "@/Components/Fragments/Footer/Footer.jsx";
 import AuthGuard from "@/Components/AuthGuard/AuthGuard";
+import axios from "axios";
+import { useEffect } from "react";
 
 const Home = () => {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("Token");
+        const response = await axios.get(
+          "http://localhost:4000/presence/logKehadiran" ,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error("Gagal fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <AuthGuard>
       <>

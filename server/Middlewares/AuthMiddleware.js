@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/AccountSchema.js"; 
 
-// Middleware untuk otentikasi semua user
 export const authenticateUser = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -39,7 +38,6 @@ export const authenticateUser = async (req, res, next) => {
   }
 };
 
-// Middleware untuk otorisasi admin
 export const authorizeAdmin = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Akses ditolak! Anda tidak memiliki izin admin." });

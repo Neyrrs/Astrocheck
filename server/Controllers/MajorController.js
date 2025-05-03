@@ -49,7 +49,6 @@ export const updateMajor = async (req, res) => {
   }
 };
 
-// Delete Major
 export const deleteMajor = async (req, res) => {
   try {
     const { id } = req.params;

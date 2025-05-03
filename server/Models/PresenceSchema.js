@@ -22,11 +22,12 @@ const PresenceSchema = new mongoose.Schema(
     },
     reason: {
       type: String,
-      enum: ["Membaca", "Meminjam", "Lainnya"], // bisa disesuaikan
+      enum: ["Membaca", "Meminjam", "Lainnya"],
       required: true,
     },
-    detail_reason: {
-      type: String, // opsional, penjelasan tambahan
+    detailReason: {
+      type: String,
+      optional: true,
     },
   },
   {

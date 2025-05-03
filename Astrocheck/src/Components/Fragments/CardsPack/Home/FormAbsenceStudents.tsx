@@ -48,8 +48,8 @@ const FormAbsence = () => {
 
   const [formData, setFormData] = useState({
     nisn: "",
-    alasan: "",
-    detailAlasan: "",
+    reason: "",
+    detailReason: "",
   });
 
   useEffect(() => {
@@ -69,15 +69,15 @@ const FormAbsence = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.alasan) {
+    if (!formData.reason) {
       showToast("error", "Alasan tidak boleh kosong!");
       return;
     }
 
     try {
       await axios.post(`http://localhost:4000/presence/${user?.nisn}`, {
-        alasan: formData.alasan,
-        detailAlasan: formData.detailAlasan,
+        reason: formData?.reason,
+        detailReason: formData?.detailReason,
       });
 
       showToast(
@@ -90,8 +90,8 @@ const FormAbsence = () => {
       );
 
       setFormData({
-        alasan: "",
-        detailAlasan: "",
+        reason: "",
+        detailReason: "",
       });
     } catch (error) {
       showToast(
@@ -137,7 +137,7 @@ const FormAbsence = () => {
           <div>
             <DropdownPackKelas
               name="kelas"
-              value={user?.kelas || ""}
+              value={user?.grade || ""}
               disabled
             />
           </div>
@@ -145,26 +145,26 @@ const FormAbsence = () => {
           <div>
             <DropdownPackJurusan
               name="jurusan"
-              value={user?.jurusan || ""}
+              value={user?.idMajor.major_name || ""}
               disabled
             />
           </div>
 
           <div>
             <DropdownPackAlasan
-              name="alasan"
-              value={formData.alasan}
+              name="reason"
+              value={formData.reason}
               onChange={handleChange}
             />
           </div>
 
           <div>
             <TextArea
-              name="detailAlasan"
+              name="detailReason"
               placeholder="Tambahkan alasan spesifik anda di sini"
-              value={formData.detailAlasan}
+              value={formData.detailReason}
               onChange={handleChange}
-              disabled={formData.alasan === "Lainnya" ? false : true}
+              disabled={formData.reason === "Lainnya" ? false : true}
             />
           </div>
 
@@ -175,8 +175,8 @@ const FormAbsence = () => {
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  alasan: "",
-                  detailAlasan: "",
+                  reason: "",
+                  detailReason: "",
                 }))
               }
             />
