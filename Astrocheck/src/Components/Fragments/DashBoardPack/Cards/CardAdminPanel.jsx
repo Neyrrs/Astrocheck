@@ -6,6 +6,7 @@ import GrafikAbsen from "./GrafikAbsen";
 import ManajemenAkun from "./ManajemenAkun";
 import ManajemenAbsen from "./ManajemenAbsen";
 import CardEditPresence from "./CardEditPresence";
+import CardBuatPresensi from "./CardBuatPresensi";
 import { Home } from "@/assets/Icons/Index";
 import Image from "next/image";
 
@@ -19,6 +20,8 @@ const CardAdminPanel = () => {
       case "Manajemen Absen": return <ManajemenAbsen />;
       case "Manajemen Akun": return <ManajemenAkun />;
       case "Edit Presensi": return <CardEditPresence />;
+      case "Edit Akun": return <ManajemenAkun />;
+      case "Buat Presensi": return <CardBuatPresensi />;
       default: return null;
     }
   };

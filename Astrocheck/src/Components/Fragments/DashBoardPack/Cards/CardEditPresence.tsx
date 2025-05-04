@@ -99,14 +99,13 @@ const CardEditPresence = () => {
         }
       );
 
-      // Menampilkan Toast Success menggunakan Swal
       Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
         text: 'Presensi berhasil diperbarui.',
         toast: true,
         position: 'top-end',
-        timer: 3000,  // Toast akan muncul selama 3 detik
+        timer: 3000, 
         showConfirmButton: false,
         timerProgressBar: true,
       });
@@ -116,14 +115,13 @@ const CardEditPresence = () => {
     } catch (error) {
       console.error("Gagal menyimpan data:", error);
 
-      // Menampilkan Toast Error menggunakan Swal jika ada kesalahan
       Swal.fire({
         icon: 'error',
         title: 'Gagal!',
         text: 'Terjadi kesalahan saat menyimpan data.',
         toast: true,
         position: 'top-end',
-        timer: 3000,  // Toast akan muncul selama 3 detik
+        timer: 3000,  
         showConfirmButton: false,
         timerProgressBar: true,
       });
@@ -131,7 +129,6 @@ const CardEditPresence = () => {
   };
 
   const handleDelete = async () => {
-    // Menampilkan konfirmasi sebelum menghapus data
     const result = await Swal.fire({
       title: 'Apakah Anda yakin?',
       text: 'Data presensi ini akan dihapus!',
@@ -150,7 +147,6 @@ const CardEditPresence = () => {
           },
         });
 
-        // Menampilkan Toast setelah berhasil menghapus
         Swal.fire({
           icon: 'success',
           title: 'Dihapus!',
@@ -167,7 +163,6 @@ const CardEditPresence = () => {
       } catch (error) {
         console.error("Gagal menghapus data:", error);
 
-        // Menampilkan Toast Error jika ada kesalahan saat menghapus
         Swal.fire({
           icon: 'error',
           title: 'Gagal!',
@@ -229,12 +224,13 @@ const CardEditPresence = () => {
             </div>
 
             <div className="col-span-2">
-              <Label htmlFor="fullName" text="Nama Lengkap *" />
-              <Input
+              <DisabledInputPack
+                text="Nama Lengkap *"
                 {...register("fullName", { required: "Nama wajib diisi" })}
                 placeholder="Nama Lengkap"
                 value={values.fullName}
                 onChange={(e) => setValue("fullName", e.target.value)}
+                readOnly
               />
               {errors.fullName && (
                 <p className="text-red-500 text-sm">
@@ -249,6 +245,7 @@ const CardEditPresence = () => {
                 placeholder="Kelas"
                 value={values.grade}
                 onChange={(e) => setValue("grade", e.target.value)}
+                disabled={true}
               />
             </div>
 
@@ -258,6 +255,7 @@ const CardEditPresence = () => {
                 placeholder="Jurusan"
                 value={values.major}
                 onChange={(e) => setValue("major", e.target.value)}
+                disabled={true}
               />
             </div>
           </div>
@@ -307,6 +305,7 @@ const CardEditPresence = () => {
                 placeholder="detailReason"
                 value={values.detailReason}
                 onChange={(e) => setValue("detailReason", e.target.value)}
+                {...values.reason === "Lainnya" ? {} : { readOnly: true }}
               />
             </div>
           </div>

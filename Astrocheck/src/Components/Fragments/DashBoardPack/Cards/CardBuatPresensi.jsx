@@ -1,0 +1,204 @@
+"use client";
+
+import { useDashboardContext } from "@/context/DashboardContext";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import axios from "axios";
+import { PrimaryButton, TertiaryButton } from "@/Components/Elements/Buttons";
+import Input from "@/Components/Elements/Inputs/Input";
+import Label from "@/Components/Elements/Labels/Label";
+import { TextArea } from "@/Components/Elements/Inputs";
+import {
+  DropdownPackAlasan,
+  DropdownPackJurusan,
+  DropdownPackKelas,
+} from "../../DropdownPack";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
+const CardBuatPresensi = () => {
+  const { setActiveContent } = useDashboardContext();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      nisn: "",
+      reason: "",
+      detailReason: "",
+    },
+  });
+
+  const values = watch();
+
+  const onSubmit = async (formData) => {
+    try {
+      setIsLoading(true);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+      const { nisn, reason, detailReason } = formData;
+
+      await axios.post(
+        `${backendUrl}/presence/`,
+        { nisn, reason, detailReason },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        }
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Presensi berhasil ditambahkan.",
+        toast: true,
+        position: "top-end",
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+      });
+
+      reset(); // Kosongkan form
+      setActiveContent("Manajemen Absen");
+    } catch (error) {
+      console.error("Gagal menambahkan presensi:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: "Terjadi kesalahan saat menyimpan presensi.",
+        toast: true,
+        position: "top-end",
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setActiveContent("Manajemen Absen");
+  };
+
+  return (
+    <div className="h-fit">
+      <div className="flex flex-row justify-between mb-6">
+        <h2 className="text-2xl font-bold">Buat Presensi Baru</h2>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        {/* Bagian Data Personal */}
+        <div className="bg-white rounded-xl shadow-md">
+          <div className="px-5 py-3 border-b font-bold text-xl">
+            Personal Data
+          </div>
+          <div className="grid grid-cols-2 gap-4 px-5 py-5">
+            {/* NISN */}
+            <div>
+              <Label htmlFor="nisn" text="NISN *" />
+              <Input
+                {...register("nisn", { required: "NISN wajib diisi" })}
+                placeholder="NISN"
+                value={values.nisn}
+                onChange={(e) => setValue("nisn", e.target.value)}
+              />
+              {errors.nisn && (
+                <p className="text-red-500 text-sm">{errors.nisn.message}</p>
+              )}
+            </div>
+
+            {/* Nama Lengkap - tidak digunakan */}
+            <div>
+              <Label htmlFor="fullName" text="Nama Lengkap" />
+              <Input placeholder="Nama Lengkap" disabled />
+            </div>
+
+            {/* Kelas - hanya formalitas */}
+            <div>
+              <DropdownPackKelas placeholder="Kelas" value="" disabled />
+            </div>
+
+            {/* Jurusan - hanya formalitas */}
+            <div>
+              <DropdownPackJurusan placeholder="Jurusan" value="" disabled />
+            </div>
+          </div>
+        </div>
+
+        {/* Bagian Data Presensi */}
+        <div className="bg-white rounded-xl shadow-md">
+          <div className="px-5 py-3 border-b font-bold text-xl">
+            Data Presensi
+          </div>
+          <div className="grid grid-cols-2 gap-3 px-5 py-5">
+            {/* Tanggal dan Jam hanya formalitas */}
+            <div className="col-span-2 flex flex-row gap-4">
+              <div className="w-full">
+                <Label text="Tanggal" />
+                <Input placeholder="Tanggal" type="date" disabled />
+              </div>
+              <div className="w-full">
+                <Label text="Jam" />
+                <Input placeholder="Jam" type="text" disabled />
+              </div>
+            </div>
+
+            {/* Alasan */}
+            <div className="col-span-2">
+              <DropdownPackAlasan
+                {...register("reason", { required: "Alasan wajib diisi" })}
+                placeholder="Alasan"
+                value={values.reason}
+                onChange={(e) => setValue("reason", e.target.value)}
+              />
+              {errors.reason && (
+                <p className="text-red-500 text-sm">{errors.reason.message}</p>
+              )}
+            </div>
+
+            {/* Detail Alasan */}
+            <div className="col-span-2">
+              <TextArea
+                height="h-40"
+                {...register("detailReason", {
+                  required: "Detail alasan wajib diisi",
+                })}
+                placeholder="Detail Alasan"
+                value={values.detailReason}
+                onChange={(e) => setValue("detailReason", e.target.value)}
+                readOnly={values.reason !== "Lainnya"}
+              />
+              {errors.detailReason && (
+                <p className="text-red-500 text-sm">
+                  {errors.detailReason.message}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Tombol Aksi */}
+        <div className="flex justify-start gap-4">
+          <PrimaryButton
+            fontSize="sm"
+            text="Simpan"
+            type="submit"
+            isLoading={isLoading}
+            onClick={onSubmit}
+          />
+          <TertiaryButton fontSize="sm" text="Batal" onClick={handleCancel} />
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default CardBuatPresensi;
