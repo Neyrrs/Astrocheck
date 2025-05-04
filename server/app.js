@@ -15,6 +15,7 @@ mongoose
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/user", AccountRoute);
 app.use("/major", MajorRoute);
 app.use("/presence", PresenceRoute);
