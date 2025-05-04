@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAllPresence } from "@/Hooks/usePresence";
 
 const styleCard =
-  "w-[21rem] h-[15rem] rounded-md px-8 pt-10 pb-[9rem] text-white";
+  "w-90 h-fit rounded-lg px-8 flex-col flex justify-center gap-5 pt-10 pb-15 text-white";
 
 const usePresenceData = (category) => {
   const { fullYear, presence } = useAllPresence();
@@ -42,12 +42,12 @@ const CardPresence = ({ title, category }) => {
 
   return (
     <div className={`${title} ${styleCard}`}>
-      <div className="flex flex-col gap-3">
-        <p className="text-base">{title}</p>
+      <div className="flex flex-col gap-2">
+        <p className="text-base">Absen {title}</p>
         <p className="text-3xl font-semibold">{presenceData[presencesIndex]} Orang</p>
       </div>
-      <button className="mt-8" onClick={handleChange}>
-        {labels[presencesIndex]}
+      <button className="w-fit" onClick={handleChange}>
+        {labels[presencesIndex]} -
       </button>
     </div>
   );

@@ -14,8 +14,12 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!BACKEND_URL) {
+        throw new Error("NEXT_PUBLIC_BACKEND_URL is not defined");
+      }
       const response = await axios.post(
-        "http://localhost:4000/user/login",
+        `${BACKEND_URL}/user/login`,
         {
           nisn,
           password,

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react";
 import SearchPack from "@/Components/Fragments/SearchPack/SearchPack";
 import axios from "axios";
@@ -9,12 +11,15 @@ const ManajemenAkun = () => {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
         const token = localStorage.getItem("Token");
-        const response = await axios.get(`${backendUrl}/all-users`, {
+        console.log("Token:", token);
+        
+        const response = await axios.get(`${backendUrl}/user/profiles`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(response.data);
+        console.log("Data pengguna:", response.data);
       } catch (error) {
-        console.error("Gagal mengambil data presensi:", error);
+        console.error("Gagal mengambil data:", error);
       }
     };
 
@@ -45,7 +50,7 @@ const ManajemenAkun = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((data, index) => (
+            {/* {users.map((data, index) => (
               <tr
                 key={index}
                 className={`whitespace-nowrap ${
@@ -73,7 +78,7 @@ const ManajemenAkun = () => {
                   </>
                 }
               </tr>
-            ))}
+            ))} */}
           </tbody>
         </table>
       </div>
