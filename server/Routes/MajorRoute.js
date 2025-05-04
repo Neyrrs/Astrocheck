@@ -1,5 +1,5 @@
 import express from "express";
-import { createMajor, getAllMajors, updateMajor, deleteMajor } from "../controllers/MajorController.js";
+import { createMajor, getAllMajors, updateMajor, deleteMajor } from "../Controllers/MajorController.js";
 
 import { authenticateUser, authorizeAdmin } from "../Middlewares/AuthMiddleware.js";
 
