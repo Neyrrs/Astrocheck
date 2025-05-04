@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser, getUserProfile, updateProfile, getAllUsers, deletePresence} from "../controllers/AccountController.js";
+import { registerUser, loginUser, getUserProfile, updateProfile, getAllUsers, deletePresence} from "../Controllers/AccountController.js";
 
 import { authenticateUser, authorizeAdmin } from "../Middlewares/AuthMiddleware.js";
 
