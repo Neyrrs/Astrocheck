@@ -18,7 +18,7 @@ const useProfile = () => {
       
       try {
         const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-        const response = await axios.get(`${BACKEND_URL}/profile`, {
+        const response = await axios.get(`${BACKEND_URL}/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

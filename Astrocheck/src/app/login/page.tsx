@@ -15,7 +15,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/login",
+        "http://localhost:4000/user/login",
         {
           nisn,
           password,
