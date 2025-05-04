@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import { DisabledInput, TextArea } from "@/Components/Elements/Inputs";
@@ -41,7 +41,6 @@ const showToast = (icon = "success", title = "", onClose = () => {}) => {
   });
 };
 
-
 const FormAbsence = () => {
   const { user } = useProfile();
   const navigate = useRouter();
@@ -75,19 +74,23 @@ const FormAbsence = () => {
     }
 
     try {
-      await axios.post(`http://localhost:4000/presence/${user?.nisn}`, {
-        reason: formData?.reason,
-        detailReason: formData?.detailReason,
-      });
-
-      showToast(
-        "success",
-        "Absen berhasil, akun akan otomatis logout",
-        () => {
-          navigate("/login");
-          localStorage.removeItem("Token");
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const token = localStorage.getItem("Token");
+      await axios.post(
+        `${backendUrl}/presence`,
+        {
+          reason: formData?.reason,
+          detailReason: formData?.detailReason,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      showToast("success", "Absen berhasil, akun akan otomatis logout", () => {
+        navigate("/login");
+        localStorage.removeItem("Token");
+      });
 
       setFormData({
         reason: "",

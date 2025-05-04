@@ -69,7 +69,7 @@ const DashBoardPack = () => {
             label={LineChartData?.datasets[0]?.label}
           />
         </div>
-        <div className="w-full h-fit bg-white rounded-lg pb-5 flex-col flex gap-3">
+        <div className="w-full h-fit bg-white rounded-xl pb-5 flex-col flex gap-3">
           <div className="px-5 w-full h-fit flex items-center py-5 border-b-2 border-slate-300">
             <p className="font-semibold text-xl">Terakhir Absen</p>
           </div>

@@ -1,14 +1,12 @@
-import SearchPack from "@/Components/Fragments/SearchPack/SearchPack";
 import { useAllPresence } from "@/Hooks/usePresence";
 import PresenceTableWrapper from "../../Table/PresenceTableWrapper";
+import CardSummary from "./CardSummary.jsx";
+import { PrimaryButton } from "@/Components/Elements/Buttons";
 
 const ManajemenAbsen = () => {
   const { allPresences } = useAllPresence();
-  const presences = allPresences?.data;
+  const presences = allPresences?.presence;
   if (!presences) return null;
-  console.log("presences", presences);
-  
-  const tablePadding = "p-[10px]";
   const historyColumns = [
     { header: "ID", field: "__index" },
     { header: "Nama Lengkap", field: "fullName" },
@@ -16,16 +14,24 @@ const ManajemenAbsen = () => {
     { header: "Waktu Masuk", field: "time" },
     { header: "Alasan", field: "reason" },
     { header: "Spesifik Alasan", field: "detailReason" },
+    { header: "", field: '<button>Delete</button>'},
   ];
+
   return (
     <div className="w-full h-full flex flex-col gap-4">
-      <div className="flex justify-between items-center w-full">
-        <h1 className="text-2xl font-bold">Manajemen Absen</h1>
-        <SearchPack placeholder="Search" />
+      <div className="flex w-full flex-row justify-end gap-5">
+        <PrimaryButton link="/absen" text="Tambah Presensi" />
       </div>
-      <div
-        className={`w-full h-full ${tablePadding} bg-white rounded-lg shadow-md`}
-      >
+      <div className="flex w-full flex-row gap-5">
+        <CardSummary title={"Presensi Hari ini"} data={50} />
+        <CardSummary title={"Presensi Bulan ini"} data={200} />
+        <CardSummary title={"Presensi Tahun ini"} data={3220} />
+      </div>
+      <div className="flex justify-between items-center w-full"></div>
+      <div className="w-full h-fit bg-white rounded-xl pb-5 flex-col flex gap-3">
+        <div className="px-5 w-full h-fit flex items-center py-5 border-b-1 border-gray-300">
+          <p className="font-bold text-xl">Terakhir Absen</p>
+        </div>
         <PresenceTableWrapper
           data={presences}
           columns={historyColumns}

@@ -60,8 +60,7 @@ export const getLogs = async (req, res) => {
       return res.status(404).json({ message: "Tidak ada data presensi untuk user ini" });
     }
 
-    const user = await User.findOne({ nisn }).select("fullName grade idMajor")
-      .populate("idMajor", "major_name");
+    const user = await User.findOne({ nisn }).select("fullName grade idMajor").populate("idMajor", "major_name");
 
     if (!user) {
       return res.status(404).json({ message: "User tidak ditemukan" });
@@ -95,11 +94,35 @@ export const getLogs = async (req, res) => {
 
 export const getAllUsersPresence = async (req, res) => {
   try {
-    const presence = await Presence.find().sort({ date: -1 });
+    const presence = await Presence.find().sort({ date: -1 }).populate({
+      path: "nisn",
+      model: "User",
+      localField: "nisn",
+      foreignField: "nisn",
+      select: "fullName grade idMajor",
+    });
+
     const count = presence.length;
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
 
-    res.json({ count, membaca, meminjam, lainnya, presence });
+    const formattedPresence = presence.map((pres) => ({
+      id: pres._id,
+      fullName: pres.nisn?.fullName || "-",
+      grade: pres.nisn?.grade || "-",
+      major: pres.nisn?.idMajor?.major_name || "-",
+      date: pres.date,
+      time: pres.time,
+      reason: pres.reason,
+      detailReason: pres.detailReason || "-",
+    }));
+
+    res.json({
+      count,
+      membaca,
+      meminjam,
+      lainnya,
+      presence: formattedPresence,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
