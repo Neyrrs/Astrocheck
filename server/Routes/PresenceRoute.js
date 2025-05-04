@@ -11,8 +11,8 @@ import {
   getAllUsersPresence,
   deletePresence,
   updatePresence,
-  getAverageTotalLogsPerMonth,
-} from "../Controllers/PresenceController.js";
+  getPresenceById,
+  } from "../Controllers/PresenceController.js";
 import {
   authenticateUser,
   authorizeAdmin,
@@ -35,6 +35,7 @@ router.get(
   authorizeAdmin,
   getAllUsersPresence
 );
+router.get("/:id", authenticateUser, authorizeAdmin, getPresenceById);
 router.get("/avaragePresence", authenticateUser, authorizeAdmin);
 router.put("/:id", authenticateUser, authorizeAdmin, updatePresence);
 router.delete("/:id", authenticateUser, authorizeAdmin, deletePresence);

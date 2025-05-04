@@ -290,3 +290,32 @@ export const deletePresence = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getPresenceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const presence = await Presence.findById(id);
+
+    if (!presence) {
+      return res.status(404).json({ message: "Data presensi tidak ditemukan" });
+    }
+
+    const user = await User.findOne({ nisn: presence.nisn }).populate("idMajor");
+
+    res.json({
+      id: presence._id,
+      nisn: presence.nisn,
+      fullName: user?.fullName || "-",
+      grade: user?.grade || "-",
+      major: user?.idMajor?.major_name || "-",
+      date: presence.date,
+      time: presence.time,
+      reason: presence.reason,
+      detailReason: presence.detailReason || "-",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Terjadi kesalahan saat mengambil data presensi", error: error.message });
+  }
+};
+

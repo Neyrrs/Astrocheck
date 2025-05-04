@@ -9,6 +9,7 @@ const PrimaryButton = (props) => {
         } text-white ${props.width || "px-4"} ${
           props.height || "py-2"
         } ease-in duration-200 rounded-md border-transparent`}
+        onClick={props.onClick}
       >
         {props.text || "Button"}
       </button>

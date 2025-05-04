@@ -1,12 +1,23 @@
 import { useAllPresence } from "@/Hooks/usePresence";
+import { useDashboardContext } from "@/context/DashboardContext";
+import { usePresenceContext } from "@/context/PresenceContext";
 import PresenceTableWrapper from "../../Table/PresenceTableWrapper";
 import CardSummary from "./CardSummary.jsx";
 import { PrimaryButton } from "@/Components/Elements/Buttons";
 
 const ManajemenAbsen = () => {
   const { allPresences } = useAllPresence();
+  const { setActiveContent } = useDashboardContext();
+  const { setSelectedPresence } = usePresenceContext();
+
   const presences = allPresences?.presence;
   if (!presences) return null;
+
+  const handleEdit = (row) => {
+    setSelectedPresence(row);
+    setActiveContent("Edit Presensi");
+  };
+
   const historyColumns = [
     { header: "ID", field: "__index" },
     { header: "Nama Lengkap", field: "fullName" },
@@ -14,7 +25,17 @@ const ManajemenAbsen = () => {
     { header: "Waktu Masuk", field: "time" },
     { header: "Alasan", field: "reason" },
     { header: "Spesifik Alasan", field: "detailReason" },
-    { header: "", field: '<button>Delete</button>'},
+    {
+      header: "Aksi",
+      render: (row) => (
+        <button
+          onClick={() => handleEdit(row)}
+          className="text-blue-600 hover:underline"
+        >
+          Edit
+        </button>
+      ),
+    },
   ];
 
   return (
@@ -27,8 +48,7 @@ const ManajemenAbsen = () => {
         <CardSummary title={"Presensi Bulan ini"} data={200} />
         <CardSummary title={"Presensi Tahun ini"} data={3220} />
       </div>
-      <div className="flex justify-between items-center w-full"></div>
-      <div className="w-full h-fit bg-white rounded-xl pb-5 flex-col flex gap-3">
+      <div className="w-full h-fit bg-white shadow-md rounded-xl pb-5 flex-col flex gap-3">
         <div className="px-5 w-full h-fit flex items-center py-5 border-b-1 border-gray-300">
           <p className="font-bold text-xl">Terakhir Absen</p>
         </div>

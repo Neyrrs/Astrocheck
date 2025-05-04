@@ -19,13 +19,24 @@ const DynamicTable = ({ columns, data, loading = false, error = false, startInde
               key={item._id || `row-${index}`}
               className="border-b font-normal text-lg border-y-2 border-[#e5e5e5]"
             >
-              {columns.map((col, idx) => (
-                <td key={idx} className="py-3 px-5">
-                  {col.field === "__index"
-                    ? startIndex + index + 1
-                    : item[col.field] ?? "-"}
-                </td>
-              ))}
+              {columns.map((col, idx) => {
+                let cellContent;
+
+                // Jika kolom punya fungsi render, pakai itu
+                if (typeof col.render === "function") {
+                  cellContent = col.render(item);
+                } else if (col.field === "__index") {
+                  cellContent = startIndex + index + 1;
+                } else {
+                  cellContent = item[col.field] ?? "-";
+                }
+
+                return (
+                  <td key={idx} className="py-3 px-5">
+                    {cellContent}
+                  </td>
+                );
+              })}
             </tr>
           ))
         ) : (

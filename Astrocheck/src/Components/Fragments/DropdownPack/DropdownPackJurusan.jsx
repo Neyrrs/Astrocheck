@@ -7,7 +7,7 @@ const DropdownPackJurusan = (props) => {
       <select
         name={props.name}
         id={props.id}
-        className="outline-none duration-150 border-gray-300 ease-in text-black border-[2px] px-2 mb-2 py-[0.5rem] font-light rounded-md text-sm w-full"
+        className="outline-none duration-150 border-gray-300 ease-in text-black border-[2px] px-2 mb-2 py-[0.5rem] font-normal rounded-md text-sm w-full"
         value={props.value || ""}
         onChange={props.onChange}
         disabled={props.disabled}
