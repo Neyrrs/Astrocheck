@@ -1,4 +1,4 @@
-import Major from "../models/MajorSchema.js";
+import Major from "../Models/MajorSchema.js";
 
 export const createMajor = async (req, res) => {
   try {

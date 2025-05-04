@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/AccountSchema.js";
-import Major from "../models/MajorSchema.js";
+import User from "../Models/AccountSchema.js";
+import Major from "../Models/MajorSchema.js";
 
 export const loginUser = async (req, res) => {
   try {
