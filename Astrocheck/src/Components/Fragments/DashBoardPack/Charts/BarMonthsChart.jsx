@@ -1,30 +1,32 @@
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
+  BarElement,
   CategoryScale,
   LinearScale,
-  BarElement,
-  Title,
   Tooltip,
   Legend,
+  Title,
 } from "chart.js";
+import React from "react";
 
 ChartJS.register(
+  BarElement,
   CategoryScale,
   LinearScale,
-  BarElement,
-  Title,
   Tooltip,
-  Legend
+  Legend,
+  Title
 );
 
-const BarMonthsChart = (props) => {
+const BarMonthsChart = ({ data = [], labels = [], title = null}) => {
+
   const barChartData = {
-    labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
+    labels : labels || defaultLabels,
     datasets: [
       {
-        label: "Rata-rata Absen",
-        data: props.data,
+        label: "Jumlah Absen",
+        data: data || [],
         backgroundColor: "#98bddf",
         borderColor: "#fff",
         borderWidth: 2,
@@ -38,28 +40,26 @@ const BarMonthsChart = (props) => {
     plugins: {
       legend: {
         position: "top",
-        labels: {
-          font: {
-            size: 14,
-          },
-        },
       },
-      tooltip: {
-        enabled: true,
-        callbacks: {
-          label: function (tooltipItem) {
-            return `${tooltipItem.label}: ${tooltipItem.raw}%`;
-          },
+      title: {
+        display: true,
+        text: title || "Grafik Absen",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 10,
         },
       },
     },
   };
+
   return (
-    <>
-      <div className="w-full h-full">
-        <Bar data={barChartData} options={options} />
-      </div>
-    </>
+    <div className="w-full h-full">
+      <Bar data={barChartData} options={options} />
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import { useAllPresence } from "@/Hooks/usePresence";
 import { useDashboardContext } from "@/context/DashboardContext";
 import { usePresenceContext } from "@/context/PresenceContext";
-import PresenceTableWrapper from "../../Table/PresenceTableWrapper";
+import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper.tsx";
 import CardSummary from "./CardSummary.jsx";
 import { PrimaryButton } from "@/Components/Elements/Buttons";
 import Swal from "sweetalert2";
@@ -9,8 +9,8 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
 import { useState } from "react"; 
 
-const ManajemenAbsen = () => {
-  const { allPresences } = useAllPresence();
+const ManajemenPresensi = () => {
+  const { summary, allPresences} = useAllPresence();
   const { setActiveContent } = useDashboardContext();
   const { setSelectedPresence } = usePresenceContext();
   const [refreshKey, setRefreshKey] = useState(0);
@@ -103,9 +103,9 @@ const ManajemenAbsen = () => {
         />
       </div>
       <div className="flex w-full flex-row gap-5">
-        <CardSummary title={"Presensi Hari ini"} data={50} />
-        <CardSummary title={"Presensi Bulan ini"} data={200} />
-        <CardSummary title={"Presensi Tahun ini"} data={3220} />
+        <CardSummary title={"Presensi Hari ini"} data={summary?.daily?.count} />
+        <CardSummary title={"Presensi Bulan ini"} data={summary?.monthly?.count} />
+        <CardSummary title={"Presensi Tahun ini"} data={summary?.yearly?.count} />
       </div>
       <div className="w-full h-fit bg-white shadow-md rounded-xl pb-5 flex-col flex gap-3">
         <div className="px-5 w-full h-fit flex items-center py-5 border-b-1 border-gray-300">
@@ -123,4 +123,4 @@ const ManajemenAbsen = () => {
   );
 };
 
-export default ManajemenAbsen;
+export default ManajemenPresensi;

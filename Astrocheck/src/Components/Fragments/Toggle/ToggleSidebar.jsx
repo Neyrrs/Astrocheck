@@ -40,59 +40,118 @@ const ToggleSidebar = ({ setActiveContent }) => {
             </div>
             <div className="px-2 flex-col flex gap-3">
               <h1 className="text-black font-semibold">Bilah sisi navigasi</h1>
-              <ul className="space-y-2 border-b-2 border-gray-300 pb-28">
-                <li
-                  className={sidebarContentStyle[0]}
-                  onClick={() => setActiveContent("Dasbor")}
-                >
-                  <Image
-                    width={30}
-                    height={30}
-                    src={Dasbor}
-                    alt="Dasbor"
-                    className={sidebarContentStyle[1]}
-                  />
-                  <p className="text-sm">Dasbor</p>
-                </li>
-                <li
-                  className={sidebarContentStyle[0]}
-                  onClick={() => setActiveContent("Grafik Absensi")}
-                >
-                  <Image
-                    width={30}
-                    height={30}
-                    src={GrafikAbsensi}
-                    alt="Grafik"
-                    className={sidebarContentStyle[1]}
-                  />
-                  <p className="text-sm">Grafik Absensi</p>
-                </li>
-                <li
-                  className={sidebarContentStyle[0]}
-                  onClick={() => setActiveContent("Manajemen Absen")}
-                >
-                  <Image
-                    width={30}
-                    height={30}
-                    src={ManajemenAbsen}
-                    alt="Manajemen Absen"
-                    className={sidebarContentStyle[1]}
-                  />
-                  <p className="text-sm">Manajemen Absen</p>
-                </li>
-                <li
-                  className={sidebarContentStyle[0]}
-                  onClick={() => setActiveContent("Manajemen Akun")}
-                >
-                  <Image
-                    width={30}  
-                    height={30}
-                    src={ManajemenAkun}
-                    alt="Manajemen Akun"
-                    className={sidebarContentStyle[1]}
-                  />
-                  <p className="text-sm">Manajemen Akun</p>
-                </li>
+              <ul className="gap-2 flex flex-col border-gray-300 pb-28">
+                <ul className="w-full h-fit py-2 gap-2 flex flex-col border-b-2 border-gray-300">
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Dasbor")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={Dasbor}
+                      alt="Dasbor"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Dasbor</p>
+                  </li>
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Grafik Absensi")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={GrafikAbsensi}
+                      alt="Grafik"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Grafik Presensi</p>
+                  </li>
+                </ul>
+
+                <ul className="w-full h-fit py-2 gap-2 flex flex-col border-b-2 border-gray-300">
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Manajemen Akun")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={ManajemenAkun}
+                      alt="Manajemen Absen"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Manajemen Akun</p>
+                  </li>
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Manajemen Presensi")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={ManajemenAkun}
+                      alt="Manajemen Presensi"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Manajemen Presensi</p>
+                  </li>
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Manajemen Jurusan")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={ManajemenAbsen}
+                      alt="Manajemen Jurusan"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Manajemen Jurusan</p>
+                  </li>
+                </ul>
+                <ul className="w-full h-fit py-2 gap-2 flex flex-col border-gray-300">
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Buat Akun")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={ManajemenAkun}
+                      alt="Buat Absen"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Buat Akun</p>
+                  </li>
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Buat Presensi")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={ManajemenAkun}
+                      alt="Buat Presensi"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Buat Presensi</p>
+                  </li>
+                  <li
+                    className={sidebarContentStyle[0]}
+                    onClick={() => setActiveContent("Buat Jurusan")}
+                  >
+                    <Image
+                      width={30}
+                      height={30}
+                      src={ManajemenAbsen}
+                      alt="Buat Jurusan"
+                      className={sidebarContentStyle[1]}
+                    />
+                    <p className="text-sm">Buat Jurusan</p>
+                  </li>
+                </ul>
               </ul>
             </div>
           </div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAllPresence } from "@/Hooks/usePresence";
 
 const styleCard =
-  "w-90 h-fit rounded-lg px-8 flex-col flex justify-center gap-5 pt-10 pb-15 text-white";
+  "w-full h-fit rounded-lg px-8 flex-col flex justify-center gap-5 pt-10 pb-15 text-white";
 
 const usePresenceData = (category) => {
   const { summary } = useAllPresence();
@@ -24,7 +24,6 @@ const usePresenceData = (category) => {
   };
 };
 
-// Komponen utama card presensi
 const CardPresence = ({ title, category }) => {
   const { presencesIndex, handleChange, presenceData, labels } =
     usePresenceData(category);

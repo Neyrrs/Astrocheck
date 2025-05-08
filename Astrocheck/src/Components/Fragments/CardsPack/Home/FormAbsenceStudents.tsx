@@ -11,7 +11,6 @@ import {
 import Swal from "sweetalert2";
 import axios from "axios";
 import useProfile from "@/Hooks/useProfile";
-import { useRouter } from "next/navigation";
 
 const showToast = (icon = "success", title = "", onClose = () => {}) => {
   let clicked = false;
@@ -43,7 +42,6 @@ const showToast = (icon = "success", title = "", onClose = () => {}) => {
 
 const FormAbsence = () => {
   const { user } = useProfile();
-  const navigate = useRouter();
 
   const [formData, setFormData] = useState({
     nisn: "",

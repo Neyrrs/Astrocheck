@@ -9,37 +9,36 @@ import {
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 
-const doughnutChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "top", 
-      labels: {
-        font: {
-          size: 11,
-        },
-      },
-    },
-    tooltip: {
-      enabled: true, 
-      callbacks: {
-        label: function (tooltipItem) {
-          return `${tooltipItem.label}: ${tooltipItem.raw}%`;
-        },
-      },
-    },
-  },
-};
 
-const DoughnutChart = (props) => {
+const DoughnutChart = ({title = null, data = [], labels = [], colors = []}) => {
+  const doughnutChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: title || "Grafik Absen",
+      },
+      tooltip: {
+        enabled: true, 
+        callbacks: {
+          label: function (tooltipItem) {
+            return `${tooltipItem.label}: ${tooltipItem.raw}%`;
+          },
+        },
+      },
+    },
+  };
   const doughnutChartData = {
-    labels: props.labels || ["Membaca", "Meminjam", "Lainnya"], 
+    labels: labels || ["Membaca", "Meminjam", "Lainnya"], 
     datasets: [
       {
         label: "Absen Kegiatan",
-        data: props.data,
-        backgroundColor: props.colors, 
+        data,
+        backgroundColor: colors, 
         borderColor: "#fff", 
         borderWidth: 2, 
       },

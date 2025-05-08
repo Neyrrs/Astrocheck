@@ -6,25 +6,25 @@ import axios from "axios";
 
 const ManajemenAkun = () => {
   const [users, setUsers] = useState([]);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        const token = localStorage.getItem("Token");
-        console.log("Token:", token);
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     try {
+  //       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  //       const token = localStorage.getItem("Token");
+  //       console.log("Token:", token);
         
-        const response = await axios.get(`${backendUrl}/user/profiles`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUsers(response.data);
-        console.log("Data pengguna:", response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data:", error);
-      }
-    };
+  //       const response = await axios.get(`${backendUrl}/user/profiles`, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
+  //       setUsers(response.data);
+  //       console.log("Data pengguna:", response.data);
+  //     } catch (error) {
+  //       console.error("Gagal mengambil data:", error);
+  //     }
+  //   };
 
-    fetchUsers();
-  }, []);
+  //   fetchUsers();
+  // }, []);
 
   const tablePadding = "p-[10px]";
 

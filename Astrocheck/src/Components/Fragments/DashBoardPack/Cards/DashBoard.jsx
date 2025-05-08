@@ -14,8 +14,6 @@ const DashBoardPack = () => {
   const fullYearData = fullYear?.logsPerMonth?.map((item) => item.count) ?? [];
   const [currentDate, setCurrentDate] = useState("");
   
-  console.log("allPresences", allPresences);
-  
   useEffect(() => {
     const date = new Date();
     const options = {
@@ -76,9 +74,9 @@ const DashBoardPack = () => {
             <ProfileImage size="w-12 h-12" />
           </div>
         </div>
-        <div className="flex flex-row items-center gap-5 w-full justify-between">
+        <div className="flex flex-row items-center w-full gap-10">
           {[CardMembaca, CardMeminjam, CardLainnya].map((Card, index) => (
-            <div key={index}>
+            <div key={index} className="w-full flex gap-5">
               <Card />
             </div>
           ))}

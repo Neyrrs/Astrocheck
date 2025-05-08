@@ -38,48 +38,55 @@ const useFetchPresence = (endpoint) => {
   return { data, loading, error };
 };
 
-export const useDailyPresence = () => useFetchPresence("getToday");
+export const useTodayPresence = () => useFetchPresence("getToday");
 export const useFullYearPresence = () => useFetchPresence("getPerMonth");
 export const useAvaragePresenceMonths = () =>
-  useFetchPresence("avaragePresence");
+  useFetchPresence("getPerMonth");
+export const useSummaryMajor = () =>
+  useFetchPresence("summaryMajor");
+
 
 export const useAllPresences = () => useFetchPresence("allUsersPresence");
-
 export const useUserPresence = () => useFetchPresence("logKehadiran");
-export const useMonthlyPresence = () => useFetchPresence("getCurrentMonth");
+export const useCurrentMonthPresence = () => useFetchPresence("getCurrentMonth");
 export const useSumaryPresence = () => useFetchPresence("summary");
-
+export const useLastYearPresence = () =>
+  useFetchPresence("getLastYear");
 
 export const useAllPresence = () => {
   const average = useAvaragePresenceMonths();
   const summary = useSumaryPresence();
-  const daily = useDailyPresence();
+  const today = useTodayPresence();
   const fullYear = useFullYearPresence();
   const allUsers = useAllPresences();
   const userPresence = useUserPresence();
-  const monthly = useMonthlyPresence();
+  const CurrentMonth = useCurrentMonthPresence();
+  const lastYear = useLastYearPresence();
+  const summaryMajor = useSummaryMajor();
 
   return {
+    summaryMajor: summaryMajor.data,
+    lastYear: lastYear.data,
     summary: summary.data,
     averages: average.data,
-    presence: daily.data,
+    today: today.data,
     fullYear: fullYear.data,
     allPresences: allUsers.data,
-    monthlyPresence: monthly.data,
+    CurrentMonth: CurrentMonth.data,
     userPresence: userPresence.data,
     loading:
-    daily.loading ||
+    today.loading ||
     fullYear.loading ||
     allUsers.loading ||
     userPresence.loading ||
     average.loading ||
-    monthly.loading,
+    CurrentMonth.loading,
   error:
-    daily.error ||
+    today.error ||
     fullYear.error ||
     allUsers.error ||
     userPresence.error ||
     average.error ||
-    monthly.error,
+    CurrentMonth.error,
   };
 };

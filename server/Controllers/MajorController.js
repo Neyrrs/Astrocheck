@@ -27,7 +27,6 @@ export const getAllMajors = async (req, res) => {
   }
 };
 
-// Update Major
 export const updateMajor = async (req, res) => {
   try {
     const { id } = req.params;

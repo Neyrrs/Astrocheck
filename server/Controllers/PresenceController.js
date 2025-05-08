@@ -1,5 +1,6 @@
 import Presence from "../Models/PresenceSchema.js";
 import User from "../Models/AccountSchema.js";
+import Major from "../Models/MajorSchema.js";
 
 const getPresenceCounts = async () => {
   const [membaca, meminjam, lainnya] = await Promise.all([
@@ -47,7 +48,9 @@ export const savePresence = async (req, res) => {
       lainnya,
     });
   } catch (error) {
-    res.status(400).json({ message: "Gagal menyimpan data", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Gagal menyimpan data", error: error.message });
   }
 };
 
@@ -57,10 +60,14 @@ export const getLogs = async (req, res) => {
 
     const logs = await Presence.find({ nisn });
     if (!logs.length) {
-      return res.status(404).json({ message: "Tidak ada data presensi untuk user ini" });
+      return res
+        .status(404)
+        .json({ message: "Tidak ada data presensi untuk user ini" });
     }
 
-    const user = await User.findOne({ nisn }).select("fullName grade idMajor").populate("idMajor", "major_name");
+    const user = await User.findOne({ nisn })
+      .select("fullName grade idMajor")
+      .populate("idMajor", "major_name");
 
     if (!user) {
       return res.status(404).json({ message: "User tidak ditemukan" });
@@ -157,7 +164,7 @@ const getLogsPerYear = async (req, res, year) => {
     const logsPerMonth = await Presence.aggregate([
       { $match: { date: { $regex: `^${year}-` } } },
       { $group: { _id: { $substr: ["$date", 5, 2] }, count: { $sum: 1 } } },
-      { $sort: { "_id": 1 } },
+      { $sort: { _id: 1 } },
     ]);
 
     const monthData = Array.from({ length: 12 }, (_, i) => ({
@@ -182,8 +189,10 @@ const getLogsPerYear = async (req, res, year) => {
   }
 };
 
-export const getLogsPerMonth = (req, res) => getLogsPerYear(req, res, new Date().getFullYear());
-export const getLogsLastYear = (req, res) => getLogsPerYear(req, res, new Date().getFullYear() - 1);
+export const getLogsPerMonth = (req, res) =>
+  getLogsPerYear(req, res, new Date().getFullYear());
+export const getLogsLastYear = (req, res) =>
+  getLogsPerYear(req, res, new Date().getFullYear() - 1);
 
 export const getLogsCurrentMonth = async (req, res) => {
   try {
@@ -201,9 +210,18 @@ export const getLogsCurrentMonth = async (req, res) => {
     });
 
     const [membaca, meminjam, lainnya] = await Promise.all([
-      Presence.countDocuments({ date: { $gte: startDate, $lte: endDate }, reason: "Membaca" }),
-      Presence.countDocuments({ date: { $gte: startDate, $lte: endDate }, reason: "Meminjam" }),
-      Presence.countDocuments({ date: { $gte: startDate, $lte: endDate }, reason: "Lainnya" }),
+      Presence.countDocuments({
+        date: { $gte: startDate, $lte: endDate },
+        reason: "Membaca",
+      }),
+      Presence.countDocuments({
+        date: { $gte: startDate, $lte: endDate },
+        reason: "Meminjam",
+      }),
+      Presence.countDocuments({
+        date: { $gte: startDate, $lte: endDate },
+        reason: "Lainnya",
+      }),
     ]);
 
     res.json({
@@ -239,6 +257,7 @@ export const getPresenceSummary = async (req, res) => {
         date: today,
         reason: "Lainnya",
       }),
+      count : await Presence.countDocuments({ date: today }),
     };
 
     const monthly = {
@@ -254,6 +273,7 @@ export const getPresenceSummary = async (req, res) => {
         date: { $regex: `^${year}-${month}` },
         reason: "Lainnya",
       }),
+      count : await Presence.countDocuments({ date: { $regex: `^${year}-${month}` } }),
     };
 
     const yearly = {
@@ -269,6 +289,7 @@ export const getPresenceSummary = async (req, res) => {
         date: { $regex: `^${year}-` },
         reason: "Lainnya",
       }),
+      count : await Presence.countDocuments({ date: { $regex: `^${year}-` } }),
     };
 
     res.json({ daily, monthly, yearly });
@@ -350,14 +371,14 @@ export const updatePresence = async (req, res) => {
     }
 
     if (req.user.nisn !== presence.nisn && req.user.role !== "admin") {
-      return res.status(403).json({ message: "Tidak memiliki akses untuk mengedit data ini" });
+      return res
+        .status(403)
+        .json({ message: "Tidak memiliki akses untuk mengedit data ini" });
     }
 
-    const updated = await Presence.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const updated = await Presence.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     res.json({ message: "Presensi berhasil diperbarui", data: updated });
   } catch (error) {
@@ -373,7 +394,9 @@ export const deletePresence = async (req, res) => {
     }
 
     if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Tidak memiliki akses untuk menghapus data ini" });
+      return res
+        .status(403)
+        .json({ message: "Tidak memiliki akses untuk menghapus data ini" });
     }
 
     await Presence.findByIdAndDelete(req.params.id);
@@ -393,7 +416,9 @@ export const getPresenceById = async (req, res) => {
       return res.status(404).json({ message: "Data presensi tidak ditemukan" });
     }
 
-    const user = await User.findOne({ nisn: presence.nisn }).populate("idMajor");
+    const user = await User.findOne({ nisn: presence.nisn }).populate(
+      "idMajor"
+    );
 
     res.json({
       id: presence._id,
@@ -407,7 +432,12 @@ export const getPresenceById = async (req, res) => {
       detailReason: presence.detailReason || "-",
     });
   } catch (error) {
-    res.status(500).json({ message: "Terjadi kesalahan saat mengambil data presensi", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Terjadi kesalahan saat mengambil data presensi",
+        error: error.message,
+      });
   }
 };
 
@@ -476,8 +506,8 @@ export const getMostAbsentStudents = async (req, res) => {
       },
       {
         $match: {
-          userData: { $ne: [] }
-        }
+          userData: { $ne: [] },
+        },
       },
       { $unwind: "$userData" },
       {
@@ -508,6 +538,66 @@ export const getMostAbsentStudents = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error("Error in getMostAbsentStudents:", error);
-    res.status(500).json({ message: "Gagal mengambil data siswa terbanyak absen" });
+    res
+      .status(500)
+      .json({ message: "Gagal mengambil data siswa terbanyak absen" });
+  }
+};
+
+export const getPresenceSummaryByMajor = async (req, res) => {
+  try {
+    const result = await Major.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "idMajor",
+          as: "students",
+        },
+      },
+      {
+        $unwind: {
+          path: "$students",
+          preserveNullAndEmptyArrays: true, 
+        },
+      },
+      {
+        $lookup: {
+          from: "presences",
+          localField: "students.nisn",
+          foreignField: "nisn",
+          as: "presences",
+        },
+      },
+      {
+        $unwind: {
+          path: "$presences",
+          preserveNullAndEmptyArrays: true, 
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          major: { $first: "$major_name" },
+          count: {
+            $sum: {
+              $cond: [{ $ifNull: ["$presences._id", false] }, 1, 0],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          major: 1,
+          count: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error while summarizing presence:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
