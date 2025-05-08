@@ -476,7 +476,7 @@ export const getMostAbsentStudents = async (req, res) => {
       },
       {
         $match: {
-          userData: { $ne: [] } // hanya ambil data yang berhasil match user
+          userData: { $ne: [] }
         }
       },
       { $unwind: "$userData" },
