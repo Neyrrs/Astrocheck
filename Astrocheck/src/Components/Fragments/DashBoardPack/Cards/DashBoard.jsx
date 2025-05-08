@@ -1,13 +1,34 @@
+"use client";
+
 import { LineChart } from "@/Components/Fragments/DashBoardPack/Charts";
 import { useAllPresence } from "@/Hooks/usePresence.js";
 import { CardLainnya, CardMembaca, CardMeminjam } from "./CardPresences.jsx";
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
+import { useEffect, useState } from "react";
+import useProfile from "@/Hooks/useProfile.js";
 
 const DashBoardPack = () => {
-  const { fullYear } = useAllPresence();
+  const { fullYear, allPresences } = useAllPresence();
+  const {user} = useProfile();
   const fullYearData = fullYear?.logsPerMonth?.map((item) => item.count) ?? [];
+  const [currentDate, setCurrentDate] = useState("");
+  
+  console.log("allPresences", allPresences);
+  
+  useEffect(() => {
+    const date = new Date();
+    const options = {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    };
 
+    const formattedDate = new Intl.DateTimeFormat("id-ID", options).format(
+      date
+    );
+    setCurrentDate(formattedDate);
+  }, []);
   const LineChartData = {
     labels: [
       "Januari",
@@ -29,10 +50,10 @@ const DashBoardPack = () => {
   const dashboardColumns = [
     { header: "ID", field: "__index" },
     { header: "Nama Lengkap", field: "fullName" },
-    { header: "Kelas", field: "date" },
-    { header: "Jurusan", field: "time" },
-    { header: "Tanggal Presensi", field: "reason" },
-    { header: "Alasan", field: "detailReason" },
+    { header: "Kelas", field: "grade" },
+    { header: "Jurusan", field: "major" },
+    { header: "Tanggal Presensi", field: "date" },
+    { header: "Alasan", field: "reason" },
     { header: "Spesifik Alasan", field: "detailReason" },
   ];
 
@@ -44,13 +65,13 @@ const DashBoardPack = () => {
             <ProfileImage size="w-12 h-12" />
             <div className="h-fit w-fit">
               <p className="text-lg font-semibold">Welcome</p>
-              <p className="text-slate-500 text-sm">Ezwan Ibnu Yassar</p>
+              <p className="text-slate-500 text-sm">{user?.fullName}</p>
             </div>
           </div>
           <div className="bg-white w-full h-25 gap-3 flex flex-row items-center justify-between rounded-xl px-5 ">
             <div className="h-fit w-fit flex flex-col gap-2">
               <p className="text-lg font-semibold">Dashboard Admin Panel</p>
-              <p className="text-slate-500 text-sm">04 Mei 2025</p>
+              <p className="text-slate-500 text-sm">{currentDate}</p>
             </div>
             <ProfileImage size="w-12 h-12" />
           </div>
@@ -74,7 +95,7 @@ const DashBoardPack = () => {
             <p className="font-semibold text-xl">Terakhir Absen</p>
           </div>
           <PresenceTableWrapper
-            data={[]}
+            data={allPresences?.presence}
             columns={dashboardColumns}
             loading={false}
             error={false}

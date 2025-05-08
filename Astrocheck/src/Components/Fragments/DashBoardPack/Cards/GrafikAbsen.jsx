@@ -1,6 +1,6 @@
 import { DoughnutChart, BarMonthsChart, LineChartThree } from "../Charts";
 import CardSiswaTerbanyakAbsen from "./CardSiswaTerbanyakAbsen";
-import { useAllPresence } from "../../../../Hooks/usePresence";
+import { useAllPresence } from "@/Hooks/usePresence";
 import { CardMembaca, CardMeminjam, CardLainnya } from "./CardPresences";
 
 // TODO Implementasikan component baru yang dibuat di CardPresences ke sini dan ke page DashBoard

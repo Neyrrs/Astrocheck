@@ -12,6 +12,10 @@ import {
   deletePresence,
   updatePresence,
   getPresenceById,
+  getLogsCurrentMonth,
+  getPresenceSummary,
+  getMostAbsentMajors,
+  getMostAbsentStudents
   } from "../Controllers/PresenceController.js";
 import {
   authenticateUser,
@@ -26,13 +30,19 @@ router.get("/logKehadiran", authenticateUser, getLogs);
 router.get("/logMeminjam", authenticateUser, authorizeAdmin, getMeminjam);
 router.get("/logMembaca", authenticateUser, authorizeAdmin, getMembaca);
 router.get("/logLainnya", authenticateUser, authorizeAdmin, getLainnya);
-router.get("/getLastYear", authenticateUser, authorizeAdmin, getLogsLastYear);
-router.get("/getPerMonth", authenticateUser, authorizeAdmin, getLogsPerMonth);
+router.get("/getLastYear",  getLogsLastYear);
+router.get("/getPerMonth", getLogsPerMonth);
+router.get("/getCurrentMonth", getLogsCurrentMonth);
+
+router.get("/summary",  getPresenceSummary);
+// routes/presenceRoutes.js
+router.get('/analytics/majors', getMostAbsentMajors);
+router.get('/analytics/students', getMostAbsentStudents);
+
+
 router.get("/getToday", authenticateUser, authorizeAdmin, getLogsToday);
 router.get(
   "/allUsersPresence",
-  authenticateUser,
-  authorizeAdmin,
   getAllUsersPresence
 );
 router.get("/:id", authenticateUser, authorizeAdmin, getPresenceById);

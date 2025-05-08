@@ -271,7 +271,7 @@ const CardEditPresence = () => {
                 <Label text="Date *" />
                 <Input
                   {...register("date", { required: "Date wajib diisi" })}
-                  placeholder="Date"
+                  placeholder="Tanggal"
                   value={values.date}
                   onChange={(e) => setValue("date", e.target.value)}
                   type="date"
@@ -282,7 +282,7 @@ const CardEditPresence = () => {
                 <Input
                   {...register("time", { required: "Time wajib diisi" })}
                   onChange={(e) => setValue("time", e.target.value)}
-                  placeholder="Time"
+                  placeholder="Wakt"
                   value={values.time}
                   type="text"
                 />
@@ -302,7 +302,7 @@ const CardEditPresence = () => {
                 {...register("detailReason", {
                   required: "Alasan wajib diisi",
                 })}
-                placeholder="detailReason"
+                placeholder="Detail Alasan"
                 value={values.detailReason}
                 onChange={(e) => setValue("detailReason", e.target.value)}
                 {...values.reason === "Lainnya" ? {} : { readOnly: true }}

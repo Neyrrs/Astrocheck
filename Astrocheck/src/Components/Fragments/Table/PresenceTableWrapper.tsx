@@ -3,8 +3,8 @@ import DynamicTable from "./DynamicTable";
 import SearchPack from "../SearchPack/SearchPack";
 
 const PresenceTableWrapper = ({
-  data,
-  columns,
+  data = [],
+  columns = [],
   itemsPerPage = 5,
   loading = false,
   error = false,

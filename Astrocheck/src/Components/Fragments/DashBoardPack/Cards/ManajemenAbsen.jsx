@@ -7,7 +7,7 @@ import { PrimaryButton } from "@/Components/Elements/Buttons";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
-import { useState } from "react"; // pastikan ini di-import
+import { useState } from "react"; 
 
 const ManajemenAbsen = () => {
   const { allPresences } = useAllPresence();

@@ -185,6 +185,98 @@ const getLogsPerYear = async (req, res, year) => {
 export const getLogsPerMonth = (req, res) => getLogsPerYear(req, res, new Date().getFullYear());
 export const getLogsLastYear = (req, res) => getLogsPerYear(req, res, new Date().getFullYear() - 1);
 
+export const getLogsCurrentMonth = async (req, res) => {
+  try {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // JS month starts at 0
+
+    const startDate = `${year}-${month}-01`;
+    const endDate = new Date(year, now.getMonth() + 1, 0)
+      .toISOString()
+      .slice(0, 10); // Akhir bulan
+
+    const logs = await Presence.find({
+      date: { $gte: startDate, $lte: endDate },
+    });
+
+    const [membaca, meminjam, lainnya] = await Promise.all([
+      Presence.countDocuments({ date: { $gte: startDate, $lte: endDate }, reason: "Membaca" }),
+      Presence.countDocuments({ date: { $gte: startDate, $lte: endDate }, reason: "Meminjam" }),
+      Presence.countDocuments({ date: { $gte: startDate, $lte: endDate }, reason: "Lainnya" }),
+    ]);
+
+    res.json({
+      month,
+      year,
+      count: logs.length,
+      membaca,
+      meminjam,
+      lainnya,
+      data: logs,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getPresenceSummary = async (req, res) => {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const year = new Date().getFullYear();
+    const month = String(new Date().getMonth() + 1).padStart(2, "0");
+
+    const daily = {
+      membaca: await Presence.countDocuments({
+        date: today,
+        reason: "Membaca",
+      }),
+      meminjam: await Presence.countDocuments({
+        date: today,
+        reason: "Meminjam",
+      }),
+      lainnya: await Presence.countDocuments({
+        date: today,
+        reason: "Lainnya",
+      }),
+    };
+
+    const monthly = {
+      membaca: await Presence.countDocuments({
+        date: { $regex: `^${year}-${month}` },
+        reason: "Membaca",
+      }),
+      meminjam: await Presence.countDocuments({
+        date: { $regex: `^${year}-${month}` },
+        reason: "Meminjam",
+      }),
+      lainnya: await Presence.countDocuments({
+        date: { $regex: `^${year}-${month}` },
+        reason: "Lainnya",
+      }),
+    };
+
+    const yearly = {
+      membaca: await Presence.countDocuments({
+        date: { $regex: `^${year}-` },
+        reason: "Membaca",
+      }),
+      meminjam: await Presence.countDocuments({
+        date: { $regex: `^${year}-` },
+        reason: "Meminjam",
+      }),
+      lainnya: await Presence.countDocuments({
+        date: { $regex: `^${year}-` },
+        reason: "Lainnya",
+      }),
+    };
+
+    res.json({ daily, monthly, yearly });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getLogsByReason = async (req, res, reason) => {
   try {
     const logs = await Presence.find({ reason });
@@ -319,3 +411,103 @@ export const getPresenceById = async (req, res) => {
   }
 };
 
+export const getMostAbsentMajors = async (req, res) => {
+  try {
+    const result = await Presence.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "nisn",
+          foreignField: "nisn",
+          as: "userData",
+        },
+      },
+      { $unwind: "$userData" },
+      {
+        $lookup: {
+          from: "majors",
+          localField: "userData.idMajor",
+          foreignField: "_id",
+          as: "majorData",
+        },
+      },
+      { $unwind: "$majorData" },
+      {
+        $group: {
+          _id: "$majorData.major_name",
+          totalAbsen: { $sum: 1 },
+        },
+      },
+      { $sort: { totalAbsen: -1 } },
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error in getMostAbsentMajors:", error);
+    res.status(500).json({ message: "Gagal mengambil data absen per jurusan" });
+  }
+};
+
+export const getMostAbsentStudents = async (req, res) => {
+  try {
+    const result = await Presence.aggregate([
+      {
+        $group: {
+          _id: "$nisn",
+          totalAbsen: { $sum: 1 },
+          totalMembaca: {
+            $sum: { $cond: [{ $eq: ["$reason", "Membaca"] }, 1, 0] },
+          },
+          totalMeminjam: {
+            $sum: { $cond: [{ $eq: ["$reason", "Meminjam"] }, 1, 0] },
+          },
+          totalLainnya: {
+            $sum: { $cond: [{ $eq: ["$reason", "Lainnya"] }, 1, 0] },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "nisn",
+          as: "userData",
+        },
+      },
+      {
+        $match: {
+          userData: { $ne: [] } // hanya ambil data yang berhasil match user
+        }
+      },
+      { $unwind: "$userData" },
+      {
+        $lookup: {
+          from: "majors",
+          localField: "userData.idMajor",
+          foreignField: "_id",
+          as: "majorData",
+        },
+      },
+      { $unwind: "$majorData" },
+      {
+        $project: {
+          nisn: "$_id",
+          nama: "$userData.fullName",
+          kelas: "$userData.grade",
+          jurusan: "$majorData.major_name",
+          totalAbsen: 1,
+          totalMembaca: 1,
+          totalMeminjam: 1,
+          totalLainnya: 1,
+        },
+      },
+      { $sort: { totalAbsen: -1 } },
+      { $limit: 10 },
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error in getMostAbsentStudents:", error);
+    res.status(500).json({ message: "Gagal mengambil data siswa terbanyak absen" });
+  }
+};

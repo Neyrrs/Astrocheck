@@ -2,7 +2,6 @@ import Link from "next/link";
 
 const PrimaryButton = (props) => {
   return (
-    <Link href={props.link || "#"}>
       <button
         className={`border-2 bg-[hsl(225,75%,65%)] hover:bg-[hsl(225,51%,54%)] font-normal text-${
           props.fontSize || "xs"
@@ -13,7 +12,6 @@ const PrimaryButton = (props) => {
       >
         {props.text || "Button"}
       </button>
-    </Link>
   );
 };
 

@@ -55,7 +55,7 @@ const FormAbsence = () => {
     if (user) {
       setFormData((prev) => ({
         ...prev,
-        nisn: user.nisn,
+        nisn: user?.nisn,
       }));
     }
   }, [user]);
@@ -87,10 +87,7 @@ const FormAbsence = () => {
         }
       );
 
-      showToast("success", "Absen berhasil, akun akan otomatis logout", () => {
-        navigate("/login");
-        localStorage.removeItem("Token");
-      });
+      showToast("success", "Absen berhasil, form akan otomatis ter-reset", () => {});
 
       setFormData({
         reason: "",
