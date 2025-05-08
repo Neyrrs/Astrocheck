@@ -1,37 +1,30 @@
-import { useAllPresence } from "@/Hooks/usePresence";
+import { useAllMajors } from "@/Hooks/useMajor.js";
 import { useDashboardContext } from "@/context/DashboardContext";
 import { useItemContext } from "@/context/ItemContext";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper.tsx";
-import CardSummary from "./CardSummary.jsx";
 import { PrimaryButton } from "@/Components/Elements/Buttons";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
-import { useState } from "react"; 
+import { useState } from "react";
 
-const ManajemenPresensi = () => {
-  const { summary, allPresences} = useAllPresence();
+const ManajemenJurusan = () => {
   const { setActiveContent } = useDashboardContext();
   const { setSelectedItem } = useItemContext();
   const [refreshKey, setRefreshKey] = useState(0);
-
-  const presences = allPresences?.presence;
-  if (!presences) return null;
+  const { data } = useAllMajors();
 
   const handleEdit = (row) => {
     setSelectedItem(row);
-    setActiveContent("Edit Presensi");
+    setActiveContent("Edit Jurusan");
   };
 
   const historyColumns = [
     { header: "ID", field: "__index" },
-    { header: "Nama Lengkap", field: "fullName" },
-    { header: "Tanggal Presensi", field: "date" },
-    { header: "Waktu Masuk", field: "time" },
-    { header: "Alasan", field: "reason" },
-    { header: "Spesifik Alasan", field: "detailReason" },
+    { header: "Nama Jurusan", field: "major_name" },
+    { header: "Panggilan Jurusan", field: "major_name" },
     {
-      header: "Aksi",
+      header: "",
       render: (row) => (
         <div className="flex flex-row gap-2 text-base">
           <button
@@ -54,7 +47,7 @@ const ManajemenPresensi = () => {
   const handleDelete = async (row) => {
     const confirm = await Swal.fire({
       title: "Yakin ingin menghapus?",
-      text: `Presensi ${row.fullName} pada ${row.date} akan dihapus.`,
+      text: `Jurusan dengan nama ${row.major_name} akan dihapus.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -66,7 +59,7 @@ const ManajemenPresensi = () => {
     if (confirm.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/presence/${row.id}`, {
+        await axios.delete(`${backendUrl}/major/${row._id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },
@@ -95,25 +88,20 @@ const ManajemenPresensi = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-4">
-      <div className="flex w-full flex-row justify-end gap-5">
+    <div className="w-full h-screen flex flex-col gap-4">
+      <div className="flex w-full flex-row justify-between gap-5">
+        <div className="w-fit h-fit flex items-center ">
+          <p className="font-bold text-3xl">Jurusan</p>
+        </div>
         <PrimaryButton
-          onClick={() => setActiveContent("Buat Presensi")}
-          text="Tambah Presensi"
+          onClick={() => setActiveContent("Buat Jurusan")}
+          text="Tambah Jurusan"
         />
       </div>
-      <div className="flex w-full flex-row gap-5">
-        <CardSummary title={"Presensi Hari ini"} data={summary?.daily?.count} />
-        <CardSummary title={"Presensi Bulan ini"} data={summary?.monthly?.count} />
-        <CardSummary title={"Presensi Tahun ini"} data={summary?.yearly?.count} />
-      </div>
-      <div className="w-full h-fit bg-white shadow-md rounded-xl pb-5 flex-col flex gap-3">
-        <div className="px-5 w-full h-fit flex items-center py-5 border-b-1 border-gray-300">
-          <p className="font-bold text-xl">Terakhir Absen</p>
-        </div>
+      <div className="w-full h-fit py-2 bg-white shadow-md rounded-xl flex-col flex gap-1">
         <PresenceTableWrapper
           key={refreshKey}
-          data={presences}
+          data={data}
           columns={historyColumns}
           loading={false}
           itemsPerPage={5}
@@ -123,4 +111,4 @@ const ManajemenPresensi = () => {
   );
 };
 
-export default ManajemenPresensi;
+export default ManajemenJurusan;

@@ -11,6 +11,10 @@ const MajorSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    majorFullName: {
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true,

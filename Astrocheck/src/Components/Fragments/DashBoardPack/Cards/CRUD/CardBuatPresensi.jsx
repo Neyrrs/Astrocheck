@@ -12,7 +12,7 @@ import {
   DropdownPackAlasan,
   DropdownPackJurusan,
   DropdownPackKelas,
-} from "../../DropdownPack";
+} from "@/Components/Fragments/DropdownPack";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 

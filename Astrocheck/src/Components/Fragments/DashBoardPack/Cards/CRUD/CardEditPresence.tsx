@@ -1,12 +1,12 @@
 "use client";
 
 import { useDashboardContext } from "@/context/DashboardContext";
-import { usePresenceContext } from "@/context/PresenceContext";
+import { useItemContext } from "@/context/ItemContext";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { DangerButton, PrimaryButton, TertiaryButton } from "@/Components/Elements/Buttons";
-import DisabledInputPack from "../../InputPack/DisabledInputPack";
+import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack";
 import Input from "@/Components/Elements/Inputs/Input";
 import Label from "@/Components/Elements/Labels/Label";
 import { TextArea } from "@/Components/Elements/Inputs";
@@ -14,12 +14,12 @@ import {
   DropdownPackAlasan,
   DropdownPackJurusan,
   DropdownPackKelas,
-} from "../../DropdownPack";
+} from "@/Components/Fragments/DropdownPack";
 import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css'; // pastikan CSS untuk swal juga sudah diimport
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const CardEditPresence = () => {
-  const { selectedPresence } = usePresenceContext();
+  const { selectedItem } = useItemContext();
   const { setActiveContent } = useDashboardContext();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -47,14 +47,14 @@ const CardEditPresence = () => {
 
   useEffect(() => {
     const fetchPresenceDetail = async () => {
-      if (!selectedPresence?.id) return;
+      if (!selectedItem?.id) return;
 
       setIsLoading(true);
       try {
         const token = localStorage.getItem("Token");
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
         const { data } = await axios.get(
-          `${backendUrl}/presence/${selectedPresence.id}`,
+          `${backendUrl}/presence/${selectedItem.id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -79,7 +79,7 @@ const CardEditPresence = () => {
     };
 
     fetchPresenceDetail();
-  }, [selectedPresence, reset]);
+  }, [selectedItem, reset]);
 
   const onSubmit = async (formData) => {
     try {
@@ -141,7 +141,7 @@ const CardEditPresence = () => {
     if (result.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/presence/${selectedPresence.id}`, {
+        await axios.delete(`${backendUrl}/presence/${selectedItem.id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },
@@ -181,7 +181,7 @@ const CardEditPresence = () => {
     setActiveContent("Manajemen Absen");
   };
 
-  if (!selectedPresence) return <p>Data tidak ditemukan</p>;
+  if (!selectedItem) return <p>Data tidak ditemukan</p>;
   if (isLoading)
     return <p className="text-gray-600">Memuat data presensi...</p>;
 
@@ -191,7 +191,7 @@ const CardEditPresence = () => {
     <div className="h-fit">
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl font-bold">
-          Edit Presensi {selectedPresence.nisn}
+          Edit Presensi {selectedItem.nisn}
         </h2>
         <DangerButton padding="px-5 py-2" text="Hapus" onClick={handleDelete}/>
       </div>

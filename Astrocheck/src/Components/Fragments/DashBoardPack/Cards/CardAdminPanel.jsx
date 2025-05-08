@@ -4,11 +4,13 @@ import ToggleSidebar from "@/Components/Fragments/Toggle/ToggleSidebar";
 import DashBoard from "./DashBoard";
 import GrafikAbsen from "./GrafikAbsen";
 import ManajemenAkun from "./ManajemenAkun";
-import CardEditPresence from "./CardEditPresence";
-import CardBuatPresensi from "./CardBuatPresensi";
+import CardEditPresence from "./CRUD/CardEditPresence";
+import CardBuatPresensi from "./CRUD/CardBuatPresensi";
 import { Home } from "@/assets/Icons/Index";
 import Image from "next/image";
 import ManajemenPresensi from "./ManajemenPresensi";
+import ManajemenJurusan from "./ManajemenJurusan";
+import CardBuatJurusan from "./CRUD/CardBuatJurusan";
 
 const CardAdminPanel = () => {
   const { activeContent, setActiveContent } = useDashboardContext();
@@ -19,9 +21,11 @@ const CardAdminPanel = () => {
       case "Grafik Absensi": return <GrafikAbsen />;
       case "Manajemen Presensi": return <ManajemenPresensi />;
       case "Manajemen Akun": return <ManajemenAkun />;
+      case "Manajemen Jurusan": return <ManajemenJurusan />;
       case "Edit Presensi": return <CardEditPresence />;
       case "Edit Akun": return <ManajemenAkun />;
       case "Buat Presensi": return <CardBuatPresensi />;
+      case "Buat Jurusan": return <CardBuatJurusan />;
       default: return null;
     }
   };

@@ -8,8 +8,21 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   profilePicture: { type: String, default: "" },
   grade: { type: String, default: "" },
-  idMajor: {type: mongoose.Schema.Types.ObjectId, ref: "Major"},
-  role: {type: String, default: "user"},
+  idMajor: { type: mongoose.Schema.Types.ObjectId, ref: "Major" },
+  role: { type: String, default: "user" },
+  status: { type: String, default: "belum lulus" },
+  generation: {
+    type: String,
+    default: function () {
+      const BASE_YEAR = 1999;
+      const currentYear = new Date().getFullYear();
+      return `Angkatan ${currentYear - BASE_YEAR + 1}`;
+    },
+  },
+  createdAt: {
+    type: Date,
+    default: () => new Date().toISOString().slice(0, 10),
+  },
 });
 
 UserSchema.pre("save", async function (next) {
