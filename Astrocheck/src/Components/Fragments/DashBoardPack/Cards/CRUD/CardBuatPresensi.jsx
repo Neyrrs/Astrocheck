@@ -151,7 +151,6 @@ const CardBuatPresensi = () => {
               </div>
             </div>
 
-            {/* Alasan */}
             <div className="col-span-2">
               <DropdownPackAlasan
                 {...register("reason", { required: "Alasan wajib diisi" })}
@@ -164,7 +163,6 @@ const CardBuatPresensi = () => {
               )}
             </div>
 
-            {/* Detail Alasan */}
             <div className="col-span-2">
               <TextArea
                 height="h-40"
@@ -185,8 +183,8 @@ const CardBuatPresensi = () => {
           </div>
         </div>
 
-        {/* Tombol Aksi */}
-        <div className="flex justify-start gap-4">
+        <div className="flex justify-between gap-4">
+          <TertiaryButton fontSize="sm" text="Batal" onClick={handleCancel} />
           <PrimaryButton
             fontSize="sm"
             text="Simpan"
@@ -194,7 +192,6 @@ const CardBuatPresensi = () => {
             isLoading={isLoading}
             onClick={onSubmit}
           />
-          <TertiaryButton fontSize="sm" text="Batal" onClick={handleCancel} />
         </div>
       </form>
     </div>

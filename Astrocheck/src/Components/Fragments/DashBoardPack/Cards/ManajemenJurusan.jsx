@@ -21,7 +21,7 @@ const ManajemenJurusan = () => {
 
   const historyColumns = [
     { header: "ID", field: "__index" },
-    { header: "Nama Jurusan", field: "major_name" },
+    { header: "Nama Jurusan", field: "majorFullName" },
     { header: "Panggilan Jurusan", field: "major_name" },
     {
       header: "",

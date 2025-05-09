@@ -178,7 +178,7 @@ const CardEditPresence = () => {
   };
 
   const handleCancel = () => {
-    setActiveContent("Manajemen Absen");
+    setActiveContent("Manajemen Presensi");
   };
 
   if (!selectedItem) return <p>Data tidak ditemukan</p>;
