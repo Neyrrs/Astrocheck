@@ -1,86 +1,123 @@
-"use client"
-
-import { useState, useEffect } from "react";
-import SearchPack from "@/Components/Fragments/SearchPack/SearchPack";
+import { useAllPresence } from "@/Hooks/usePresence";
+import { useDashboardContext } from "@/context/DashboardContext";
+import { useItemContext } from "@/context/ItemContext";
+import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper.tsx";
+import CardSummary from "./CardSummary.jsx";
+import { PrimaryButton } from "@/Components/Elements/Buttons";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
+import { useState } from "react"; 
 
 const ManajemenAkun = () => {
-  const [users, setUsers] = useState([]);
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     try {
-  //       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-  //       const token = localStorage.getItem("Token");
-  //       console.log("Token:", token);
-        
-  //       const response = await axios.get(`${backendUrl}/user/profiles`, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       });
-  //       setUsers(response.data);
-  //       console.log("Data pengguna:", response.data);
-  //     } catch (error) {
-  //       console.error("Gagal mengambil data:", error);
-  //     }
-  //   };
+  const { summary, allPresences} = useAllPresence();
+  const { setActiveContent } = useDashboardContext();
+  const { setSelectedItem } = useItemContext();
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  //   fetchUsers();
-  // }, []);
+  const presences = allPresences?.presence;
+  if (!presences) return null;
 
-  const tablePadding = "p-[10px]";
+  const handleEdit = (row) => {
+    setSelectedItem(row);
+    setActiveContent("Edit Akun");
+  };
+
+  const historyColumns = [
+    { header: "ID", field: "__index" },
+    { header: "Nama Lengkap", field: "fullName" },
+    { header: "Tanggal Presensi", field: "date" },
+    { header: "Waktu Masuk", field: "time" },
+    { header: "Alasan", field: "reason" },
+    { header: "Spesifik Alasan", field: "detailReason" },
+    {
+      header: "Aksi",
+      render: (row) => (
+        <div className="flex flex-row gap-2 text-base">
+          <button
+            onClick={() => handleEdit(row)}
+            className="text-blue-600 hover:underline"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDelete(row)}
+            className="text-red-600 hover:underline"
+          >
+            Hapus
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  const handleDelete = async (row) => {
+    const confirm = await Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: `Presensi ${row.fullName} pada ${row.date} akan dihapus.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        await axios.delete(`${backendUrl}/presence/${row.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        });
+
+        Swal.fire({
+          icon: "success",
+          title: "Dihapus!",
+          text: "Data berhasil dihapus.",
+          toast: true,
+          timer: 3000,
+          position: "top-end",
+          showConfirmButton: false,
+          timerProgressBar: true,
+        });
+        setRefreshKey((prev) => prev + 1);
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal!",
+          text: "Gagal menghapus data.",
+        });
+      }
+    }
+  };
 
   return (
-    <div className="h-fit">
-      <div className="relative w-full h-[80px]">
-        <div className="absolute w-80 top-5 right-0">
-          <SearchPack width="fit" />
-        </div>
+    <div className="w-full h-full flex flex-col gap-4">
+      <div className="flex w-full flex-row justify-end gap-5">
+        <PrimaryButton
+          onClick={() => setActiveContent("Buat Akun")}
+          text="Tambah Akun"
+        />
       </div>
-      <div className="overflow-scroll border-t-2 border-spacing-9 py-5 h-screen border-slate-400">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="whitespace-nowrap pb-5 text-gray-500 text-base">
-              <td className={tablePadding}>ID</td>
-              <td className={tablePadding}>NISN</td>
-              <td className={tablePadding}>Nama Lengkap</td>
-              <td className={tablePadding}>Nama Tampilan</td>
-              <td className={tablePadding}>Kelas</td>
-              <td className={tablePadding}>Jurusan</td>
-              <td className={tablePadding}>Email</td>
-              <td className={tablePadding}>Password</td>
-            </tr>
-          </thead>
-          <tbody>
-            {/* {users.map((data, index) => (
-              <tr
-                key={index}
-                className={`whitespace-nowrap ${
-                  index % 2 === 0 ? "bg-white" : "bg-[#f0f0f0]"
-                }`}
-              >
-                { users.role === "admin" ? "" :
-                  <>
-                    <td className={`${tablePadding} text-center`}>
-                      {index + 1}
-                    </td>
-                    <td className={tablePadding}>{data.nisn}</td>
-                    <td className={tablePadding}>{data.fullName}</td>
-                    <td className={tablePadding}>{data.nickname || "None"}</td>
-                    <td className={`${tablePadding} text-center`}>
-                      {data.kelas || "None"}
-                    </td>
-                    <td className={tablePadding}>{data.jurusan || "None"}</td>
-                    <td className={`${tablePadding} text-left`}>
-                      {data.email || "None"}
-                    </td>
-                    <td className={`${tablePadding} text-left`}>
-                      *****
-                    </td>
-                  </>
-                }
-              </tr>
-            ))} */}
-          </tbody>
-        </table>
+      <div className="flex w-full flex-row gap-5">
+        <CardSummary title={"Presensi Hari ini"} data={summary?.daily?.count} />
+        <CardSummary title={"Presensi Bulan ini"} data={summary?.monthly?.count} />
+        <CardSummary title={"Presensi Tahun ini"} data={summary?.yearly?.count} />
+      </div>
+      <div className="w-full h-fit bg-white shadow-md rounded-xl pb-5 flex-col flex gap-3">
+        <div className="px-5 w-full h-fit flex items-center py-5 border-b-1 border-gray-300">
+          <p className="font-bold text-xl">Terakhir Absen</p>
+        </div>
+        <PresenceTableWrapper
+          key={refreshKey}
+          data={presences}
+          columns={historyColumns}
+          loading={false}
+          itemsPerPage={5}
+        />
       </div>
     </div>
   );

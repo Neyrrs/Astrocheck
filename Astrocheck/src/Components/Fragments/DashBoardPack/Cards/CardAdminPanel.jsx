@@ -11,7 +11,9 @@ import Image from "next/image";
 import ManajemenPresensi from "./ManajemenPresensi";
 import ManajemenJurusan from "./ManajemenJurusan";
 import CardBuatJurusan from "./CRUD/CardBuatJurusan";
+import CardBuatAkun from "./CRUD/CardBuatAkun";
 import CardEditJurusan from "./CRUD/CardEditJurusan";
+import CardEditAkun from "./CRUD/CardEditAkun";
 
 const CardAdminPanel = () => {
   const { activeContent, setActiveContent } = useDashboardContext();
@@ -24,10 +26,11 @@ const CardAdminPanel = () => {
       case "Manajemen Akun": return <ManajemenAkun />;
       case "Manajemen Jurusan": return <ManajemenJurusan />;
       case "Edit Presensi": return <CardEditPresence />;
-      case "Edit Akun": return <ManajemenAkun />;
+      case "Edit Akun": return <CardEditAkun />;
       case "Edit Jurusan": return <CardEditJurusan />;
       case "Buat Presensi": return <CardBuatPresensi />;
       case "Buat Jurusan": return <CardBuatJurusan />;
+      case "Buat Akun": return <CardBuatAkun />;
       default: return null;
     }
   };

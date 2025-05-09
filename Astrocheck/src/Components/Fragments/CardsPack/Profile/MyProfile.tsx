@@ -10,7 +10,6 @@ const MyProfile = () => {
     return <p>Loading...</p>;
   }
   console.log(user);
-  
 
   const CardProfileInput = [
     [
@@ -18,7 +17,7 @@ const MyProfile = () => {
         id: 1,
         htmlFor: "namaLengkap",
         text: "Nama Lengkap",
-        value: user.fullName || "None",
+        value: user?.fullName || "None",
       },
     ],
     [
@@ -27,7 +26,7 @@ const MyProfile = () => {
         id: 3,
         htmlFor: "password",
         text: "Password",
-        value: user.password || "Nons",
+        value: user?.password || "Nons",
       },
     ],
   ];
@@ -37,10 +36,10 @@ const MyProfile = () => {
       <div className="flex gap-5 items-center">
         <ProfileImage className="w-24" />
         <div className="text-lg font-normal">
-          <p>{user.fullName}</p>
+          <p>{user?.fullName}</p>
           <p className="text-gray-400">
-            {user.grade + " " + user?.idMajor?.major_name ||
-              (user.role != "admin" ? "None" : "Admin")}
+            {user?.grade + " " + user?.idMajor?.major_name ||
+              (user?.role != "admin" ? "None" : "Admin")}
           </p>
         </div>
       </div>
