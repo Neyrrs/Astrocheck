@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  profilePicture: { type: String, default: "" },
+  profilePicture: { secure_url: String, public_id: String },
   grade: { type: String, default: "" },
   idMajor: { type: mongoose.Schema.Types.ObjectId, ref: "Major" },
   role: { type: String, default: "user" },

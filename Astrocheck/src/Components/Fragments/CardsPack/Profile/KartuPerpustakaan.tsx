@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ProfileImageSquare } from "@/Components/Elements/Icons";
+// import { ProfileImageSquare } from "@/Components/Elements/Icons";
 
 const KartuPerpustakaan = () => {
   const [show, setShow] = useState(false);
@@ -59,7 +59,7 @@ const Kartu = () => {
         <p className="text-lg font-medium">Kartu Perpustakaan SMKN 1 Cibinong</p>
       </div>
       <div className="flex gap-5 justify-center mt-5">
-        <ProfileImageSquare />
+        {/* <ProfileImageSquare /> */}
         <div>
           <p className="font-medium">Nama</p>
           <p className="font-normal">Ezwan Ibnu Yassar</p>

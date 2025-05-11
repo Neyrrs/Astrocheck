@@ -1,6 +1,11 @@
 import jwt from "jsonwebtoken";
 import User from "../Models/AccountSchema.js";
 import Major from "../Models/MajorSchema.js";
+import cloudinary from "../Config/Cloudinary.js";
+import multer from "multer";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 export const loginUser = async (req, res) => {
   try {
@@ -69,12 +74,21 @@ export const registerUser = async (req, res) => {
     if (existingUser)
       return res.status(400).json({ message: "NISN sudah terdaftar!" });
 
+    let cloudinaryUrl = profilePicture;
+    if (req.files && req.files.profilePicture) {
+      const file = req.files.profilePicture;
+      const result = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+        folder: "user_profile_pictures",
+      });
+      cloudinaryUrl = result.secure_url;
+    }
+
     const newUser = new User({
       nisn,
       fullName,
       email,
       password,
-      profilePicture,
+      profilePicture: cloudinaryUrl,
       grade,
       idMajor: Idmajor._id,
       role,
@@ -93,7 +107,7 @@ export const registerUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find()
-      .populate("major", "major_code major_name")
+      .populate("idMajor", "major_code major_name")
       .select("-password");
 
     res.status(200).json(users);
@@ -105,12 +119,10 @@ export const getAllUsers = async (req, res) => {
 export const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await User.findById(userId)
-      .select("-password")
-      .populate({
-        path: "idMajor",
-        select: "major_code major_name -_id", 
-      });
+    const user = await User.findById(userId).select("-password").populate({
+      path: "idMajor",
+      select: "major_code major_name -_id",
+    });
 
     if (!user) {
       return res.status(404).json({ message: "User tidak ditemukan" });
@@ -121,41 +133,100 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-export const updateProfile = async (req, res) => {
+export const updateProfile = [
+  upload.single("profilePicture"),
+  async (req, res) => {
+    try {
+      const { nickname, email, password } = req.body;
+      const user = await User.findById(req.params.id);
+      if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
+
+      if (nickname) user.nickname = nickname;
+      if (email) user.email = email;
+      if (password) user.password = password;
+
+      // Jika ada file gambar baru yang diupload
+      if (req.file) {
+        // Hapus gambar lama kalau ada
+        if (user.profilePicture?.public_id) {
+          try {
+            await cloudinary.v2.uploader.destroy(user.profilePicture.public_id);
+          } catch (error) {
+            console.warn("Gagal hapus gambar lama:", error);
+          }
+        }
+
+        // Upload gambar baru ke Cloudinary
+        const uploadStream = cloudinary.v2.uploader.upload_stream(
+          { folder: "user_profile_pictures" },
+          async (error, result) => {
+            if (error) {
+              return res.status(500).json({ message: "Gagal upload gambar", error });
+            }
+
+            user.profilePicture = {
+              secure_url: result.secure_url,
+              public_id: result.public_id,
+            };
+
+            await user.save();
+            res.status(200).json({ message: "Profil berhasil diperbarui", user });
+          }
+        );
+
+        uploadStream.end(req.file.buffer);
+        return;
+      }
+
+      await user.save();
+      res.status(200).json({ message: "Profil berhasil diperbarui", user });
+    } catch (error) {
+      console.error("Error in updateProfile:", error);
+      res.status(500).json({ message: "Terjadi kesalahan saat memperbarui profil", error });
+    }
+  }
+];
+
+
+export const deleteProfilePicture = async (req, res) => {
   try {
-    const { fullName, nickname, email, password } = req.body;
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
 
-    if (fullName) user.fullName = fullName;
-    if (nickname) user.nickname = nickname;
-    if (email) user.email = email;
-    if (password) user.password = password;
+    if (user.profilePicture) {
+      const publicId = user.profilePicture.split("/").pop().split(".")[0];
+      await cloudinary.v2.uploader.destroy(publicId);
+      user.profilePicture = "";
+    }
 
     await user.save();
 
-    res.status(200).json({ message: "Profil berhasil diperbarui", user });
+    res.status(200).json({ message: "Gambar profil berhasil dihapus" });
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Terjadi kesalahan saat memperbarui profil", error });
+      .json({
+        message: "Terjadi kesalahan saat menghapus gambar profil",
+        error,
+      });
   }
 };
 
-export const deletePresence = async (req, res) => {
+export const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (!presence) {
-      return res.status(404).json({ message: "Data user tidak ditemukan" });
-    }
+    if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
 
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Tidak memiliki akses untuk menghapus data ini" });
+    if (user.profilePicture) {
+      const publicId = user.profilePicture.split("/").pop().split(".")[0];
+      await cloudinary.v2.uploader.destroy(publicId);
     }
 
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: "Akun berhasil dihapus" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan saat menghapus akun", error });
   }
 };

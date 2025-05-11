@@ -1,12 +1,19 @@
-import image from '@/assets/Pictures/Images/CircleImage.png'
-import Icons from './Icons'
+import Icons from './Icons';
+import useProfile from '@/Hooks/useProfile';
+import DefaultImage from "@/assets/Pictures/Images/DefaultImage.png";
 
-const ProfileImage = (props) => {
+const ProfileImage = ({width, height, size = '', ...rest }) => {
+  const {user} = useProfile();
   return (
-    <>
-        <Icons image={image} alt="Profile picture" className={`rounded-full ${props.size || ""} object-cover`} {...props}/>
-    </>
-  )
-}
+    <Icons
+      image={user?.profilePicture?.secure_url ?? DefaultImage}
+      alt="Profile picture"
+      width={width || 100}
+      height={height || 100}
+      className={`rounded-full ${size} object-cover`} 
+      {...rest}  
+    />
+  );
+};
 
-export default ProfileImage
+export default ProfileImage;

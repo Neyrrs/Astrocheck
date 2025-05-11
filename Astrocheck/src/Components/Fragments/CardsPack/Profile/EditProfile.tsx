@@ -1,20 +1,25 @@
-'use client'
+"use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
-import {ProfileImage} from "@/Components/Elements/Icons";
+import { ProfileImage } from "@/Components/Elements/Icons";
 import SuccessButton from "@/Components/Elements/Buttons/SuccessButton";
 import useProfile from "@/Hooks/useProfile";
+import { Input } from "@/Components/Elements/Inputs";
 
 const EditProfile = () => {
   const { user } = useProfile();
-  const { register, handleSubmit, reset } = useForm({
+  const [imagePreview, setImagePreview] = useState(
+    user?.profilePicture?.secure_url || ""
+  );
+  const { register, handleSubmit, reset, setValue } = useForm({
     defaultValues: {
-      nickname: "",
-      email: "",
+      nickname: user?.nickname || "",
+      email: user?.email || "",
       password: "",
+      profilePicture: "",
     },
   });
 
@@ -28,12 +33,33 @@ const EditProfile = () => {
     }
   }, [user, reset]);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setValue("profilePicture", file);
+    }
+  };
+
   const onSubmit = async (data) => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
-      await axios.put(`${backendUrl}/profile/update`, data, {
-        headers: { Authorization: `Bearer ${token}` },
+      const formData = new FormData();
+      formData.append("password", data.password);
+      if (data.profilePicture) {
+        formData.append("profilePicture", data.profilePicture);
+      }
+
+      await axios.put(`${backendUrl}/user/${user?._id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       Swal.fire({
@@ -54,23 +80,37 @@ const EditProfile = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex gap-5 items-center">
-        <ProfileImage className="w-24 hover:w-25 duration-150 ease-in-out" />
+        <div className="w-24 h-24 rounded-full overflow-hidden">
+          <ProfileImage width={100} height={100} />
+        </div>
         <div className="text-lg font-normal">
           <p>{user?.fullName}</p>
-          <p className="text-gray-500">{user?.kelas}</p>
+          <p className="text-gray-500">
+            {user?.grade + " " + user?.idMajor?.major_name}
+          </p>
         </div>
       </div>
-      <div className="w-full mt-5 flex flex-col">
-          <div  className="flex flex-col gap-2 font-normal">
-            <label className="w-full text-left">Password</label>
-            <input
-              type={'password'}
-              className="focus:border-[#6384E9] hover:border-[#6384E9] border-gray-300 focus:shadow-md hover:shadow-md duration-150 ease-in outline-none border-[2px] px-3 mb-2 py-[1rem] h-[2rem] w-full text-sm rounded-[5px] font-normal"
-              {...register('password')}
-              placeholder={'Masukkan password baru'}
-            />
-          </div>
+
+      <div className="w-full mt-5 flex flex-col font-normal">
+        <label className="w-full text-left">Password</label>
+        <Input
+          type="password"
+          {...register("password")}
+          placeholder="Masukkan password baru"
+        />
       </div>
+
+      <div className="w-full mt-2 flex flex-col font-normal">
+        <label className="w-full text-left">Gambar Profil</label>
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          placeholder="Select image"
+          required={false}
+        />
+      </div>
+
       <div className="mt-2">
         <SuccessButton text="Simpan" type="submit" />
       </div>
