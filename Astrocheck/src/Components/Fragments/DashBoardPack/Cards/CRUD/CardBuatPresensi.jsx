@@ -85,7 +85,7 @@ const CardBuatPresensi = () => {
   };
 
   const handleCancel = () => {
-    setActiveContent("Manajemen Absen");
+    setActiveContent("Manajemen Presensi");
   };
 
   return (
@@ -95,13 +95,11 @@ const CardBuatPresensi = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-        {/* Bagian Data Personal */}
         <div className="bg-white rounded-xl shadow-md">
           <div className="px-5 py-3 border-b font-bold text-xl">
             Personal Data
           </div>
-          <div className="grid grid-cols-2 gap-4 px-5 py-5">
-            {/* NISN */}
+          <div className="grid cols-2 gap-4 px-5 py-5">
             <div>
               <Label htmlFor="nisn" text="NISN *" />
               <Input
@@ -114,32 +112,14 @@ const CardBuatPresensi = () => {
                 <p className="text-red-500 text-sm">{errors.nisn.message}</p>
               )}
             </div>
-
-            {/* Nama Lengkap - tidak digunakan */}
-            <div>
-              <Label htmlFor="fullName" text="Nama Lengkap" />
-              <Input placeholder="Nama Lengkap" disabled />
-            </div>
-
-            {/* Kelas - hanya formalitas */}
-            <div>
-              <DropdownPackKelas placeholder="Kelas" value="" disabled />
-            </div>
-
-            {/* Jurusan - hanya formalitas */}
-            <div>
-              <DropdownPackJurusan placeholder="Jurusan" value="" disabled />
-            </div>
           </div>
         </div>
 
-        {/* Bagian Data Presensi */}
         <div className="bg-white rounded-xl shadow-md">
           <div className="px-5 py-3 border-b font-bold text-xl">
             Data Presensi
           </div>
           <div className="grid grid-cols-2 gap-3 px-5 py-5">
-            {/* Tanggal dan Jam hanya formalitas */}
             <div className="col-span-2 flex flex-row gap-4">
               <div className="w-full">
                 <Label text="Tanggal" />

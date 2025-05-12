@@ -2,14 +2,14 @@ import Major from "../Models/MajorSchema.js";
 
 export const createMajor = async (req, res) => {
   try {
-    const { major_code, major_name, majorFullName } = req.body;
+    const { major_code, major_name, majorFullName, duration } = req.body;
 
     const existingMajor = await Major.findOne({ major_code });
     if (existingMajor) {
       return res.status(400).json({ message: "Kode jurusan sudah ada!" });
     }
 
-    const newMajor = new Major({ major_code, major_name, majorFullName });
+    const newMajor = new Major({ major_code, major_name, majorFullName, duration });
     await newMajor.save();
 
     res.status(201).json({ message: "Jurusan berhasil dibuat!", major: newMajor });
@@ -30,11 +30,11 @@ export const getAllMajors = async (req, res) => {
 export const updateMajor = async (req, res) => {
   try {
     const { id } = req.params;
-    const { major_code, major_name, majorFullName } = req.body;
+    const { major_code, major_name, majorFullName, duration } = req.body;
 
     const updatedMajor = await Major.findByIdAndUpdate(
       id,
-      { major_code, major_name, majorFullName },
+      { major_code, major_name, majorFullName, duration },
       { new: true }
     );
 

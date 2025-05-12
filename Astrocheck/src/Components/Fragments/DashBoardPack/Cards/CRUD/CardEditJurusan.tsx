@@ -5,7 +5,11 @@ import { useItemContext } from "@/context/ItemContext";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { PrimaryButton, TertiaryButton, DangerButton } from "@/Components/Elements/Buttons";
+import {
+  PrimaryButton,
+  TertiaryButton,
+  DangerButton,
+} from "@/Components/Elements/Buttons";
 import Input from "@/Components/Elements/Inputs/Input";
 import Label from "@/Components/Elements/Labels/Label";
 import Swal from "sweetalert2";
@@ -26,30 +30,31 @@ const CardEditJurusan = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      _id : "",
+      _id: "",
       major_code: "",
       major_name: "",
       majorFullName: "",
+      duration: "",
     },
   });
 
   const values = watch();
 
-useEffect(() => {
-  if (selectedItem?._id) {
-    reset({
-      _id: selectedItem._id || "",
-      major_code: selectedItem.major_code || "",
-      major_name: selectedItem.major_name || "",
-      majorFullName: selectedItem.majorFullName || "",
-    });
-    setIsLoading(false);
-  }
-}, [selectedItem, reset]);
-
+  useEffect(() => {
+    if (selectedItem?._id) {
+      reset({
+        _id: selectedItem._id || "",
+        major_code: selectedItem.major_code || "",
+        major_name: selectedItem.major_name || "",
+        majorFullName: selectedItem.majorFullName || "",
+        duration: selectedItem.duration || "",
+      });
+      setIsLoading(false);
+    }
+  }, [selectedItem, reset]);
 
   const onSubmit = async (formData) => {
-    const { major_code, major_name, majorFullName, _id } = formData;
+    const { major_code, major_name, majorFullName, _id, duration } = formData;
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       await axios.put(
@@ -58,6 +63,7 @@ useEffect(() => {
           major_code,
           major_name,
           majorFullName,
+          duration,
         },
         {
           headers: {
@@ -148,34 +154,59 @@ useEffect(() => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <div className="bg-white rounded-xl shadow-md">
-          <div className="px-5 py-3 border-b font-bold text-xl">Data Jurusan</div>
+          <div className="px-5 py-3 border-b font-bold text-xl">
+            Data Jurusan
+          </div>
           <div className="grid grid-cols-2 gap-4 px-5 py-5">
             <div className="col-span-2">
               <Label htmlFor="id" text="ID" />
-              <DisabledInput  value={values?.major_code} onChange={(e) => setValue("major_code", e.target.value)} 
-                />
+              <DisabledInput
+                value={values?.major_code}
+                onChange={(e) => setValue("major_code", e.target.value)}
+              />
             </div>
 
             <div>
               <Label htmlFor="majorFullName" text="Nama Jurusan *" />
               <Input
-                {...register("majorFullName", { required: "Nama Jurusan wajib diisi" })}
+                {...register("majorFullName", {
+                  required: "Nama Jurusan wajib diisi",
+                })}
                 value={values?.majorFullName}
                 onChange={(e) => setValue("majorFullName", e.target.value)}
                 placeholder="Nama Jurusan"
               />
-              {errors.majorFullName && <p className="text-red-500 text-sm">{errors.majorFullName.message}</p>}
+              {errors.majorFullName && (
+                <p className="text-red-500 text-sm">
+                  {errors.majorFullName.message}
+                </p>
+              )}
             </div>
 
             <div>
               <Label htmlFor="major_name" text="Panggilan Jurusan *" />
               <Input
-                {...register("major_name", { required: "Nama panggilan Jurusan wajib diisi" })}
+                {...register("major_name", {
+                  required: "Nama panggilan Jurusan wajib diisi",
+                })}
                 value={values?.major_name}
                 onChange={(e) => setValue("major_name", e.target.value)}
                 placeholder="Panggilan Jurusan"
               />
-              {errors.major_name && <p className="text-red-500 text-sm">{errors.major_name.message}</p>}
+              {errors.major_name && (
+                <p className="text-red-500 text-sm">
+                  {errors.major_name.message}
+                </p>
+              )}
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="duration" text="Durasi" />
+              <Input
+                type="number"
+                value={values?.duration}
+                onChange={(e) => setValue("duration", e.target.value)}
+                placeholder="Durasi Jurusan"
+              />
             </div>
           </div>
         </div>

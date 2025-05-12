@@ -7,12 +7,12 @@ const DropdownPackJurusan = (props) => {
       <select
         name={props.name}
         id={props.id}
-        className={`${props.disabled ? 'border-[#dbdbdb] bg-[#fafafa]' : ''} outline-none border-gray-300 hover:shadow-md duration-200 ease-in-out text-black border-[2px] px-2 mb-2 py-[0.5rem] font-normal rounded-md text-sm w-full`}
+        className={`${props.disabled ? 'border-[#dbdbdb] bg-[#fafafa]' : ''} outline-none border-gray-300 hover:shadow-md duration-200 ease-in-out text-black border-[2px] px-2 py-[0.5rem] font-normal rounded-md text-sm w-full`}
         value={props.value || ""}
         onChange={props.onChange}
         disabled={props.disabled}
       >
-        <option value="">Pilih Kelas</option>
+        <option value="">Pilih Jurusan</option>
         <option value="RPL">RPL</option>
         <option value="SIJA">SIJA</option>
         <option value="TKJ">TKJ</option>

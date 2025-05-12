@@ -1,45 +1,52 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-const useProfile = () => {
-  const [user, setUser] = useState(null);
+const useFetchProfile = (endpoint = "profile") => {
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
+    try {
+      const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-      
-      try {
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-        const response = await axios.get(`${BACKEND_URL}/user/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
 
-        setUser(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data user:", error);
-        setError(error);
+      if (!token) throw new Error("Token tidak ditemukan");
 
-        if (error.response && error.response.status === 403) {
-          localStorage.removeItem("Token");
-          window.location.href = "/";
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+      const response = await axios.get(`${BACKEND_URL}/user/${endpoint}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
+      if (!response) return;
+      setData(response.data);
+    } catch (err) {
+      setError(err.message || "Terjadi kesalahan saat mengambil data profil");
+    } finally {
+      setLoading(false);
+    }
+  }, [endpoint]);
+
+  useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [fetchProfile]);
 
-  return { user, loading, error };
+  return { data, loading, error };
 };
 
-export default useProfile;
+export default useFetchProfile;
+
+export const useProfile = () => useFetchProfile("profile");
+export const useProfiles = () => useFetchProfile("profiles");
+
+export const useAllProfiles = () => {
+  const user = useProfile();
+  const users = useProfiles();
+  return {
+    user: user.data,
+    users: users.data,
+    loading: user.loading || users.loading,
+    error: user.error || users.error,
+  };
+};

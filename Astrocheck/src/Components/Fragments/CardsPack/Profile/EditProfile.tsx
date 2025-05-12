@@ -6,11 +6,11 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { ProfileImage } from "@/Components/Elements/Icons";
 import SuccessButton from "@/Components/Elements/Buttons/SuccessButton";
-import useProfile from "@/Hooks/useProfile";
+import { useAllProfiles} from "@/Hooks/useProfile";
 import { Input } from "@/Components/Elements/Inputs";
 
 const EditProfile = () => {
-  const { user } = useProfile();
+  const { user } = useAllProfiles();
   const [imagePreview, setImagePreview] = useState(
     user?.profilePicture?.secure_url || ""
   );

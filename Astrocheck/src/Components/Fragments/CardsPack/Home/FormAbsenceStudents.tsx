@@ -10,7 +10,7 @@ import {
 } from "@/Components/Fragments/DropdownPack";
 import Swal from "sweetalert2";
 import axios from "axios";
-import useProfile from "@/Hooks/useProfile";
+import {useAllProfiles} from "@/Hooks/useProfile";
 
 const showToast = (icon = "success", title = "", onClose = () => {}) => {
   let clicked = false;
@@ -41,7 +41,7 @@ const showToast = (icon = "success", title = "", onClose = () => {}) => {
 };
 
 const FormAbsence = () => {
-  const { user } = useProfile();
+  const { user } = useAllProfiles();
 
   const [formData, setFormData] = useState({
     nisn: "",
@@ -143,7 +143,7 @@ const FormAbsence = () => {
           <div>
             <DropdownPackJurusan
               name="jurusan"
-              value={user?.idMajor.major_name || ""}
+              value={user?.idMajor?.major_name || ""}
               disabled
             />
           </div>

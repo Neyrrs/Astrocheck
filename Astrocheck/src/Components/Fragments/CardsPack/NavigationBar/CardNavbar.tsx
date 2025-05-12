@@ -8,11 +8,11 @@ import {
   AdminPanel,
 } from "@/assets/Pictures/CardNavbar";
 import Swal from "sweetalert2";
-import useProfile from "@/Hooks/useProfile";
+import {useAllProfiles} from "@/Hooks/useProfile";
 import Image from "next/image";
 
 const CardNavbar = () => {
-  const { user } = useProfile();
+  const { user } = useAllProfiles();
   const handleLogout = (e) => {
     e.preventDefault();
     Swal.fire({
@@ -45,7 +45,7 @@ const CardNavbar = () => {
             <div>
               <p className="text-black text-sm">{user.fullName}</p>
               <p className="text-sm text-gray-500">
-                {user.grade || (user.role === "admin" && `Admin Astrocheck`)}
+                {(user.grade + " " + user?.idMajor?.major_name) || (user.role === "admin" && `Admin Astrocheck`)}
               </p>
             </div>
           </div>

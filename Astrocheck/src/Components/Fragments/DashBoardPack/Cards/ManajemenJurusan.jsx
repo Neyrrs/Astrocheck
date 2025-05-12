@@ -23,6 +23,7 @@ const ManajemenJurusan = () => {
     { header: "ID", field: "__index" },
     { header: "Nama Jurusan", field: "majorFullName" },
     { header: "Panggilan Jurusan", field: "major_name" },
+    { header: "Durasi", field: "duration" },
     {
       header: "",
       render: (row) => (

@@ -6,11 +6,11 @@ import { CardLainnya, CardMembaca, CardMeminjam } from "./CardPresences.jsx";
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
 import { useEffect, useState } from "react";
-import useProfile from "@/Hooks/useProfile.js";
+import { useAllProfiles} from "@/Hooks/useProfile.js";
 
 const DashBoardPack = () => {
   const { fullYear, allPresences } = useAllPresence();
-  const {user} = useProfile();
+  const {user} = useAllProfiles();
   const fullYearData = fullYear?.logsPerMonth?.map((item) => item.count) ?? [];
   const [currentDate, setCurrentDate] = useState("");
   

@@ -26,6 +26,8 @@ const CardBuatJurusan = () => {
     defaultValues: {
       major_code: "",
       major_name: "",
+      majorFullName: "",
+      duration: "",
     },
   });
 
@@ -36,11 +38,11 @@ const CardBuatJurusan = () => {
       setIsLoading(true);
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-      const { major_code, major_name } = formData;
+      const { major_code, major_name, duration, majorFullName } = formData;
 
       await axios.post(
         `${backendUrl}/major/`,
-        { major_code, major_name },
+        { major_code, major_name, duration, majorFullName},
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
@@ -59,7 +61,7 @@ const CardBuatJurusan = () => {
         timerProgressBar: true,
       });
 
-      reset(); 
+      reset();
       setActiveContent("Manajemen Jurusan");
     } catch (error) {
       console.error("Gagal menambahkan presensi:", error);
@@ -134,6 +136,15 @@ const CardBuatJurusan = () => {
                   {errors.major_code.message}
                 </p>
               )}
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="duration" text="Durasi" />
+              <Input
+                type="number"
+                value={values?.duration}
+                onChange={(e) => setValue("duration", e.target.value)}
+                placeholder="Durasi Jurusan"
+              />
             </div>
           </div>
         </div>

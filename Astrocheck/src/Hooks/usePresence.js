@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import useProfile from "./useProfile";
+import { useAllProfiles} from "./useProfile";
 
 const useFetchPresence = (endpoint) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user } = useProfile();
+  const { user } = useAllProfiles();
 
   const fetchData = useCallback(async () => {
     if (!user) return;

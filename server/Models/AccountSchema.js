@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const UserSchema = new mongoose.Schema({
   nisn: { type: String, required: true, unique: true },
   fullName: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: false },
   password: { type: String, required: true },
   profilePicture: { secure_url: String, public_id: String },
   grade: { type: String, default: "" },
@@ -12,16 +12,20 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, default: "user" },
   status: { type: String, default: "belum lulus" },
   generation: {
-    type: String,
+    type: Number,
     default: function () {
       const BASE_YEAR = 1999;
       const currentYear = new Date().getFullYear();
-      return `Angkatan ${currentYear - BASE_YEAR + 1}`;
+      return `${currentYear - BASE_YEAR + 1}`;
     },
   },
   createdAt: {
     type: Date,
     default: () => new Date().toISOString().slice(0, 10),
+  },
+  graduationYear: {
+    type: Number,
+    default: null,
   },
 });
 

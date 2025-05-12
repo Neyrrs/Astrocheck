@@ -6,12 +6,12 @@ import {
   Dasbor,
   GrafikAbsensi,
 } from "@/assets/Icons/Index";
-import useProfile from "@/Hooks/useProfile";
+import {useAllProfiles} from "@/Hooks/useProfile";
 import Image from "next/image";
 
 const ToggleSidebar = ({ setActiveContent }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useProfile();
+  const { user } = useAllProfiles();
 
   const sidebarContentStyle = [
     "hover:translate-x-2 duration-200 ease-out cursor-pointer flex items-center py-1 gap-4 bg-gradient-to-r h-fit rounded-md hover:from-[#E3EAFF] to-white px-3",

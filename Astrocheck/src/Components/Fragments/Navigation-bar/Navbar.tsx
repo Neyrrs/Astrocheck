@@ -75,7 +75,7 @@ const Navbar = ({ homePage = false }: NavbarProps) => {
           Get App
         </button>
         <div className="relative flex items-center gap-20 flex-col">
-          <button onClick={togglePopup}>
+          <button onClick={togglePopup} className='h-fit w-fit'>
             <ProfileImage size="w-8 object-contain h-fit border-2 border-white" />
           </button>
           {isPopupVisible && <CardNavbar />}
