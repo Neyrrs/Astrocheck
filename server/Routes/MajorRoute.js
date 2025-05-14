@@ -5,7 +5,7 @@ import { authenticateUser, authorizeAdmin } from "../Middlewares/AuthMiddleware.
 
 const router = express.Router();
 
-router.post("/", authenticateUser, authorizeAdmin, createMajor);      
+router.post("/", createMajor);      
 router.get("/", authenticateUser, authorizeAdmin, getAllMajors);                     
 router.put("/:id", authenticateUser, authorizeAdmin, updateMajor);  
 router.delete("/:id", authenticateUser, authorizeAdmin, deleteMajor);
