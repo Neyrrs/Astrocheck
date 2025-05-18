@@ -41,7 +41,7 @@ const CardNavbar = () => {
       <div className="absolute right-0 mt-14 bg-white rounded-md shadow-lg p-4 w-64 z-50">
         <Link href={{ pathname: "/profile", query: { show: 1 } }}>
           <div className="flex items-center gap-3 border-b border-[#d0d5dc] pb-3">
-            <ProfileImage size="w-12 object-contain h-fit border-2 border-white" />
+            <ProfileImage size="w-12 object-contain h-fit border-2 border-white rounded-full" />
             <div>
               <p className="text-black text-sm">{user.fullName}</p>
               <p className="text-sm text-gray-500">

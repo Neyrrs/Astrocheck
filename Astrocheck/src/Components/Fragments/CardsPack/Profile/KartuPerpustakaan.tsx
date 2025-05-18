@@ -1,7 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 // import { ProfileImageSquare } from "@/Components/Elements/Icons";
+import { useProfile } from "@/Hooks/useProfile";
+import { ProfileImage } from "@/Components/Elements/Icons";
 
 const KartuPerpustakaan = () => {
   const [show, setShow] = useState(false);
@@ -9,19 +11,22 @@ const KartuPerpustakaan = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         setShow(false);
       }
     };
 
     if (show) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [show]);
 
@@ -53,20 +58,29 @@ const KartuPerpustakaan = () => {
 export default KartuPerpustakaan;
 
 const Kartu = () => {
+  const { data: user } = useProfile();
   return (
     <div>
       <div className="flex justify-center border-b border-[#A8A8A8] py-4">
-        <p className="text-lg font-medium">Kartu Perpustakaan SMKN 1 Cibinong</p>
+        <p className="text-lg font-medium">
+          Kartu Perpustakaan SMKN 1 Cibinong
+        </p>
       </div>
       <div className="flex gap-5 justify-center mt-5">
-        {/* <ProfileImageSquare /> */}
+        <ProfileImage
+          width={150}
+          height={150}
+          className="rounded-sm object-cover"
+        />
         <div>
           <p className="font-medium">Nama</p>
-          <p className="font-normal">Ezwan Ibnu Yassar</p>
+          <p className="font-normal">{user?.fullName}</p>
           <p className="font-medium">NIS</p>
-          <p className="font-normal">1234567890</p>
+          <p className="font-normal">{user?.nisn}</p>
           <p className="font-medium">Kelas</p>
-          <p className="font-normal">XI RPL 2</p>
+          <p className="font-normal">
+            {user?.grade + " " + user?.idMajor?.major_name}
+          </p>
         </div>
       </div>
       <div className="flex justify-center">

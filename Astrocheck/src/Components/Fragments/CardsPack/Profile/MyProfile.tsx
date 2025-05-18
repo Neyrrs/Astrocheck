@@ -1,7 +1,7 @@
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 import DisabledToggleInput from "@/Components/Fragments/InputPack/DisabledToggleInput.jsx";
 import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack.jsx";
-import { useAllProfiles} from "@/Hooks/useProfile.js";
+import { useAllProfiles } from "@/Hooks/useProfile.js";
 
 const MyProfile = () => {
   const { user } = useAllProfiles();
@@ -34,7 +34,7 @@ const MyProfile = () => {
   return (
     <>
       <div className="flex gap-5 items-center">
-        <ProfileImage className="w-24 rounded-full" />
+        <ProfileImage width={100} height={100} className="rounded-full" />
         <div className="text-lg font-normal">
           <p>{user?.fullName}</p>
           <p className="text-gray-400">

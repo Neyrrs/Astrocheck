@@ -2,17 +2,28 @@ import Icons from "./Icons";
 import { useAllProfiles } from "@/Hooks/useProfile";
 import DefaultImage from "@/assets/Pictures/Images/DefaultImage.png";
 
-const ProfileImage = ({ width, height, size = "", ...rest }) => {
+const ProfileImage = ({ width = 50, height = 50, size = "", className = "", ...rest }) => {
   const { user } = useAllProfiles();
+  const imageSrc = user?.profilePicture?.secure_url ?? DefaultImage;
+
   return (
-    <Icons
-      image={user?.profilePicture?.secure_url ?? DefaultImage}
-      alt="Profile picture"
-      width={width || 100}
-      height={height || 100}
-      className={`rounded-full ${size} object-cover`}
-      {...rest}
-    />
+    <div
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        overflow: "hidden",
+      }}
+      className={`relative ${size}`}
+    >
+      <Icons
+        image={imageSrc}
+        alt="Profile picture"
+        width={width}
+        height={height}
+        className={`object-cover w-full h-full ${className}`} // className tambahan dari luar
+        {...rest}
+      />
+    </div>
   );
 };
 

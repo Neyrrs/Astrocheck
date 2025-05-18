@@ -1,37 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { ProfileImage } from "@/Components/Elements/Icons";
 import SuccessButton from "@/Components/Elements/Buttons/SuccessButton";
-import { useAllProfiles} from "@/Hooks/useProfile";
-import { Input } from "@/Components/Elements/Inputs";
+import { useAllProfiles } from "@/Hooks/useProfile";
 
 const EditProfile = () => {
   const { user } = useAllProfiles();
-  const [imagePreview, setImagePreview] = useState(
-    user?.profilePicture?.secure_url || ""
-  );
-  const { register, handleSubmit, reset, setValue } = useForm({
-    defaultValues: {
-      nickname: user?.nickname || "",
-      email: user?.email || "",
-      password: "",
-      profilePicture: "",
-    },
-  });
+  const [imagePreview, setImagePreview] = useState(user?.profilePicture?.secure_url || "");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (user) {
-      reset({
-        nickname: user.nickname || "",
-        email: user.email || "",
-        password: "",
-      });
+    if (user?.profilePicture?.secure_url) {
+      setImagePreview(user.profilePicture.secure_url);
     }
-  }, [user, reset]);
+  }, [user]);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -41,18 +31,19 @@ const EditProfile = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
-      setValue("profilePicture", file);
+      setSelectedImage(file); // Simpan file untuk dikirim saat submit
     }
   };
 
-  const onSubmit = async (data) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
       const formData = new FormData();
-      formData.append("password", data.password);
-      if (data.profilePicture) {
-        formData.append("profilePicture", data.profilePicture);
+
+      if (selectedImage) {
+        formData.append("profilePicture", selectedImage);
       }
 
       await axios.put(`${backendUrl}/user/${user?._id}`, formData, {
@@ -78,40 +69,37 @@ const EditProfile = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit}>
       <div className="flex gap-5 items-center">
-        <div className="w-24 h-24 rounded-full overflow-hidden">
-          <ProfileImage width={100} height={100} />
+        <div
+          className="w-24 h-24 rounded-full overflow-hidden cursor-pointer border"
+          onClick={handleImageClick}
+          title="Klik untuk ganti gambar"
+        >
+          {imagePreview ? (
+            <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+          ) : (
+            <ProfileImage width={100} height={100} />
+          )}
         </div>
         <div className="text-lg font-normal">
-          <p>{user?.fullName}</p>
+          <p>{user?.fullName || "Loading..."}</p>
           <p className="text-gray-500">
-            {user?.grade + " " + user?.idMajor?.major_name}
+            {(user?.grade + " " + user?.idMajor?.major_name) ?? "Loading"}
           </p>
         </div>
       </div>
 
-      <div className="w-full mt-5 flex flex-col font-normal">
-        <label className="w-full text-left">Password</label>
-        <Input
-          type="password"
-          {...register("password")}
-          placeholder="Masukkan password baru"
-        />
-      </div>
+      {/* input file disembunyikan */}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        ref={fileInputRef}
+        className="hidden"
+      />
 
-      <div className="w-full mt-2 flex flex-col font-normal">
-        <label className="w-full text-left">Gambar Profil</label>
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          placeholder="Select image"
-          required={false}
-        />
-      </div>
-
-      <div className="mt-2">
+      <div className="mt-4">
         <SuccessButton text="Simpan" type="submit" />
       </div>
     </form>

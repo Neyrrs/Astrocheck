@@ -13,16 +13,29 @@ const DropdownPackJurusan = (props) => {
         disabled={props.disabled}
       >
         <option value="">Pilih Jurusan</option>
-        <option value="RPL">RPL</option>
-        <option value="SIJA">SIJA</option>
-        <option value="TKJ">TKJ</option>
-        <option value="DKV">DKV</option>
-        <option value="DPIB">DPIB</option>
-        <option value="TOI">TOI</option>
-        <option value="TKP">TKP</option>
-        <option value="TP">TP</option>
-        <option value="TFLM">TFLM</option>
-        <option value="TKR">TKR</option>
+        <option value="RPL 2">RPL 1</option>
+        <option value="RPL 1">RPL 2</option>
+        <option value="SIJA 1">SIJA 1</option>
+        <option value="SIJA 2">SIJA 2</option>
+        <option value="TKJ 1">TKJ 1</option>
+        <option value="TKJ 2">TKJ 2</option>
+        <option value="DKV 1">DKV 1</option>
+        <option value="DKV 2">DKV 2</option>
+        <option value="DKV 3">DKV 3</option>
+        <option value="DKV 4">DKV 4</option>
+        <option value="DPIB 1">DPIB 1</option>
+        <option value="DPIB 2">DPIB 2</option>
+        <option value="TOI 1">TOI 1</option>
+        <option value="TOI 2">TOI 2</option>
+        <option value="TKP 1">TKP </option>
+        <option value="TKP 2">TKP </option>
+        <option value="TP 1">TP</option>
+        <option value="TP 2">TP</option>
+        <option value="TFLM 1">TFLM</option>
+        <option value="TFLM 2">TFLM</option>
+        <option value="TKR 1">TKR</option>
+        <option value="TKR 2">TKR</option>
+        <option value="TKR 3">TKR</option>
       </select>
     </div>
   );

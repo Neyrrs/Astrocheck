@@ -162,7 +162,6 @@ const FormAbsence = () => {
               placeholder="Tambahkan alasan spesifik anda di sini"
               value={formData.detailReason}
               onChange={handleChange}
-              disabled={formData.reason === "Lainnya" ? false : true}
             />
           </div>
 
