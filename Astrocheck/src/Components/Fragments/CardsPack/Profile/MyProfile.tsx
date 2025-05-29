@@ -9,7 +9,6 @@ const MyProfile = () => {
   if (!user) {
     return <p>Loading...</p>;
   }
-  console.log(user);
 
   const CardProfileInput = [
     [

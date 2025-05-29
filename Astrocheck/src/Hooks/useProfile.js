@@ -42,11 +42,44 @@ export const useProfiles = () => useFetchProfile("profiles");
 
 export const useAllProfiles = () => {
   const user = useProfile();
-  const users = useProfiles();
+
+  const [users, setUsers] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      if (!user?.data?.role || user?.data?.role !== "admin") {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem("Token");
+        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+        const response = await axios.get(`${BACKEND_URL}/user/profiles`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setUsers(response.data);
+      } catch (err) {
+        setError(err.message || "Terjadi kesalahan saat mengambil semua profil");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user?.data) {
+      fetchAllUsers();
+    }
+  }, [user?.data]);
+
   return {
     user: user.data,
-    users: users.data,
-    loading: user.loading || users.loading,
-    error: user.error || users.error,
+    users,
+    loading: user.loading || loading,
+    error: user.error || error,
   };
 };
+

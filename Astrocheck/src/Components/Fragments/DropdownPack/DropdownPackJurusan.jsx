@@ -13,8 +13,8 @@ const DropdownPackJurusan = (props) => {
         disabled={props.disabled}
       >
         <option value="">Pilih Jurusan</option>
-        <option value="RPL 2">RPL 1</option>
-        <option value="RPL 1">RPL 2</option>
+        <option value="RPL 1">RPL 1</option>
+        <option value="RPL 2">RPL 2</option>
         <option value="SIJA 1">SIJA 1</option>
         <option value="SIJA 2">SIJA 2</option>
         <option value="TKJ 1">TKJ 1</option>

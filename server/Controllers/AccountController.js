@@ -9,9 +9,9 @@ const upload = multer({ storage });
 
 export const loginUser = async (req, res) => {
   try {
-    const { nisn, password } = req.body;
+    const { nis, password } = req.body;
 
-    const user = await User.findOne({ nisn }).populate("idMajor", "major_name");
+    const user = await User.findOne({ nis }).populate("idMajor", "major_name");
     if (!user) {
       return res.status(404).json({ message: "Akun tidak ditemukan!" });
     }
@@ -24,7 +24,7 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
-        nisn: user.nisn,
+        nis: user.nis,
         fullName: user.fullName,
         role: user.role,
         major: user.idMajor ? user.idMajor.major_name : null,
@@ -37,7 +37,7 @@ export const loginUser = async (req, res) => {
       message: "Login berhasil!",
       token,
       user: {
-        nisn: user.nisn,
+        nis: user.nis,
         fullName: user.fullName,
         email: user.email,
         grade: user.grade,
@@ -45,6 +45,7 @@ export const loginUser = async (req, res) => {
         profilePicture: user.profilePicture,
         nickname: user.nickname || "",
         role: user.role || "student",
+        streak: user.streak || 0,
       },
     });
   } catch (error) {
@@ -58,7 +59,7 @@ export const registerUser = [
   async (req, res) => {
     try {
       const {
-        nisn,
+        nis,
         fullName,
         password,
         grade,
@@ -69,17 +70,16 @@ export const registerUser = [
         createdAt,
       } = req.body;
 
-      const Idmajor = await Major.findOne({ major_name });
-      if (!Idmajor)
+      const major = await Major.findOne({ major_name });
+      if (!major)
         return res.status(404).json({ message: "Major tidak ditemukan!" });
 
-      const major = await Major.findOne({ major_name });
-      const generationYear = 1999 + generation;
-      const graduationYear = generationYear + major.duration;
+      const enteredYear = 2000 + parseInt(generation) - 2;
+      const graduationYear = enteredYear + parseInt(major.duration);
 
-      const existingUser = await User.findOne({ nisn });
+      const existingUser = await User.findOne({ nis });
       if (existingUser)
-        return res.status(400).json({ message: "NISN sudah terdaftar!" });
+        return res.status(400).json({ message: "nis sudah terdaftar!" });
 
       let profilePictureCloud = "";
 
@@ -99,12 +99,12 @@ export const registerUser = [
             };
 
             const newUser = new User({
-              nisn,
+              nis,
               fullName,
               password,
               profilePicture: profilePictureCloud,
               grade,
-              idMajor: Idmajor._id,
+              idMajor: major?._id,
               role,
               status,
               generation,
@@ -122,12 +122,12 @@ export const registerUser = [
         streamUpload.end(req.file.buffer);
       } else {
         const newUser = new User({
-          nisn,
+          nis,
           fullName,
           password,
           profilePicture: "",
           grade,
-          idMajor: Idmajor._id,
+          idMajor: major._id,
           role,
           status,
           generation,
@@ -188,7 +188,7 @@ export const updateProfile = [
         return res.status(404).json({ message: "User tidak ditemukan" });
 
       const allowedFields = [
-        "nisn",
+        "nis",
         "fullName",
         "grade",
         "major",

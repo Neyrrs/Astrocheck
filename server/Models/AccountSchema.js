@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
-  nisn: { type: String, required: true, unique: true },
+  nis: { type: String, required: true, unique: true },
   fullName: { type: String, required: true },
   email: { type: String},
   password: { type: String, required: true },
@@ -25,6 +25,14 @@ const UserSchema = new mongoose.Schema({
   },
   graduationYear: {
     type: Number,
+    default: null,
+  },
+  streak: {
+    type: Number,
+    default: 0,
+  },
+  lastPresenceDate: {
+    type: String, 
     default: null,
   },
 });

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useAllProfiles} from "./useProfile";
+import { useAllProfiles } from "./useProfile";
 
 const useFetchPresence = (endpoint) => {
   const [data, setData] = useState(null);
@@ -40,53 +40,58 @@ const useFetchPresence = (endpoint) => {
 
 export const useTodayPresence = () => useFetchPresence("getToday");
 export const useFullYearPresence = () => useFetchPresence("getPerMonth");
-export const useAvaragePresenceMonths = () =>
-  useFetchPresence("getPerMonth");
-export const useSummaryMajor = () =>
-  useFetchPresence("summaryMajor");
-
-
+export const useAvaragePresenceMonths = () => useFetchPresence("getPerMonth");
+export const useSummaryMajor = () => useFetchPresence("summaryMajor");
 export const useAllPresences = () => useFetchPresence("allUsersPresence");
-export const useUserPresence = () => useFetchPresence("logKehadiran");
-export const useCurrentMonthPresence = () => useFetchPresence("getCurrentMonth");
+export const useCurrentMonthPresence = () =>
+  useFetchPresence("getCurrentMonth");
 export const useSumaryPresence = () => useFetchPresence("summary");
-export const useLastYearPresence = () =>
-  useFetchPresence("getLastYear");
+export const useLastYearPresence = () => useFetchPresence("getLastYear");
+
+export const useUserPresence = () => useFetchPresence("logKehadiran");
 
 export const useAllPresence = () => {
-  const average = useAvaragePresenceMonths();
-  const summary = useSumaryPresence();
+  const { user } = useAllProfiles();
+
+  const userPresence = useUserPresence();
   const today = useTodayPresence();
   const fullYear = useFullYearPresence();
   const allUsers = useAllPresences();
-  const userPresence = useUserPresence();
+  const average = useAvaragePresenceMonths();
   const CurrentMonth = useCurrentMonthPresence();
+  const summary = useSumaryPresence();
   const lastYear = useLastYearPresence();
   const summaryMajor = useSummaryMajor();
 
+  const isAdmin = user?.role === "admin";
+
   return {
-    summaryMajor: summaryMajor.data,
-    lastYear: lastYear.data,
-    summary: summary.data,
-    averages: average.data,
-    today: today.data,
-    fullYear: fullYear.data,
-    allPresences: allUsers.data,
-    CurrentMonth: CurrentMonth.data,
+    summaryMajor: isAdmin ? summaryMajor.data : null,
+    lastYear: isAdmin ? lastYear.data : null,
+    summary: isAdmin ? summary.data : null,
+    averages: isAdmin ? average.data : null,
+    today: isAdmin ? today.data : null,
+    fullYear: isAdmin ? fullYear.data : null,
+    allPresences: isAdmin ? allUsers.data : null,
+    CurrentMonth: isAdmin ? CurrentMonth.data : null,
     userPresence: userPresence.data,
-    loading:
-    today.loading ||
-    fullYear.loading ||
-    allUsers.loading ||
-    userPresence.loading ||
-    average.loading ||
-    CurrentMonth.loading,
-  error:
-    today.error ||
-    fullYear.error ||
-    allUsers.error ||
-    userPresence.error ||
-    average.error ||
-    CurrentMonth.error,
+
+    loading: isAdmin
+      ? today.loading ||
+        fullYear.loading ||
+        allUsers.loading ||
+        userPresence.loading ||
+        average.loading ||
+        CurrentMonth.loading
+      : userPresence.loading,
+
+    error: isAdmin
+      ? today.error ||
+        fullYear.error ||
+        allUsers.error ||
+        userPresence.error ||
+        average.error ||
+        CurrentMonth.error
+      : userPresence.error,
   };
 };

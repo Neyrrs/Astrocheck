@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const PresenceSchema = new mongoose.Schema(
   {
-    nisn:  {type: String, ref: "user"},
+    nis:  {type: String, ref: "user"},
     date: {
       type: String,
       required: true,

@@ -66,7 +66,7 @@ const CardBuatPresensi = () => {
       });
 
       reset(); // Kosongkan form
-      setActiveContent("Manajemen Absen");
+      setActiveContent("Manajemen Presensi");
     } catch (error) {
       console.error("Gagal menambahkan presensi:", error);
       Swal.fire({
@@ -123,11 +123,11 @@ const CardBuatPresensi = () => {
             <div className="col-span-2 flex flex-row gap-4">
               <div className="w-full">
                 <Label text="Tanggal" />
-                <Input placeholder="Tanggal" type="date" disabled />
+                <Input placeholder="Tanggal" type="date" />
               </div>
               <div className="w-full">
                 <Label text="Jam" />
-                <Input placeholder="Jam" type="text" disabled />
+                <Input placeholder="Jam" type="text" />
               </div>
             </div>
 
@@ -147,7 +147,6 @@ const CardBuatPresensi = () => {
               <TextArea
                 height="h-40"
                 {...register("detailReason", {
-                  required: "Detail alasan wajib diisi",
                 })}
                 placeholder="Detail Alasan"
                 value={values.detailReason}

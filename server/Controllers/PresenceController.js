@@ -1,6 +1,7 @@
 import Presence from "../Models/PresenceSchema.js";
 import User from "../Models/AccountSchema.js";
 import Major from "../Models/MajorSchema.js";
+import { isHolidayOrWeekend } from "../Utils/HolidayChecker.js";
 
 const getPresenceCounts = async () => {
   const [membaca, meminjam, lainnya] = await Promise.all([
@@ -13,9 +14,9 @@ const getPresenceCounts = async () => {
 
 export const savePresence = async (req, res) => {
   try {
-    const { nisn } = req.user;
+    const { nis } = req.user;
 
-    const user = await User.findOne({ nisn });
+    const user = await User.findOne({ nis });
     if (!user) {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
@@ -27,8 +28,31 @@ export const savePresence = async (req, res) => {
       minute: "2-digit",
     });
 
+    let newStreak = user.streak;
+
+    if (!isHolidayOrWeekend(formattedDate)) {
+      const lastPresence = await Presence.findOne({ nis }).sort({ date: -1 });
+
+      if (lastPresence) {
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+        if (lastPresence.date === yesterdayStr) {
+          newStreak = user.streak + 1;
+        } else {
+          newStreak = 1;
+        }
+      } else {
+        newStreak = 1;
+      }
+
+      user.streak = newStreak;
+      await user.save();
+    }
+
     const newPresence = new Presence({
-      nisn: user.nisn,
+      nis: user.nis,
       ...req.body,
       date: formattedDate,
       time: formattedTime,
@@ -46,6 +70,7 @@ export const savePresence = async (req, res) => {
       membaca,
       meminjam,
       lainnya,
+      streak: user.streak,
     });
   } catch (error) {
     res
@@ -54,18 +79,19 @@ export const savePresence = async (req, res) => {
   }
 };
 
+
 export const getLogs = async (req, res) => {
   try {
-    const { nisn } = req.user;
+    const { nis } = req.user;
 
-    const logs = await Presence.find({ nisn });
+    const logs = await Presence.find({ nis });
     if (!logs.length) {
       return res
         .status(404)
         .json({ message: "Tidak ada data presensi untuk user ini" });
     }
 
-    const user = await User.findOne({ nisn })
+    const user = await User.findOne({ nis })
       .select("fullName grade idMajor")
       .populate("idMajor", "major_name");
 
@@ -101,27 +127,29 @@ export const getLogs = async (req, res) => {
 
 export const getAllUsersPresence = async (req, res) => {
   try {
-    const presence = await Presence.find().sort({ date: -1 }).populate({
-      path: "nisn",
-      model: "User",
-      localField: "nisn",
-      foreignField: "nisn",
-      select: "fullName grade idMajor",
-    });
+    const presenceList = await Presence.find().sort({ date: -1 });
 
-    const count = presence.length;
+    const count = presenceList.length;
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
 
-    const formattedPresence = presence.map((pres) => ({
-      id: pres._id,
-      fullName: pres.nisn?.fullName || "-",
-      grade: pres.nisn?.grade || "-",
-      major: pres.nisn?.idMajor?.major_name || "-",
-      date: pres.date,
-      time: pres.time,
-      reason: pres.reason,
-      detailReason: pres.detailReason || "-",
-    }));
+    const formattedPresence = await Promise.all(
+      presenceList.map(async (pres) => {
+        const user = await User.findOne({ nis: pres.nis }).populate(
+          "idMajor"
+        );
+
+        return {
+          id: pres._id,
+          fullName: user?.fullName || "-",
+          grade: user?.grade || "-",
+          major: user?.idMajor?.major_name || "-",
+          date: pres.date,
+          time: pres.time,
+          reason: pres.reason,
+          detailReason: pres.detailReason || "-",
+        };
+      })
+    );
 
     res.json({
       count,
@@ -257,7 +285,7 @@ export const getPresenceSummary = async (req, res) => {
         date: today,
         reason: "Lainnya",
       }),
-      count : await Presence.countDocuments({ date: today }),
+      count: await Presence.countDocuments({ date: today }),
     };
 
     const monthly = {
@@ -273,7 +301,9 @@ export const getPresenceSummary = async (req, res) => {
         date: { $regex: `^${year}-${month}` },
         reason: "Lainnya",
       }),
-      count : await Presence.countDocuments({ date: { $regex: `^${year}-${month}` } }),
+      count: await Presence.countDocuments({
+        date: { $regex: `^${year}-${month}` },
+      }),
     };
 
     const yearly = {
@@ -289,7 +319,7 @@ export const getPresenceSummary = async (req, res) => {
         date: { $regex: `^${year}-` },
         reason: "Lainnya",
       }),
-      count : await Presence.countDocuments({ date: { $regex: `^${year}-` } }),
+      count: await Presence.countDocuments({ date: { $regex: `^${year}-` } }),
     };
 
     res.json({ daily, monthly, yearly });
@@ -370,7 +400,7 @@ export const updatePresence = async (req, res) => {
       return res.status(404).json({ message: "Data presensi tidak ditemukan" });
     }
 
-    if (req.user.nisn !== presence.nisn && req.user.role !== "admin") {
+    if (req.user.nis !== presence.nis && req.user.role !== "admin") {
       return res
         .status(403)
         .json({ message: "Tidak memiliki akses untuk mengedit data ini" });
@@ -416,13 +446,13 @@ export const getPresenceById = async (req, res) => {
       return res.status(404).json({ message: "Data presensi tidak ditemukan" });
     }
 
-    const user = await User.findOne({ nisn: presence.nisn }).populate(
+    const user = await User.findOne({ nis: presence.nis }).populate(
       "idMajor"
     );
 
     res.json({
       id: presence._id,
-      nisn: presence.nisn,
+      nis: presence.nis,
       fullName: user?.fullName || "-",
       grade: user?.grade || "-",
       major: user?.idMajor?.major_name || "-",
@@ -432,12 +462,10 @@ export const getPresenceById = async (req, res) => {
       detailReason: presence.detailReason || "-",
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Terjadi kesalahan saat mengambil data presensi",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Terjadi kesalahan saat mengambil data presensi",
+      error: error.message,
+    });
   }
 };
 
@@ -447,8 +475,8 @@ export const getMostAbsentMajors = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "nisn",
-          foreignField: "nisn",
+          localField: "nis",
+          foreignField: "nis",
           as: "userData",
         },
       },
@@ -483,7 +511,7 @@ export const getMostAbsentStudents = async (req, res) => {
     const result = await Presence.aggregate([
       {
         $group: {
-          _id: "$nisn",
+          _id: "$nis",
           totalAbsen: { $sum: 1 },
           totalMembaca: {
             $sum: { $cond: [{ $eq: ["$reason", "Membaca"] }, 1, 0] },
@@ -500,7 +528,7 @@ export const getMostAbsentStudents = async (req, res) => {
         $lookup: {
           from: "users",
           localField: "_id",
-          foreignField: "nisn",
+          foreignField: "nis",
           as: "userData",
         },
       },
@@ -521,7 +549,7 @@ export const getMostAbsentStudents = async (req, res) => {
       { $unwind: "$majorData" },
       {
         $project: {
-          nisn: "$_id",
+          nis: "$_id",
           nama: "$userData.fullName",
           kelas: "$userData.grade",
           jurusan: "$majorData.major_name",
@@ -558,21 +586,21 @@ export const getPresenceSummaryByMajor = async (req, res) => {
       {
         $unwind: {
           path: "$students",
-          preserveNullAndEmptyArrays: true, 
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
           from: "presences",
-          localField: "students.nisn",
-          foreignField: "nisn",
+          localField: "students.nis",
+          foreignField: "nis",
           as: "presences",
         },
       },
       {
         $unwind: {
           path: "$presences",
-          preserveNullAndEmptyArrays: true, 
+          preserveNullAndEmptyArrays: true,
         },
       },
       {

@@ -74,7 +74,7 @@ const FormAbsence = () => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
-      await axios.post(
+      const response = await axios.post(
         `${backendUrl}/presence`,
         {
           reason: formData?.reason,
@@ -84,6 +84,8 @@ const FormAbsence = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      console.log("Response:", response.data);
 
       showToast("success", "Absen berhasil, form akan otomatis ter-reset", () => {});
 

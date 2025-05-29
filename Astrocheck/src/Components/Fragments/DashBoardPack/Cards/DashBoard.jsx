@@ -6,14 +6,15 @@ import { CardLainnya, CardMembaca, CardMeminjam } from "./CardPresences.jsx";
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
 import { useEffect, useState } from "react";
-import { useAllProfiles} from "@/Hooks/useProfile.js";
+import { useAllProfiles } from "@/Hooks/useProfile.js";
 
 const DashBoardPack = () => {
+  const { user } = useAllProfiles();
   const { fullYear, allPresences } = useAllPresence();
-  const {user} = useAllProfiles();
+
   const fullYearData = fullYear?.logsPerMonth?.map((item) => item.count) ?? [];
   const [currentDate, setCurrentDate] = useState("");
-  
+
   useEffect(() => {
     const date = new Date();
     const options = {
@@ -60,7 +61,7 @@ const DashBoardPack = () => {
       <div className="dashboard-container flex-col gap-5 flex bg-[#f0f0f0]">
         <div className="flex w-full flex-row gap-5">
           <div className="bg-white w-full h-25 gap-3 flex flex-row items-center rounded-xl px-5 ">
-            <ProfileImage size="w-12 h-12" />
+            <ProfileImage size="w-12 h-12" className="rounded-full" />
             <div className="h-fit w-fit">
               <p className="text-lg font-semibold">Welcome</p>
               <p className="text-slate-500 text-sm">{user?.fullName}</p>

@@ -32,7 +32,7 @@ const ToggleSidebar = ({ setActiveContent }) => {
         >
           <div className="p-4 text-black flex-col flex gap-5 mb-auto">
             <div className="flex h-fit pb-4 gap-5 items-center border-b-2 border-gray-300">
-              <ProfileImage size="w-[4rem] h-[4rem]" />
+              <ProfileImage size="w-18 h-18" className="rounded-full" />
               <div className="h-fit flex flex-col">
                 <p className="text-sm text-black">{user?.fullName}</p>
                 <p className="text-xs text-gray-500">Admin Astrocheck</p>
