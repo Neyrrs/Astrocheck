@@ -33,7 +33,7 @@ router.get(
 );
 router.get("/getLastYear", authenticateUser, authorizeAdmin, getLogsLastYear);
 router.get("/getPerMonth", authenticateUser, authorizeAdmin, getLogsPerMonth);
-router.get("/summary", authenticateUser, authorizeAdmin, getPresenceSummary);
+router.get("/summary",getPresenceSummary);
 router.get(
   "/analytics/majors",
   authenticateUser,

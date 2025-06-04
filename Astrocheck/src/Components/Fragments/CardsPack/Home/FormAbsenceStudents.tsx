@@ -44,7 +44,7 @@ const FormAbsence = () => {
   const { user } = useAllProfiles();
 
   const [formData, setFormData] = useState({
-    nisn: "",
+    nis: "",
     reason: "",
     detailReason: "",
   });
@@ -53,7 +53,7 @@ const FormAbsence = () => {
     if (user) {
       setFormData((prev) => ({
         ...prev,
-        nisn: user?.nisn,
+        nis: user?.nis,
       }));
     }
   }, [user]);
@@ -111,14 +111,14 @@ const FormAbsence = () => {
       <div className="my-10 px-24">
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div>
-            <label htmlFor="nisn" className="text-sm">
-              NISN
+            <label htmlFor="nis" className="text-sm">
+              NIS
             </label>
             <DisabledInput
               disabled
               type="number"
-              name="nisn"
-              value={user?.nisn || ""}
+              name="nis"
+              value={user?.nis || ""}
             />
           </div>
 

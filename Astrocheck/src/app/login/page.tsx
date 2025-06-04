@@ -7,7 +7,7 @@ import { Input } from "@/Components/Elements/Inputs";
 import { LoginButton } from "@/Components/Elements/Buttons";
 
 const Login = () => {
-  const [nisn, setNisn] = useState("");
+  const [nis, setNis] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,7 +21,7 @@ const Login = () => {
       const response = await axios.post(
         `${BACKEND_URL}/user/login`,
         {
-          nisn,
+          nis,
           password,
         }
       );
@@ -40,7 +40,7 @@ const Login = () => {
     } catch (err) {
       Swal.fire({
         title: "Gagal!",
-        text: "NISN atau password salah!",
+        text: "NIS atau password salah!",
         icon: "error",
       });
     }
@@ -58,14 +58,16 @@ const Login = () => {
           </div>
           <div className="mt-4 w-70">
             <div className="flex flex-col gap-1 w-full h-fit">
-              <label className="block text-base">NISN</label>
+              <label className="block text-base">NIS</label>
               <Input
                 type="text"
                 placeholder="Contoh: 123456789"
-                value={nisn}
+                value={nis}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setNisn(e.target.value)
+                  setNis(e.target.value)
                 }
+                autoFocus
+                autoComplete="off"
               />
             </div>
             <div className="flex flex-col gap-1 w-full h-fit">
@@ -77,6 +79,7 @@ const Login = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setPassword(e.target.value)
                 }
+                 autoComplete="off"
               />
             </div>
           </div>

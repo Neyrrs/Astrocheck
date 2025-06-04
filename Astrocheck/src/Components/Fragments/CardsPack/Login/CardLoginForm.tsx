@@ -7,14 +7,14 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const CardLoginForm = () => {
-  const [nisn, setNisn] = useState("");
+  const [nis, setNis] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:3000/login`, {
-        nisn,
+      const response = await axios.post(`http://localhost:5000/login`, {
+        nis,
         password,
       });
 
@@ -46,8 +46,8 @@ const CardLoginForm = () => {
           <Input
             type="text"
             placeholder="Contoh: 123456789"
-            value={nisn}
-            onChange={(e) => setNisn(e.target.value)}
+            value={nis}
+            onChange={(e) => setNis(e.target.value)}
           />
           <label className="block text-sm">Password</label>
           <Input

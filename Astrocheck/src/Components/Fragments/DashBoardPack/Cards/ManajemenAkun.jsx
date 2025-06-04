@@ -35,7 +35,7 @@ const ManajemenAkun = () => {
 
   const historyColumns = [
     { header: "ID", field: "__index" },
-    { header: "NISN", field: "nisn" },
+    { header: "NIS", field: "nis" },
     { header: "Role", field: "role" },
     { header: "Nama Lengkap", field: "fullName" },
     { header: "Kelas", field: "grade" },

@@ -76,7 +76,7 @@ const Kartu = () => {
           <p className="font-medium">Nama</p>
           <p className="font-normal">{user?.fullName}</p>
           <p className="font-medium">NIS</p>
-          <p className="font-normal">{user?.nisn}</p>
+          <p className="font-normal">{user?.nis}</p>
           <p className="font-medium">Kelas</p>
           <p className="font-normal">
             {user?.grade + " " + user?.idMajor?.major_name}

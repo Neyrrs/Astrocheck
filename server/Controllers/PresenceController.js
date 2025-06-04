@@ -22,7 +22,15 @@ export const savePresence = async (req, res) => {
     }
 
     const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 10);
+    const formattedDate = now
+      .toLocaleDateString("id-ID", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .split("/")
+      .reverse()
+      .join("-");
     const formattedTime = now.toLocaleTimeString("id-ID", {
       hour: "2-digit",
       minute: "2-digit",
@@ -53,6 +61,7 @@ export const savePresence = async (req, res) => {
 
     const newPresence = new Presence({
       nis: user.nis,
+      status: user.status,
       ...req.body,
       date: formattedDate,
       time: formattedTime,
@@ -79,10 +88,9 @@ export const savePresence = async (req, res) => {
   }
 };
 
-
 export const getLogs = async (req, res) => {
   try {
-    const { nis } = req.user;
+    const { nis } = req.user || "";
 
     const logs = await Presence.find({ nis });
     if (!logs.length) {
@@ -134,9 +142,7 @@ export const getAllUsersPresence = async (req, res) => {
 
     const formattedPresence = await Promise.all(
       presenceList.map(async (pres) => {
-        const user = await User.findOne({ nis: pres.nis }).populate(
-          "idMajor"
-        );
+        const user = await User.findOne({ nis: pres.nis }).populate("idMajor");
 
         return {
           id: pres._id,
@@ -446,9 +452,7 @@ export const getPresenceById = async (req, res) => {
       return res.status(404).json({ message: "Data presensi tidak ditemukan" });
     }
 
-    const user = await User.findOne({ nis: presence.nis }).populate(
-      "idMajor"
-    );
+    const user = await User.findOne({ nis: presence.nis }).populate("idMajor");
 
     res.json({
       id: presence._id,

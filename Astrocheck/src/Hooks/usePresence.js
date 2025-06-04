@@ -68,7 +68,7 @@ export const useAllPresence = () => {
   return {
     summaryMajor: isAdmin ? summaryMajor.data : null,
     lastYear: isAdmin ? lastYear.data : null,
-    summary: isAdmin ? summary.data : null,
+    summary: summary.data,
     averages: isAdmin ? average.data : null,
     today: isAdmin ? today.data : null,
     fullYear: isAdmin ? fullYear.data : null,

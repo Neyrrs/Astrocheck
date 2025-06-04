@@ -10,8 +10,9 @@ const UserSchema = new mongoose.Schema({
   grade: { type: String, default: "" },
   idMajor: { type: mongoose.Schema.Types.ObjectId, ref: "Major" },
   role: { type: String, default: "user" },
-  status: { type: String, default: "belum lulus" },
+  status: { type: String, default: "Belum lulus" },
   generation: {
+    required: true,
     type: Number,
     default: function () {
       const BASE_YEAR = 1999;
