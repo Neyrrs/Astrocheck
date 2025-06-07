@@ -65,7 +65,7 @@ const CardBuatPresensi = () => {
         timerProgressBar: true,
       });
 
-      reset(); // Kosongkan form
+      reset(); 
       setActiveContent("Manajemen Presensi");
     } catch (error) {
       console.error("Gagal menambahkan presensi:", error);
@@ -96,7 +96,7 @@ const CardBuatPresensi = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <div className="bg-white rounded-xl shadow-md">
-          <div className="px-5 py-3 border-b font-bold text-xl">
+          <div className="px-5 py-3 border-b-2 border-gray-300 font-semibold text-xl">
             Personal Data
           </div>
           <div className="grid cols-2 gap-4 px-5 py-5">
@@ -116,7 +116,7 @@ const CardBuatPresensi = () => {
         </div>
 
         <div className="bg-white rounded-xl shadow-md">
-          <div className="px-5 py-3 border-b font-bold text-xl">
+          <div className="px-5 py-3 border-b-2 border-gray-300 font-semibold text-xl">
             Data Presensi
           </div>
           <div className="grid grid-cols-2 gap-3 px-5 py-5">

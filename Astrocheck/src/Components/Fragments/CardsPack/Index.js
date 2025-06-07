@@ -1,6 +1,5 @@
 export {default as  CardDenah} from "./Home/CardDenah.tsx";
 export {default as  CardFAQ} from "./Home/CardFAQ.tsx";
-export {default as  CardLoginForm} from "./Login/CardLoginForm.tsx";
 export {default as  CardGetApp} from "./Home/CardGetApp.tsx";
 export {default as  CardGrafik} from "./Home/CardGrafik.tsx";
 export {default as  CardNavbar} from "./NavigationBar/CardNavbar.tsx";

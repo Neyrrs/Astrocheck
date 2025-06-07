@@ -25,7 +25,7 @@ const CardEditAkun = () => {
   const [imageFile, setImageFile] = useState(null);
   const [formData, setFormData] = useState({
     id: user?.id ?? "",
-    nisn: user?.nisn ?? "",
+    nis: user?.nis ?? "",
     fullName: user?.fullName ?? "",
     grade: user?.grade ?? "",
     major: user?.idMajor?.major_name ?? "",
@@ -73,7 +73,7 @@ const CardEditAkun = () => {
       const formPayload = new FormData();
 
       formPayload.append("id", formData.id);
-      formPayload.append("nisn", formData.nisn);
+      formPayload.append("nis", formData.nis);
       formPayload.append("fullName", formData.fullName);
       formPayload.append("grade", formData.grade);
       formPayload.append("major", formData.major);
@@ -183,11 +183,11 @@ const CardEditAkun = () => {
                   />
                 </div>
                 <div className="w-full">
-                  <Label text="NISN" />
+                  <Label text="NIS" />
                   <Input
-                    label="NISN"
-                    name="nisn"
-                    value={formData.nisn}
+                    label="NIS"
+                    name="nis"
+                    value={formData.nis}
                     onChange={handleChange}
                   />
                 </div>
@@ -312,6 +312,7 @@ const CardEditAkun = () => {
           </div>
 
           <div className="bg-white rounded-xl p-5 w-full md:w-[300px] h-fit shadow-md">
+            <Label text="Tanggal Pembuatan" />
             <Input
               label="Tanggal Pembuatan Akun"
               name="createdAt"

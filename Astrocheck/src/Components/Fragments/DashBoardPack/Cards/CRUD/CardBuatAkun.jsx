@@ -117,8 +117,8 @@ const CardBuatAkun = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center flex-wrap gap-3">
-        <h1 className="text-2xl font-semibold">Buat Akun Baru</h1>
+      <div className="flex justify-between items-center flex-wrap">
+        <h1 className="text-2xl font-bold">Buat Akun Baru</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -153,7 +153,7 @@ const CardBuatAkun = () => {
             </div>
 
             <div className="bg-white rounded-xl space-y-4 shadow-md">
-              <div className="border-b px-5 py-3 font-bold text-xl">
+              <div className=" px-5 py-3 font-semibold border-b-2 border-gray-300 text-xl">
                 Personal Data
               </div>
               <div className="flex flex-col p-5 gap-4">
@@ -165,6 +165,7 @@ const CardBuatAkun = () => {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleChange}
+                      autoComplete="false"
                     />
                   </div>
                   <div className="w-full">
@@ -198,7 +199,7 @@ const CardBuatAkun = () => {
               <Label text="Angkatan" />
               <Input
                 placeholder="Angkatan"
-                name="generation"
+                name="Creategeneration"
                 value={formData.generation}
                 onChange={handleChange}
               />
@@ -263,14 +264,16 @@ const CardBuatAkun = () => {
               <Input
                 value={formData.password}
                 placeholder="Password"
-                name="password"
+                name="Createpassword"
                 onChange={handleChange}
                 type="password"
+                autoComplete="false"
               />
             </div>
           </div>
 
           <div className="bg-white rounded-xl p-5 w-full md:w-[300px] h-fit shadow-md">
+            <Label text="Tanggal Pembuatan" />
             <Input
               label="Tanggal Pembuatan Akun"
               name="createdAt"

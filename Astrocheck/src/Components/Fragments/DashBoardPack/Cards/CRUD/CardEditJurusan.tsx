@@ -154,7 +154,7 @@ const CardEditJurusan = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <div className="bg-white rounded-xl shadow-md">
-          <div className="px-5 py-3 border-b font-bold text-xl">
+          <div className="px-5 py-3 border-b-2 border-gray-300 font-semibold text-xl">
             Data Jurusan
           </div>
           <div className="grid grid-cols-2 gap-4 px-5 py-5">

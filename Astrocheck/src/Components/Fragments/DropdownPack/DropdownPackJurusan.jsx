@@ -29,13 +29,13 @@ const DropdownPackJurusan = (props) => {
         <option value="TOI 2">TOI 2</option>
         <option value="TKP 1">TKP </option>
         <option value="TKP 2">TKP </option>
-        <option value="TP 1">TP</option>
-        <option value="TP 2">TP</option>
-        <option value="TFLM 1">TFLM</option>
-        <option value="TFLM 2">TFLM</option>
-        <option value="TKR 1">TKR</option>
-        <option value="TKR 2">TKR</option>
-        <option value="TKR 3">TKR</option>
+        <option value="TP 1">TP 1</option>
+        <option value="TP 2">TP 2</option>
+        <option value="TFLM 1">TFLM 1</option>
+        <option value="TFLM 2">TFLM 2</option>
+        <option value="TKR 1">TKR 1</option>
+        <option value="TKR 2">TKR 2</option>
+        <option value="TKR 3">TKR 3</option>
       </select>
     </div>
   );

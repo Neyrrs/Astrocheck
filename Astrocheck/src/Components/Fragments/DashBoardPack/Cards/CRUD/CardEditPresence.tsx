@@ -35,7 +35,7 @@ const CardEditPresence = () => {
     defaultValues: {
       id: "",
       fullName: "",
-      nisn: "",
+      nis: "",
       date: "",
       time: "",
       reason: "",
@@ -63,7 +63,7 @@ const CardEditPresence = () => {
         reset({
           id: data.id || "",
           fullName: data.fullName || "",
-          nisn: data.nisn || "",
+          nis: data.nis || "",
           date: data.date || "",
           time: data.time || "",
           reason: data.reason || "",
@@ -191,14 +191,14 @@ const CardEditPresence = () => {
     <div className="h-fit">
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl font-bold">
-          Edit Presensi {selectedItem.nisn}
+          Edit Presensi {selectedItem.nis}
         </h2>
         <DangerButton padding="px-5 py-2" text="Hapus" onClick={handleDelete}/>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <div className="bg-white rounded-xl shadow-md">
-          <div className="px-5 py-3 border-b font-bold text-xl">
+          <div className="px-5 py-3 border-b-2 border-gray-300 font-semibold text-xl">
             Data Personal
           </div>
           <div className="grid grid-cols-2 gap-3 px-5 py-5">
@@ -214,10 +214,10 @@ const CardEditPresence = () => {
               </div>
               <div className="w-1/2">
                 <DisabledInputPack
-                  text="NISN"
-                  {...register("nisn", { required: "NISN wajib diisi" })}
-                  placeholder="NISN"
-                  value={values.nisn}
+                  text="NIS"
+                  {...register("nis", { required: "NIS wajib diisi" })}
+                  placeholder="NIS"
+                  value={values.nis}
                   readOnly
                 />
               </div>
@@ -262,7 +262,7 @@ const CardEditPresence = () => {
         </div>
 
         <div className="bg-white rounded-xl shadow-md">
-          <div className="px-5 py-3 border-b font-bold text-xl">
+          <div className="px-5 py-3 border-b-2 border-gray-300 font-semibold text-xl">
             Data Personal
           </div>
           <div className="grid grid-cols-2 gap-3 px-5 py-5">
