@@ -2,12 +2,12 @@
 import { useDashboardContext } from "@/context/DashboardContext";
 import ToggleSidebar from "@/Components/Fragments/Toggle/ToggleSidebar";
 import DashBoard from "./DashBoard";
-import GrafikAbsen from "./GrafikAbsen";
 import ManajemenAkun from "./ManajemenAkun";
 import CardEditPresence from "./CRUD/CardEditPresence";
 import CardBuatPresensi from "./CRUD/CardBuatPresensi";
 import { Home } from "@/assets/Icons/Index";
 import Image from "next/image";
+
 import ManajemenPresensi from "./ManajemenPresensi";
 import ManajemenJurusan from "./ManajemenJurusan";
 import CardBuatJurusan from "./CRUD/CardBuatJurusan";
@@ -21,7 +21,6 @@ const CardAdminPanel = () => {
   const renderContent = () => {
     switch (activeContent) {
       case "Dasbor": return <DashBoard />;
-      case "Grafik Absensi": return <GrafikAbsen />;
       case "Manajemen Presensi": return <ManajemenPresensi />;
       case "Manajemen Akun": return <ManajemenAkun />;
       case "Manajemen Jurusan": return <ManajemenJurusan />;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-// import { ProfileImageSquare } from "@/Components/Elements/Icons";
 import { useProfile } from "@/Hooks/useProfile";
 import { ProfileImage } from "@/Components/Elements/Icons";
 
@@ -59,6 +58,9 @@ export default KartuPerpustakaan;
 
 const Kartu = () => {
   const { data: user } = useProfile();
+
+  if(!user) return <div>Loading...</div>
+  
   return (
     <div>
       <div className="flex justify-center border-b border-[#A8A8A8] py-4">

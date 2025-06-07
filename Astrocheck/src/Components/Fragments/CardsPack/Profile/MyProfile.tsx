@@ -1,6 +1,6 @@
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
-import DisabledToggleInput from "@/Components/Fragments/InputPack/DisabledToggleInput.jsx";
-import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack.jsx";
+import DisabledToggleInput from "@/Components/Fragments/InputPack/DisabledToggleInput";
+import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack";
 import { useAllProfiles } from "@/Hooks/useProfile.js";
 
 const MyProfile = () => {
@@ -20,13 +20,7 @@ const MyProfile = () => {
       },
     ],
     [
-      { id: 2, htmlFor: "NISN", text: "NISN", value: user.nisn || "None" },
-      {
-        id: 3,
-        htmlFor: "password",
-        text: "Password",
-        value: user?.password || "Nons",
-      },
+      { id: 2, htmlFor: "NISN", text: "NIS", value: user.nis || "None" },
     ],
   ];
 

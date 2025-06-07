@@ -55,19 +55,7 @@ const ToggleSidebar = ({ setActiveContent }) => {
                     />
                     <p className="text-sm">Dasbor</p>
                   </li>
-                  <li
-                    className={sidebarContentStyle[0]}
-                    onClick={() => setActiveContent("Grafik Absensi")}
-                  >
-                    <Image
-                      width={30}
-                      height={30}
-                      src={GrafikAbsensi}
-                      alt="Grafik"
-                      className={sidebarContentStyle[1]}
-                    />
-                    <p className="text-sm">Grafik Presensi</p>
-                  </li>
+                 
                 </ul>
 
                 <ul className="w-full h-fit py-2 gap-2 flex flex-col border-b-2 border-gray-300">

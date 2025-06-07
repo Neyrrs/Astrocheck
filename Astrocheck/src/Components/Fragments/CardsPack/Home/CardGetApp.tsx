@@ -30,7 +30,7 @@ const CardGetApp = () => {
 export default CardGetApp;
 
 
-const CheckList = (props) => {
+const CheckList = ({text = ""}) => {
     return(
         <>
         <p className="flex gap-2">
@@ -43,7 +43,7 @@ const CheckList = (props) => {
             alt=""
           />
         </span>
-        {props.text}
+        {text}
       </p>
         </>
     );

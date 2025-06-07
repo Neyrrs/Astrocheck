@@ -60,12 +60,6 @@ body {
   background-size: cover;
 }
 
-.Home {
-  background: url("../assets/Backgrounds/HomeBackground.png");
-  object-fit: cover;
-  background-size: cover;
-}
-
 .Login {
   background: url("../assets/Backgrounds/LoginBackground.png");
   object-fit: cover;

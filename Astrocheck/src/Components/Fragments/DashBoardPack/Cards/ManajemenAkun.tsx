@@ -1,35 +1,64 @@
+"use client";
+
 import { useAllPresence } from "@/Hooks/usePresence";
 import { useDashboardContext } from "@/context/DashboardContext";
 import { useItemContext } from "@/context/ItemContext";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper.tsx";
-import CardSummary from "./CardSummary.jsx";
+import CardSummary from "./CardSummary.tsx";
 import { PrimaryButton } from "@/Components/Elements/Buttons";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
 import { useState } from "react";
+import { useAllProfiles } from "@/Hooks/useProfile.js";
+import Image from "next/image.js";
 
-const ManajemenPresensi = () => {
+const ManajemenAkun = () => {
   const { summary, allPresences } = useAllPresence();
   const { setActiveContent } = useDashboardContext();
   const { setSelectedItem } = useItemContext();
   const [refreshKey, setRefreshKey] = useState(0);
+  const { users: rawUsers } = useAllProfiles();
 
+  const users = rawUsers?.map((user) => ({
+    ...user,
+    id: user._id,
+  }));
   const presences = allPresences?.presence;
   if (!presences) return null;
 
   const handleEdit = (row) => {
-    setSelectedItem(row);
-    setActiveContent("Edit Presensi");
+    const userWithId = { ...row, id: row._id };
+    setSelectedItem(userWithId);
+    setActiveContent("Edit Akun");
   };
 
   const historyColumns = [
     { header: "ID", field: "__index" },
+    { header: "NIS", field: "nis" },
+    { header: "Role", field: "role" },
     { header: "Nama Lengkap", field: "fullName" },
-    { header: "Tanggal Presensi", field: "date" },
-    { header: "Waktu Masuk", field: "time" },
-    { header: "Alasan", field: "reason" },
-    { header: "Spesifik Alasan", field: "detailReason" },
+    { header: "Kelas", field: "grade" },
+    { header: "Angkatan", field: "generation" },
+    { header: "Status", field: "status" },
+    {
+      header: "Jurusan",
+      render: (row) => row?.idMajor?.major_name ?? "-",
+    },
+    {
+      header: "Profile",
+      render: (row) =>
+        row?.profilePicture?.secure_url ? (
+          <Image
+            src={row.profilePicture.secure_url}
+            alt="Profile"
+            width={50}
+            height={50}
+          />
+        ) : (
+          "-"
+        ),
+    },
     {
       header: "Aksi",
       render: (row) => (
@@ -84,7 +113,7 @@ const ManajemenPresensi = () => {
   const handleDelete = async (row) => {
     const confirm = await Swal.fire({
       title: "Yakin ingin menghapus?",
-      text: `Presensi ${row.fullName} pada ${row.date} akan dihapus.`,
+      text: `Akun dengan nama ${row.fullName} akan dihapus.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -96,7 +125,7 @@ const ManajemenPresensi = () => {
     if (confirm.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/presence/${row.id}`, {
+        await axios.delete(`${backendUrl}/user/${row?._id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },
@@ -114,7 +143,7 @@ const ManajemenPresensi = () => {
         });
         setRefreshKey((prev) => prev + 1);
       } catch (error) {
-        console.error(error);
+        console.error("Error axiosnya", error);
         Swal.fire({
           icon: "error",
           title: "Gagal!",
@@ -128,8 +157,8 @@ const ManajemenPresensi = () => {
     <div className="w-full h-full flex flex-col gap-4">
       <div className="flex w-full flex-row justify-end gap-5">
         <PrimaryButton
-          onClick={() => setActiveContent("Buat Presensi")}
-          text="Tambah Presensi"
+          onClick={() => setActiveContent("Buat Akun")}
+          text="Tambah Akun"
         />
       </div>
       <div className="flex w-full flex-row gap-5">
@@ -149,7 +178,7 @@ const ManajemenPresensi = () => {
         </div>
         <PresenceTableWrapper
           key={refreshKey}
-          data={presences}
+          data={users ?? []}
           columns={historyColumns}
           loading={false}
           itemsPerPage={5}
@@ -159,4 +188,4 @@ const ManajemenPresensi = () => {
   );
 };
 
-export default ManajemenPresensi;
+export default ManajemenAkun;

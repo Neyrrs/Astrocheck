@@ -2,7 +2,7 @@
 
 import { LineChart } from "@/Components/Fragments/DashBoardPack/Charts";
 import { useAllPresence } from "@/Hooks/usePresence.js";
-import { CardLainnya, CardMembaca, CardMeminjam } from "./CardPresences.jsx";
+import { CardLainnya, CardMembaca, CardMeminjam } from "./CardPresences";
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
 import { useEffect, useState } from "react";
