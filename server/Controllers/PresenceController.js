@@ -42,11 +42,9 @@ export const savePresence = async (req, res) => {
       const lastPresence = await Presence.findOne({ nis }).sort({ date: -1 });
 
       if (lastPresence) {
-        const yesterday = new Date(now);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().slice(0, 10);
+        const prevWorkday = await getPreviousWorkday(formattedDate);
 
-        if (lastPresence.date === yesterdayStr) {
+        if (lastPresence.date === prevWorkday) {
           newStreak = user.streak + 1;
         } else {
           newStreak = 1;
@@ -636,41 +634,47 @@ export const getPresenceSummaryByMajor = async (req, res) => {
 
 export const getMonthlyPresenceByMajor = async (req, res) => {
   try {
-    const year = req.query.year ? parseInt(req.query.year, 10) : new Date().getFullYear();
+    const year = req.query.year
+      ? parseInt(req.query.year, 10)
+      : new Date().getFullYear();
 
     const aggregationResult = await Presence.aggregate([
       {
-        $match: { date: { $regex: `^${year}-` } }
+        $match: { date: { $regex: `^${year}-` } },
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'nis',
-          foreignField: 'nis',
-          as: 'user'
-        }
+          from: "users",
+          localField: "nis",
+          foreignField: "nis",
+          as: "user",
+        },
       },
-      { $unwind: '$user' },
+      { $unwind: "$user" },
       {
         $lookup: {
-          from: 'majors',
-          localField: 'user.idMajor',
-          foreignField: '_id',
-          as: 'major'
-        }
+          from: "majors",
+          localField: "user.idMajor",
+          foreignField: "_id",
+          as: "major",
+        },
       },
-      { $unwind: '$major' },
+      { $unwind: "$major" },
       {
         $addFields: {
-          month: { $substr: ["$date", 5, 2] }
-        }
+          month: { $substr: ["$date", 5, 2] },
+        },
       },
       {
         $group: {
-          _id: { month: "$month", major: "$major.major_name", reason: "$reason" },
-          count: { $sum: 1 }
-        }
-      }
+          _id: {
+            month: "$month",
+            major: "$major.major_name",
+            reason: "$reason",
+          },
+          count: { $sum: 1 },
+        },
+      },
     ]);
 
     const monthNames = {
@@ -683,18 +687,18 @@ export const getMonthlyPresenceByMajor = async (req, res) => {
       "07": "juli",
       "08": "agustus",
       "09": "september",
-      "10": "oktober",
-      "11": "november",
-      "12": "desember"
+      10: "oktober",
+      11: "november",
+      12: "desember",
     };
 
     const resultData = {};
 
-    Object.values(monthNames).forEach(monthName => {
+    Object.values(monthNames).forEach((monthName) => {
       resultData[monthName] = {};
     });
 
-    aggregationResult.forEach(item => {
+    aggregationResult.forEach((item) => {
       const { month, major, reason } = item._id;
       const count = item.count;
       const monthName = monthNames[month] || month;
@@ -704,7 +708,7 @@ export const getMonthlyPresenceByMajor = async (req, res) => {
           count: 0,
           meminjam: 0,
           membaca: 0,
-          lainnya: 0
+          lainnya: 0,
         };
       }
 
@@ -718,10 +722,15 @@ export const getMonthlyPresenceByMajor = async (req, res) => {
 
     res.status(200).json({
       year,
-      data: resultData
+      data: resultData,
     });
   } catch (error) {
     console.error("Error in getMonthlyPresenceByMajor:", error);
-    res.status(500).json({ message: "Gagal mengambil data presensi per jurusan per bulan", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Gagal mengambil data presensi per jurusan per bulan",
+        error: error.message,
+      });
   }
 };

@@ -24,3 +24,17 @@ export const isHolidayOrWeekend = (dateStr) => {
   const isHoliday = holidays.includes(dateStr);
   return isWeekend || isHoliday;
 };
+
+export const getPreviousWorkday = async (fromDateStr) => {
+  let date = new Date(fromDateStr);
+  date.setDate(date.getDate() - 1); 
+
+  while (true) {
+    const dateStr = date.toISOString().slice(0, 10);
+    if (!isHolidayOrWeekend(dateStr)) {
+      return dateStr;
+    }
+    date.setDate(date.getDate() - 1); 
+  }
+};
+

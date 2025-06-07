@@ -66,7 +66,7 @@ const History = () => {
           <div className={cardStyle}>
             <h1 className="font-medium text-gray-500">Presensi streak</h1>
             <p className="text-4xl flex items-center gap-x-2 font-semibold">
-              {data?.streak}
+              {data?.streak || 0}
               <svg
                 width="25"
                 height="25"
@@ -87,7 +87,7 @@ const History = () => {
                         : data.streak < 200
                         ? streakFire.green
                         : streakFire.blue
-                      : "#999999" // fallback untuk 0, null, atau tidak ada streak
+                      : "#999999" 
                   }
                 />
               </svg>

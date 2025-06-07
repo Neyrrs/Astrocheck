@@ -36,6 +36,17 @@ export const loginUser = async (req, res) => {
     return res.status(200).json({
       message: "Login berhasil!",
       token,
+      user: {
+        nis: user.nis,
+        fullName: user.fullName,
+        email: user.email,
+        grade: user.grade,
+        idMajor: user.idMajor ? user.idMajor.major_name : null,
+        profilePicture: user.profilePicture,
+        nickname: user.nickname || "",
+        role: user.role || "student",
+        streak: user.streak || 0,
+      },
     });
   } catch (error) {
     console.log("Error login:", error);

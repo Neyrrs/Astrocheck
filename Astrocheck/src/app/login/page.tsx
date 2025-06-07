@@ -13,13 +13,15 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      const nisTrimmed = nis.trim();
+      const passwordTrimmed = password.trim();
       const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
       if (!BACKEND_URL) {
         throw new Error("NEXT_PUBLIC_BACKEND_URL is not defined");
       }
       const response = await axios.post(`${BACKEND_URL}/user/login`, {
-        nis: nis.trim(),
-        password: password.trim(),
+        nis: nisTrimmed,
+        password: passwordTrimmed,
       });
 
       const token = response.data.token;
