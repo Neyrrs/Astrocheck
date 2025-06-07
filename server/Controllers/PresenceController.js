@@ -633,3 +633,95 @@ export const getPresenceSummaryByMajor = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getMonthlyPresenceByMajor = async (req, res) => {
+  try {
+    const year = req.query.year ? parseInt(req.query.year, 10) : new Date().getFullYear();
+
+    const aggregationResult = await Presence.aggregate([
+      {
+        $match: { date: { $regex: `^${year}-` } }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'nis',
+          foreignField: 'nis',
+          as: 'user'
+        }
+      },
+      { $unwind: '$user' },
+      {
+        $lookup: {
+          from: 'majors',
+          localField: 'user.idMajor',
+          foreignField: '_id',
+          as: 'major'
+        }
+      },
+      { $unwind: '$major' },
+      {
+        $addFields: {
+          month: { $substr: ["$date", 5, 2] }
+        }
+      },
+      {
+        $group: {
+          _id: { month: "$month", major: "$major.major_name", reason: "$reason" },
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const monthNames = {
+      "01": "januari",
+      "02": "februari",
+      "03": "maret",
+      "04": "april",
+      "05": "mei",
+      "06": "juni",
+      "07": "juli",
+      "08": "agustus",
+      "09": "september",
+      "10": "oktober",
+      "11": "november",
+      "12": "desember"
+    };
+
+    const resultData = {};
+
+    Object.values(monthNames).forEach(monthName => {
+      resultData[monthName] = {};
+    });
+
+    aggregationResult.forEach(item => {
+      const { month, major, reason } = item._id;
+      const count = item.count;
+      const monthName = monthNames[month] || month;
+
+      if (!resultData[monthName][major]) {
+        resultData[monthName][major] = {
+          count: 0,
+          meminjam: 0,
+          membaca: 0,
+          lainnya: 0
+        };
+      }
+
+      resultData[monthName][major].count += count;
+
+      const reasonKey = reason.toLowerCase();
+      if (["meminjam", "membaca", "lainnya"].includes(reasonKey)) {
+        resultData[monthName][major][reasonKey] += count;
+      }
+    });
+
+    res.status(200).json({
+      year,
+      data: resultData
+    });
+  } catch (error) {
+    console.error("Error in getMonthlyPresenceByMajor:", error);
+    res.status(500).json({ message: "Gagal mengambil data presensi per jurusan per bulan", error: error.message });
+  }
+};
