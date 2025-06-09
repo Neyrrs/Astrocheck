@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useAllPresence } from "@/Hooks/usePresence";
 import { useProfileMostStreak } from "@/Hooks/useProfile";
 import { BarMonthsChart } from "../Charts";
@@ -8,13 +8,15 @@ import PresenceTableWrapper from "../../Table/PresenceTableWrapper";
 import { useItemContext } from "@/context/ItemContext";
 import { useDashboardContext } from "@/context/DashboardContext";
 import StreakBadge from "@/Components/Elements/Icons/Streak";
+import { PrimaryButton } from "@/Components/Elements/Buttons";
+import ExportExcel from "../../CardsPack/Dashboard/ExportExcel";
 
 const GrafikPresensi = () => {
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const { fullYear, mostPresence } = useAllPresence();
   const { setActiveContent } = useDashboardContext();
   const { setSelectedItem } = useItemContext();
   const { data } = useProfileMostStreak();
-
 
   const monthNames = [
     "",
@@ -39,6 +41,9 @@ const GrafikPresensi = () => {
   const handleEdit = (row) => {
     setSelectedItem(row);
     setActiveContent("Edit Akun");
+  };
+  const handleExport = () => {
+    setIsExportModalOpen(true);
   };
 
   const mostStreakColumns = [
@@ -112,9 +117,15 @@ const GrafikPresensi = () => {
     },
   ];
 
-  console.log(mostPresence);
   return (
     <>
+      <div className="flex justify-end items-center h-fit">
+        <PrimaryButton text="Export Data" onClick={handleExport} />
+        <ExportExcel
+          isOpen={isExportModalOpen}
+          onClose={() => setIsExportModalOpen(false)}
+        />
+      </div>
       <div className="bg-white h-fit w-full rounded-lg">
         <div className="px-5 w-full h-fit flex items-center  py-5 border-b-1 border-slate-300">
           <p className="font-semibold text-xl">Rata-rata presensi</p>
