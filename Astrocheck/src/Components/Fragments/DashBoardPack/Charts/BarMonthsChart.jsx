@@ -25,7 +25,7 @@ const BarMonthsChart = ({ data = [], labels = [], title = null}) => {
     labels : labels || defaultLabels,
     datasets: [
       {
-        label: "Jumlah Absen",
+        label: title,
         data: data || [],
         backgroundColor: "#98bddf",
         borderColor: "#fff",
@@ -37,15 +37,6 @@ const BarMonthsChart = ({ data = [], labels = [], title = null}) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: title || "Grafik Absen",
-      },
-    },
     scales: {
       y: {
         beginAtZero: true,

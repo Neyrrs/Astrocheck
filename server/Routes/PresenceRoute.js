@@ -4,7 +4,6 @@ import {
   getLogs,
   getLogsLastYear,
   getLogsPerMonth,
-  getLogsToday,
   getAllUsersPresence,
   deletePresence,
   updatePresence,
@@ -23,8 +22,16 @@ import {
 
 const router = express.Router();
 
-router.get("/logKehadiran", authenticateUser, getLogs);
 router.post("/", authenticateUser, savePresence);
+router.get("/logKehadiran", authenticateUser, getLogs);
+
+router.get(
+  "/allUsersPresence",
+  authenticateUser,
+  authorizeAdmin,
+  getAllUsersPresence
+);
+router.get("/getPerMonth", authenticateUser, authorizeAdmin, getLogsPerMonth);
 router.get(
   "/getCurrentMonth",
   authenticateUser,
@@ -32,8 +39,6 @@ router.get(
   getLogsCurrentMonth
 );
 router.get("/getLastYear", authenticateUser, authorizeAdmin, getLogsLastYear);
-router.get("/getPerMonth", authenticateUser, authorizeAdmin, getLogsPerMonth);
-router.get("/summary", authenticateUser, authorizeAdmin, getPresenceSummary);
 router.get(
   "/analytics/majors",
   authenticateUser,
@@ -52,6 +57,7 @@ router.get(
   authorizeAdmin,
   getMonthlyPresenceByMajor
 );
+router.get("/summary", authenticateUser, authorizeAdmin, getPresenceSummary);
 router.get(
   "/summaryMajor",
   authenticateUser,
@@ -59,12 +65,6 @@ router.get(
   getPresenceSummaryByMajor
 );
 
-router.get(
-  "/allUsersPresence",
-  authenticateUser,
-  authorizeAdmin,
-  getAllUsersPresence
-);
 router.get("/:id", authenticateUser, authorizeAdmin, getPresenceById);
 router.put("/:id", authenticateUser, authorizeAdmin, updatePresence);
 router.delete("/:id", authenticateUser, authorizeAdmin, deletePresence);

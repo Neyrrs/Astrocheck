@@ -279,3 +279,24 @@ export const deleteUser = async (req, res) => {
     });
   }
 };
+
+export const geMostStreakUsers = async (req, res) => {
+  try {
+    const mostStreak = await User.find()
+      .sort({ streak: -1 }) 
+      .limit(10) 
+      .select("nis fullName profilePicture streak role grade") 
+      .populate("idMajor", "major_name");
+
+    res.status(200).json({
+      message: "Berhasil mengambil 10 user dengan streak tertinggi",
+      mostStreak,
+    });
+  } catch (error) {
+    console.error("Error saat mengambil top streak users:", error);
+    res.status(500).json({
+      message: "Terjadi kesalahan saat mengambil data",
+      error: error.message,
+    });
+  }
+};

@@ -14,6 +14,7 @@ import CardBuatJurusan from "./CRUD/CardBuatJurusan";
 import CardBuatAkun from "./CRUD/CardBuatAkun";
 import CardEditJurusan from "./CRUD/CardEditJurusan";
 import CardEditAkun from "./CRUD/CardEditAkun";
+import GrafikPresensi from "./GrafikPresensi";
 
 const CardAdminPanel = () => {
   const { activeContent, setActiveContent } = useDashboardContext();
@@ -21,6 +22,7 @@ const CardAdminPanel = () => {
   const renderContent = () => {
     switch (activeContent) {
       case "Dasbor": return <DashBoard />;
+      case "Grafik Presensi": return <GrafikPresensi />;
       case "Manajemen Presensi": return <ManajemenPresensi />;
       case "Manajemen Akun": return <ManajemenAkun />;
       case "Manajemen Jurusan": return <ManajemenJurusan />;

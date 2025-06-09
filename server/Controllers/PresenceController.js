@@ -1,7 +1,7 @@
 import Presence from "../Models/PresenceSchema.js";
 import User from "../Models/AccountSchema.js";
 import Major from "../Models/MajorSchema.js";
-import { isHolidayOrWeekend } from "../Utils/HolidayChecker.js";
+import { getPreviousWorkday, isHolidayOrWeekend } from "../Utils/HolidayChecker.js";
 
 const getPresenceCounts = async () => {
   const [membaca, meminjam, lainnya] = await Promise.all([
@@ -200,7 +200,7 @@ const getLogsPerYear = async (req, res, year) => {
     ]);
 
     const monthData = Array.from({ length: 12 }, (_, i) => ({
-      month: String(i + 1).padStart(2, "0"),
+      month: String(i + 1),
       count: 0,
     }));
 
@@ -552,9 +552,9 @@ export const getMostAbsentStudents = async (req, res) => {
       {
         $project: {
           nis: "$_id",
-          nama: "$userData.fullName",
-          kelas: "$userData.grade",
-          jurusan: "$majorData.major_name",
+          fullName: "$userData.fullName",
+          grade: "$userData.grade",
+          major: "$majorData.major_name",
           totalAbsen: 1,
           totalMembaca: 1,
           totalMeminjam: 1,
@@ -625,7 +625,24 @@ export const getPresenceSummaryByMajor = async (req, res) => {
       },
     ]);
 
-    res.status(200).json(result);
+    const mergedMajors = {};
+
+    result.forEach(({ major, count }) => {
+      const baseMajor = major.replace(/\s*\d+$/, ""); 
+
+      if (!mergedMajors[baseMajor]) {
+        mergedMajors[baseMajor] = {
+          major: baseMajor,
+          count: 0,
+        };
+      }
+
+      mergedMajors[baseMajor].count += count;
+    });
+
+    const finalResult = Object.values(mergedMajors);
+
+    res.status(200).json(finalResult);
   } catch (error) {
     console.error("Error while summarizing presence:", error);
     res.status(500).json({ message: "Internal Server Error" });

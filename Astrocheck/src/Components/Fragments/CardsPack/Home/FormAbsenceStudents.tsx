@@ -85,8 +85,6 @@ const FormAbsence = () => {
         }
       );
 
-      console.log("Response:", response.data);
-
       showToast("success", "Absen berhasil, form akan otomatis ter-reset", () => {});
 
       setFormData({

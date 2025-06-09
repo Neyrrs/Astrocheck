@@ -43,6 +43,8 @@ export const useFullYearPresence = () => useFetchPresence("getPerMonth");
 export const useAvaragePresenceMonths = () => useFetchPresence("getPerMonth");
 export const useSummaryMajor = () => useFetchPresence("summaryMajor");
 export const useAllPresences = () => useFetchPresence("allUsersPresence");
+export const useMostUserPresences = () =>
+  useFetchPresence("analytics/students");
 export const useCurrentMonthPresence = () =>
   useFetchPresence("getCurrentMonth");
 export const useSumaryPresence = () => useFetchPresence("summary");
@@ -62,10 +64,11 @@ export const useAllPresence = () => {
   const summary = useSumaryPresence();
   const lastYear = useLastYearPresence();
   const summaryMajor = useSummaryMajor();
-
+  const mostPresence = useMostUserPresences();
   const isAdmin = user?.role === "admin";
 
   return {
+    mostPresence: isAdmin ? mostPresence.data : null,
     summaryMajor: isAdmin ? summaryMajor.data : null,
     lastYear: isAdmin ? lastYear.data : null,
     summary: summary.data,
@@ -82,7 +85,11 @@ export const useAllPresence = () => {
         allUsers.loading ||
         userPresence.loading ||
         average.loading ||
-        CurrentMonth.loading
+        CurrentMonth.loading ||
+        summary.loading ||
+        lastYear.loading ||
+        summaryMajor.loading ||
+        mostPresence.loading
       : userPresence.loading,
 
     error: isAdmin

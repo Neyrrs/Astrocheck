@@ -39,6 +39,7 @@ export default useFetchProfile;
 
 export const useProfile = () => useFetchProfile("profile");
 export const useProfiles = () => useFetchProfile("profiles");
+export const useProfileMostStreak  = () => useFetchProfile("profiles/mostStreak");
 
 export const useAllProfiles = () => {
   const user = useProfile();
