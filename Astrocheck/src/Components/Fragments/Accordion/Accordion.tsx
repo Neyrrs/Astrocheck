@@ -1,6 +1,7 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import DownArrow from "@/assets/Icons/DownArrow.png";
 
 const Accordion = (props) => {
@@ -11,38 +12,54 @@ const Accordion = (props) => {
   };
 
   return (
-    <>
-      <div className="h-fit py-5 bg-[#DFE5F6]  px-8 rounded-lg shadow-xl cursor-pointer" onClick={toggle}>
-        <div className="flex items-center gap-5">
-          <img
-            src={props.image}
-            className="w-8 object-contain h-8"
-            alt={props.alt}
+    <div
+      className="w-full h-fit py-5 bg-[#DFE5F6] rounded-lg shadow-xl cursor-pointer px-4 md:px-8"
+      onClick={toggle}
+    >
+      <div className="flex items-center gap-4 sm:gap-5">
+        <Image
+          src={props.image}
+          width={32}
+          height={32}
+          alt={props.alt}
+          className="w-6 h-6 sm:w-8 sm:h-8 object-contain flex-shrink-0"
+        />
+        <p className="mr-auto text-sm sm:text-base px-2 sm:px-5 break-words">
+          {props.question}
+        </p>
+        <button>
+          <Image
+            src={DownArrow}
+            width={32}
+            height={32}
+            alt="Toggle Arrow"
+            className={`w-6 h-6 sm:w-8 sm:h-8 object-contain ease-in-out duration-[0.4s] ${
+              show ? "rotate-180" : ""
+            }`}
           />
-          <p className="mr-auto px-5">{props.question}</p>
-          <button>
-            <img
-              src={DownArrow.src}
-              className={`w-8 h-8 object-contain ease-in-out duration-[0.4s] ${
-                show ? "rotate-180" : ""
-              }`}
-              alt=""
-            />
-          </button>
-        </div>
-        <div
-          className={`overflow-hidden transition-[max-height] duration-[0.7s] ease-in-out ${
-            show ? "max-h-40" : "max-h-0"
-          }`}
-        >
-          <ul className={`text-sm border-t-2 border-black ${props.listType} list-inside mt-6 py-3`}>
-            <li className="mt-2 px-2 w-[45rem]">{props.answerOne}</li>
-            <li className="mt-2 px-2 w-[50rem]">{props.answerSecond}</li>
-            <li className="mt-2 px-2 w-[50rem]">{props.answerThird}</li>
-          </ul>
-        </div>
+        </button>
       </div>
-    </>
+
+      <div
+        className={`overflow-hidden transition-[max-height] duration-[0.7s] ease-in-out ${
+          show ? "max-h-[1000px]" : "max-h-0"
+        }`}
+      >
+        <ul
+          className={`text-sm border-t-2 border-black ${props.listType} list-inside mt-4 sm:mt-6 py-3 space-y-2`}
+        >
+          {props.answerOne && (
+            <li className="px-2 break-words">{props.answerOne}</li>
+          )}
+          {props.answerSecond && (
+            <li className="px-2 break-words">{props.answerSecond}</li>
+          )}
+          {props.answerThird && (
+            <li className="px-2 break-words">{props.answerThird}</li>
+          )}
+        </ul>
+      </div>
+    </div>
   );
 };
 

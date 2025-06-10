@@ -41,13 +41,13 @@ const CardFAQ = () => {
   ];
 
   return (
-    <>
-      <div className="pt-44 px-52 w-full">
+    <div className="">
+      <div className="flex flex-col justify-center items-center">
         <div
           id="FAQ"
-          className="h-[6rem] bg-gradient-to-l from-[#E8ECF8] to-[#A9BCED] flex items-center justify-center w-full rounded-lg drop-shadow-xl"
+          className="h-22 bg-gradient-to-l w-[65%] from-[#E8ECF8] to-[#A9BCED] flex items-center justify-center  px-auto rounded-lg drop-shadow-xl"
         >
-          <p className="text-2xl font-semibold">
+          <p className="text-2xl font-bold">
             <span className="text-[#3849D2]">Pertanyaan</span> seputar
             Astrocheck
           </p>
@@ -68,7 +68,7 @@ const CardFAQ = () => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { useRouter } from 'next/navigation';
-import {CardNavbar} from '@/Components/Fragments/CardsPack/Index';
+import { CardNavbar } from '@/Components/Fragments/CardsPack/Index';
 import ProfileImage from '@/Components/Elements/Icons/ProfileImage';
 
 interface NavbarProps {
@@ -13,6 +13,7 @@ interface NavbarProps {
 const Navbar = ({ homePage = false }: NavbarProps) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const router = useRouter();
+  const cardRef = useRef<HTMLDivElement>(null); 
 
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
 
@@ -24,6 +25,27 @@ const Navbar = ({ homePage = false }: NavbarProps) => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        cardRef.current &&
+        !cardRef.current.contains(event.target as Node)
+      ) {
+        setIsPopupVisible(false);
+      }
+    };
+
+    if (isPopupVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isPopupVisible]);
+
   const navItems = [
     { nav: 'Absen', route: '/absen' },
     { nav: 'Denah', route: 'Denah' },
@@ -32,7 +54,7 @@ const Navbar = ({ homePage = false }: NavbarProps) => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-16 flex items-center bg-[#98bddf] bg-opacity-80 text-white px-14 text-lg z-50">
+    <nav className="fixed top-0 left-0 w-full h-16 flex items-center bg-[#98bddf]/70 backdrop-blur-md text-white px-14 text-lg z-50">
       <p className="text-xl">
         <a href={"/"}>Astrocheck</a>
       </p>
@@ -74,9 +96,13 @@ const Navbar = ({ homePage = false }: NavbarProps) => {
         <button className="bg-white w-24 text-black rounded-md h-7 text-[10px]">
           Get App
         </button>
-        <div className="relative flex items-center w-fit h-fit gap-20 flex-col">
-          <button onClick={togglePopup} className='h-fit w-fit'>
-            <ProfileImage width={30} height={30} size="w-8 object-contain h-fit border-2 border-white rounded-full" />
+        <div className="relative flex items-center w-fit h-fit gap-20 flex-col" ref={cardRef}>
+          <button onClick={togglePopup} className="h-fit w-fit">
+            <ProfileImage
+              width={30}
+              height={30}
+              size="w-8 object-contain h-fit border-2 border-white rounded-full"
+            />
           </button>
           {isPopupVisible && <CardNavbar />}
         </div>

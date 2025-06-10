@@ -25,7 +25,7 @@ const CardNavbar = () => {
       confirmButtonText: "Keluar",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/";
+        window.location.href = "/login";
         localStorage.removeItem("Token");
       }
     });
@@ -43,7 +43,7 @@ const CardNavbar = () => {
           <div className="flex items-center gap-3 border-b border-[#d0d5dc] pb-3">
             <ProfileImage size="w-12 object-contain h-fit border-2 border-white rounded-full" />
             <div>
-              <p className="text-black text-sm">{user.fullName}</p>
+              <p className="text-black text-sm">{user?.fullName}</p>
               <p className="text-sm text-gray-500">
                 {(user.grade + " " + user?.idMajor?.major_name) || (user.role === "admin" && `Admin Astrocheck`)}
               </p>
