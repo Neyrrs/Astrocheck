@@ -12,6 +12,37 @@ body {
   height: 100%;
 }
 
+.CTA {
+  background-image: url(../assets/Backgrounds/CTABackground.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.Denah {
+  background-image: url(../assets/Backgrounds/DenahBackground.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.FAQ {
+  background-image: url(../assets/Backgrounds/FAQBackground.png);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.GetApp {
+  background-image: url(../assets/Backgrounds/AppButtonBackground.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.Footer {
+  background-image: url(../assets/Backgrounds/FooterBackground.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
 .Membaca {
   background: url("../assets/Backgrounds/DashboardMembaca.png");

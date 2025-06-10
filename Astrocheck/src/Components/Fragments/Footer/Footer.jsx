@@ -4,7 +4,7 @@ import Image from "next/image";
 const Footer = () => {
   return (
     <>
-      <div className="h-96 flex flex-col py-[4rem] px-20">
+      <div className="h-fit flex flex-col py-[4rem] px-20 Footer">
         <div className="h-12 flex items-center gap-5">
           <Image width={60} height={60} src={OpenedBook.src} alt="" className="w-[3rem] h-fit object-contain" />
           <p className="text-[40px] font-light text-white">Astrolitera</p>
