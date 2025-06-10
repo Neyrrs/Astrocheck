@@ -1,5 +1,5 @@
 import Navbar from "@/Components/Fragments/Navigation-bar/Navbar";
-import { FormAbsenceStudents, FormAbsenceGuest } from "@/Components/Fragments/CardsPack/Index";
+import { FormAbsenceStudents } from "@/Components/Fragments/CardsPack/Index";
 import AuthGuard from "@/Components/AuthGuard/AuthGuard";
 
 const Absen = () => {

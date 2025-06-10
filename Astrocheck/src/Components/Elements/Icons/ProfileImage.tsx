@@ -20,7 +20,7 @@ const ProfileImage = ({ width = 50, height = 50, size = "", className = "", ...r
         alt="Profile picture"
         width={width}
         height={height}
-        className={`object-cover w-full h-full ${className}`} // className tambahan dari luar
+        className={`object-cover w-full h-full ${className}`} 
         {...rest}
       />
     </div>

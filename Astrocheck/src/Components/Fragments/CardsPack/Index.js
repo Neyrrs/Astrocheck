@@ -7,6 +7,5 @@ export {default as  CardNavbar} from "./NavigationBar/CardNavbar.tsx";
 export {default as  CardProfile} from "./Profile/CardProfile.tsx";
 export {default as  EditProfile} from "./Profile/EditProfile.tsx";
 export {default as  FormAbsenceStudents} from "./Home/FormAbsenceStudents.tsx";
-export {default as  FormAbsenceGuest} from "./Home/FormAbsenceGuest.tsx";
 export {default as  KartuPerpustakaan} from "./Profile/KartuPerpustakaan.tsx";
 export {default as  MyProfile} from "./Profile/MyProfile.tsx";
