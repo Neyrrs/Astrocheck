@@ -28,8 +28,3 @@ Meningkatkan efisiensi dan akurasi sistem absensi perpustakaan dengan menghilang
 - **Backend**:
   - Node.js
   - MongoDB
-
----
-
-Jika ada tambahan fitur atau teknologi lainnya, beri tahu aku, Wan. Dengan stack yang kamu pakai, AstroCheck sudah tampak sangat modern dan powerful untuk keperluan perpustakaan digital! 📖💻
-
