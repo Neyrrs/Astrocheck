@@ -3,7 +3,7 @@ const PrimaryButton = ({
   height = "py-2",
   fontSize = "xs",
   text = "Button",
-  onClick,
+  onClick = () => {},
   ...rest
 }) => {
   return (

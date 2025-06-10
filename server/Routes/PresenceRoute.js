@@ -14,6 +14,7 @@ import {
   getMostAbsentStudents,
   getPresenceSummaryByMajor,
   getMonthlyPresenceByMajor,
+  exportPresenceExcel,
 } from "../Controllers/PresenceController.js";
 import {
   authenticateUser,
@@ -31,11 +32,11 @@ router.get(
   authorizeAdmin,
   getAllUsersPresence
 );
-router.get("/getPerMonth", authenticateUser, authorizeAdmin, getLogsPerMonth);
+router.get("/getPerMonth",  getLogsPerMonth);
 router.get(
   "/getCurrentMonth",
-  authenticateUser,
-  authorizeAdmin,
+  // authenticateUser,
+  // authorizeAdmin,
   getLogsCurrentMonth
 );
 router.get("/getLastYear", authenticateUser, authorizeAdmin, getLogsLastYear);
@@ -63,6 +64,13 @@ router.get(
   authenticateUser,
   authorizeAdmin,
   getPresenceSummaryByMajor
+);
+
+router.post(
+  "/export",
+  authenticateUser,
+  authorizeAdmin,
+  exportPresenceExcel
 );
 
 router.get("/:id", authenticateUser, authorizeAdmin, getPresenceById);

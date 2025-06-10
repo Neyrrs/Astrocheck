@@ -1,7 +1,12 @@
 import Presence from "../Models/PresenceSchema.js";
 import User from "../Models/AccountSchema.js";
 import Major from "../Models/MajorSchema.js";
-import { getPreviousWorkday, isHolidayOrWeekend } from "../Utils/HolidayChecker.js";
+import {
+  getPreviousWorkday,
+  isHolidayOrWeekend,
+} from "../Utils/HolidayChecker.js";
+import * as XLSX from "sheetjs-style";
+import { Readable } from "stream";
 
 const getPresenceCounts = async () => {
   const [membaca, meminjam, lainnya] = await Promise.all([
@@ -628,7 +633,7 @@ export const getPresenceSummaryByMajor = async (req, res) => {
     const mergedMajors = {};
 
     result.forEach(({ major, count }) => {
-      const baseMajor = major.replace(/\s*\d+$/, ""); 
+      const baseMajor = major.replace(/\s*\d+$/, "");
 
       if (!mergedMajors[baseMajor]) {
         mergedMajors[baseMajor] = {
@@ -743,11 +748,220 @@ export const getMonthlyPresenceByMajor = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in getMonthlyPresenceByMajor:", error);
-    res
-      .status(500)
-      .json({
-        message: "Gagal mengambil data presensi per jurusan per bulan",
-        error: error.message,
+    res.status(500).json({
+      message: "Gagal mengambil data presensi per jurusan per bulan",
+      error: error.message,
+    });
+  }
+};
+
+const createExcelBufferFromJSON = (jsonData, sheetName = "Presensi") => {
+  const worksheet = XLSX.utils.json_to_sheet(jsonData);
+
+  const range = XLSX.utils.decode_range(worksheet["!ref"]);
+  for (let C = range.s.c; C <= range.e.c; ++C) {
+    const address = XLSX.utils.encode_cell({ r: 0, c: C });
+    if (worksheet[address]) {
+      worksheet[address].s = {
+        font: { bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "4F46E5" } },
+        alignment: { horizontal: "center" },
+      };
+    }
+  }
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+  return XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+};
+
+export const exportPresenceExcel = async (req, res) => {
+  const { jenis } = req.body;
+
+  try {
+    let data = [];
+
+    const bulanMap = {
+      "01": "Januari",
+      "02": "Februari",
+      "03": "Maret",
+      "04": "April",
+      "05": "Mei",
+      "06": "Juni",
+      "07": "Juli",
+      "08": "Agustus",
+      "09": "September",
+      "10": "Oktober",
+      "11": "November",
+      "12": "Desember",
+    };
+
+    const bulanUrut = [
+      "01", "02", "03", "04", "05", "06",
+      "07", "08", "09", "10", "11", "12"
+    ];
+
+    if (jenis === "tahunan") {
+      const year = new Date().getFullYear();
+
+      const allMajorsRaw = await Major.find({}, "major_name").lean();
+      const uniqueMajors = [
+        ...new Set(
+          allMajorsRaw.map((m) => m.major_name.replace(/\s*\d+$/, "").trim())
+        ),
+      ];
+
+      const logsPerMajorAndMonth = await Presence.aggregate([
+        {
+          $match: {
+            date: { $regex: `^${year}-` },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "nis",
+            foreignField: "nis",
+            as: "user",
+          },
+        },
+        { $unwind: "$user" },
+        {
+          $lookup: {
+            from: "majors",
+            localField: "user.idMajor",
+            foreignField: "_id",
+            as: "major",
+          },
+        },
+        { $unwind: "$major" },
+        {
+          $project: {
+            jurusan: {
+              $let: {
+                vars: {
+                  regexResult: {
+                    $regexFind: {
+                      input: "$major.major_name",
+                      regex: /^[^\d]+/,
+                    },
+                  },
+                },
+                in: {
+                  $trim: {
+                    input: "$$regexResult.match",
+                  },
+                },
+              },
+            },
+            bulan: { $substr: ["$date", 5, 2] },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              jurusan: "$jurusan",
+              bulan: "$bulan",
+            },
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      data = uniqueMajors.map((majorName) => {
+        const row = { Jurusan: majorName };
+
+        bulanUrut.forEach((kodeBulan) => {
+          const namaBulan = bulanMap[kodeBulan];
+          row[namaBulan] = 0;
+        });
+
+        logsPerMajorAndMonth.forEach(({ _id, count }) => {
+          if (_id.jurusan && _id.jurusan.trim() === majorName) {
+            const namaBulan = bulanMap[_id.bulan];
+            row[namaBulan] = count;
+          }
+        });
+
+        return row;
       });
+    } else if (jenis === "bulanan") {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const startDate = `${year}-${month}-01`;
+      const endDate = new Date(year, now.getMonth() + 1, 0)
+        .toISOString()
+        .slice(0, 10);
+
+      const rawLogs = await Presence.aggregate([
+        {
+          $match: {
+            date: { $gte: startDate, $lte: endDate },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "nis",
+            foreignField: "nis",
+            as: "user",
+          },
+        },
+        { $unwind: "$user" },
+        {
+          $lookup: {
+            from: "majors",
+            localField: "user.idMajor",
+            foreignField: "_id",
+            as: "major",
+          },
+        },
+        { $unwind: "$major" },
+        {
+          $project: {
+            jurusan: "$major.major_name",
+          },
+        },
+      ]);
+
+      const countMap = {};
+
+      rawLogs.forEach(({ jurusan }) => {
+        const jurusanBase = jurusan.replace(/\s*\d+$/, "").trim();
+        if (!countMap[jurusanBase]) {
+          countMap[jurusanBase] = { Jurusan: jurusanBase, Jumlah: 0 };
+        }
+        countMap[jurusanBase].Jumlah += 1;
+      });
+
+      const allMajors = await Major.find({}, "major_name").lean();
+      allMajors.forEach((m) => {
+        const jurusanBase = m.major_name.replace(/\s*\d+$/, "").trim();
+        if (!countMap[jurusanBase]) {
+          countMap[jurusanBase] = { Jurusan: jurusanBase, Jumlah: 0 };
+        }
+      });
+
+      data = Object.values(countMap);
+    } else {
+      return res.status(400).json({
+        message: "Jenis tidak valid. Gunakan 'bulanan' atau 'tahunan'.",
+      });
+    }
+
+    const buffer = createExcelBufferFromJSON(data, `Presensi-${jenis}`);
+    const filename = `Presensi-${jenis}-${Date.now()}.xlsx`;
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+    res.send(buffer);
+  } catch (error) {
+    console.error("Gagal export Excel:", error);
+    res.status(500).json({ message: error.message });
   }
 };
