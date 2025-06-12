@@ -20,10 +20,11 @@ import {
   authenticateUser,
   authorizeAdmin,
 } from "../Middlewares/AuthMiddleware.js";
+import { checkLocalIP } from "../Middlewares/LocalIPMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", authenticateUser, savePresence);
+router.post("/", authenticateUser, checkLocalIP, savePresence);
 router.get("/logKehadiran", authenticateUser, getLogs);
 
 router.get(
