@@ -33,15 +33,13 @@ const Accordion = (props) => {
             width={32}
             height={32}
             alt="Toggle Arrow"
-            className={`w-6 h-6 sm:w-8 sm:h-8 object-contain ease-in-out duration-[0.4s] ${
-              show ? "rotate-180" : ""
-            }`}
+           className={`... transition-transform duration-500 ease-in-out ${show ? "rotate-180" : ""}`}
           />
         </button>
       </div>
 
       <div
-        className={`overflow-hidden transition-[max-height] duration-[0.7s] ease-in-out ${
+        className={`overflow-hidden duration-[0.6s] ease-in-out ${
           show ? "max-h-[1000px]" : "max-h-0"
         }`}
       >
