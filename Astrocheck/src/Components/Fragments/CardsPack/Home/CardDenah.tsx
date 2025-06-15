@@ -49,12 +49,12 @@ const CardDenah = () => {
       image: RuangStaffDetail,
     },
   ];
-  const [hovered, setHovered] = useState(false);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  // const [hovered, setHovered] = useState(false);
+  // const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
   const [imageIndex, setImageIndex] = useState(0);
 
-  const handleChange = (direction) => {
+  const handleChange = (direction: string) => {
     if (direction === "next") {
       setImageIndex((prevIndex) => (prevIndex + 1) % images.length);
     } else if (direction === "prev") {
@@ -84,11 +84,11 @@ const CardDenah = () => {
           />
         </button>
         <div
-          onMouseMove={(e) => {
-            setCursorPos({ x: e.clientX, y: e.clientY });
-          }}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          // onMouseMove={(e) => {
+          //   setCursorPos({ x: e.clientX, y: e.clientY });
+          // }}
+          // onMouseEnter={() => setHovered(true)}
+          // onMouseLeave={() => setHovered(false)}
           className="bg-[#f0f4fd] py-10 px-10 w-[55rem] h-[30rem] rounded-2xl overflow-hidden shadow-lg flex items-center justify-center"
         >
           <Image
@@ -99,9 +99,9 @@ const CardDenah = () => {
             className="w-full h-full object-contain"
           />
 
-          {hovered && (
+          {/* {hovered && (
             <HoverItem cursorPosX={cursorPos.x} cursorPosY={cursorPos.y} text={images[imageIndex].name}/>
-          )}
+          )} */}
         </div>
         <button
           className="w-10 h-10 bg-white outline-none rounded-full shadow-md flex items-center justify-center"
@@ -121,21 +121,21 @@ const CardDenah = () => {
 
 export default CardDenah;
 
-const HoverItem = ({ cursorPosX = 0, cursorPosY = 0, text = "" }) => {
-  return (
-    <>
-      <div
-        style={{
-          position: "fixed",
-          top: cursorPosY - 50, 
-          left: cursorPosX + 10,
-          pointerEvents: "none", 
-          zIndex: 50,
-        }}
-        className={`bg-white shadow-lg text-black p-2 rounded-md border-2 border-black w-max`}
-      >
-        Ini adalah preview dari ruangan {text}
-      </div>
-    </>
-  );
-};
+// const HoverItem = ({ cursorPosX = 0, cursorPosY = 0, text = "" }) => {
+//   return (
+//     <>
+//       <div
+//         style={{
+//           position: "fixed",
+//           top: cursorPosY - 50, 
+//           left: cursorPosX + 10,
+//           pointerEvents: "none", 
+//           zIndex: 50,
+//         }}
+//         className={`bg-white shadow-lg text-black p-2 rounded-md border-2 border-black w-max`}
+//       >
+//         Ini adalah preview dari ruangan {text}
+//       </div>
+//     </>
+//   );
+// };

@@ -10,7 +10,9 @@ import Image from "next/image";
 
 const EditProfile: React.FC = () => {
   const { user } = useAllProfiles();
-  const [imagePreview, setImagePreview] = useState<string>(user?.profilePicture?.secure_url || "");
+  const [imagePreview, setImagePreview] = useState<string>(
+    user?.profilePicture?.secure_url || ""
+  );
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -39,37 +41,39 @@ const EditProfile: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      const token = localStorage.getItem("Token");
-      const formData = new FormData();
+  e.preventDefault();
+  try {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const token = localStorage.getItem("Token");
+    const formData = new FormData();
 
-      if (selectedImage) {
-        formData.append("profilePicture", selectedImage);
-      }
-
-      await axios.put(`${backendUrl}/user/${user?._id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      Swal.fire({
-        icon: "success",
-        title: "Profil berhasil diperbarui",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-    } catch (error: any) {
-      Swal.fire({
-        icon: "error",
-        title: "Gagal memperbarui profil",
-        text: error?.response?.data?.message || "Terjadi kesalahan",
-      });
+    if (selectedImage) {
+      formData.append("profilePicture", selectedImage);
     }
-  };
+
+    await axios.put(`${backendUrl}/user/${user?._id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "Profil berhasil diperbarui",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { data?: { message?: string } } };
+    Swal.fire({
+      icon: "error",
+      title: "Gagal memperbarui profil",
+      text: axiosError?.response?.data?.message || "Terjadi kesalahan",
+    });
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit}>

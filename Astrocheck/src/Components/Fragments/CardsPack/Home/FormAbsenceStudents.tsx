@@ -74,7 +74,7 @@ const FormAbsence = () => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
-      const response = await axios.post(
+      await axios.post(
         `${backendUrl}/presence`,
         {
           reason: formData?.reason,

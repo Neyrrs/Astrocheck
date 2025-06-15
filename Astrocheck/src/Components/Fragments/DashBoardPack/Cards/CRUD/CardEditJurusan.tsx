@@ -19,7 +19,6 @@ import DisabledInput from "@/Components/Elements/Inputs/DisabledInput";
 const CardEditJurusan = () => {
   const { selectedItem } = useItemContext();
   const { setActiveContent } = useDashboardContext();
-  const [isLoading, setIsLoading] = useState(true);
 
   const {
     register,
@@ -49,7 +48,6 @@ const CardEditJurusan = () => {
         majorFullName: selectedItem.majorFullName || "",
         duration: selectedItem.duration || "",
       });
-      setIsLoading(false);
     }
   }, [selectedItem, reset]);
 

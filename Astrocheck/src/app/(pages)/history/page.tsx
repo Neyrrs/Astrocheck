@@ -24,7 +24,7 @@ const History = () => {
     ? [usePresenceArray]
     : [];
 
-  const [filter, setFilter] = useState("All");
+  const [filter] = useState("All");
 
   const filteredData =
     filter === "All"

@@ -35,7 +35,7 @@ const Login = () => {
       }).then(() => {
         window.location.href = "/";
       });
-    } catch (err) {
+    } catch {
       Swal.fire({
         title: "Gagal!",
         text: "NIS atau password salah!",

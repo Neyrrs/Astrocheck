@@ -16,7 +16,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     if (!token) {
       router.replace("/login");
     }
-  }, []);
+  }, [router]);
 
   return <>{children}</>;
 };

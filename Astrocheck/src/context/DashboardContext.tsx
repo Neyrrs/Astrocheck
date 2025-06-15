@@ -1,21 +1,18 @@
 "use client";
+
 import React, { createContext, useContext, useState } from "react";
 
-// Buat tipe (optional)
-interface DashboardContextType {
+const DashboardContext = createContext<{
   activeContent: string;
   setActiveContent: (value: string) => void;
-  selectedPresence: any;
-  setSelectedPresence: (data: any) => void;
-}
+  selectedPresence: { [key: string]: unknown } | null;
+  setSelectedPresence: (data: { [key: string]: unknown } | null) => void;
+} | undefined>(undefined);
 
-// Buat context
-const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
-
-// Provider
 export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeContent, setActiveContent] = useState("Dasbor");
-  const [selectedPresence, setSelectedPresence] = useState(null);
+
+  const [selectedPresence, setSelectedPresence] = useState<{ [key: string]: unknown } | null>(null);
 
   return (
     <DashboardContext.Provider
@@ -26,9 +23,10 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
   );
 };
 
-// Hook untuk akses context
 export const useDashboardContext = () => {
   const context = useContext(DashboardContext);
-  if (!context) throw new Error("useDashboardContext must be used within DashboardProvider");
+  if (!context) {
+    throw new Error("useDashboardContext must be used within DashboardProvider");
+  }
   return context;
 };

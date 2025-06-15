@@ -3,7 +3,6 @@ import React from "react";
 const DynamicTable = ({
   columns,
   data,
-  loading = false,
   error = false,
   startIndex = 0,
 }) => {
