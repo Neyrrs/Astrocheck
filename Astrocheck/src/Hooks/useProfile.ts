@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type { User } from "@/types/user";
 
 const useFetchProfile = (endpoint = "profile") => {
