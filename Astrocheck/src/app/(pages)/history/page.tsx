@@ -5,10 +5,24 @@ import Navbar from "@/Components/Fragments/Navigation-bar/Navbar";
 import { useAllPresence } from "@/Hooks/usePresence.js";
 import { useProfile } from "@/Hooks/useProfile";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
+import type {PresenceLog} from "@/types/presence";
+
+type AllPresence = {
+  logs: PresenceLog[];
+};
+
+type UserProfile = {
+  streak: number;
+};
 
 const History = () => {
-  const { userPresence, error } = useAllPresence();
-  const { data } = useProfile();
+  const { userPresence, error } = useAllPresence() as {
+    userPresence: AllPresence | null;
+    error: boolean | null;
+  };
+  const { data } = useProfile() as {
+    data: UserProfile | null;
+  };
 
   const streakFire = {
     orange: "#FF9E11",
@@ -17,19 +31,15 @@ const History = () => {
     blue: "#394AD7",
   };
 
-  const usePresenceArray = userPresence?.logs;
-  const presenceArray = Array.isArray(usePresenceArray)
-    ? usePresenceArray
-    : usePresenceArray
-    ? [usePresenceArray]
-    : [];
+  const logs = userPresence?.logs ?? [];
+  const presenceArray = Array.isArray(logs) ? logs : [];
 
   const [filter] = useState("All");
 
   const filteredData =
-    filter === "All"
-      ? presenceArray
-      : presenceArray.filter((item) => item.alasan === filter);
+  filter === "All"
+    ? presenceArray
+    : presenceArray.filter((item) => item.reason === filter);
 
   const historyColumns = [
     { header: "ID", field: "__index" },
@@ -87,7 +97,7 @@ const History = () => {
                         : data.streak < 200
                         ? streakFire.green
                         : streakFire.blue
-                      : "#999999" 
+                      : "#999999"
                   }
                 />
               </svg>
@@ -97,10 +107,10 @@ const History = () => {
 
         <div className="border-1 border-[#e5e5e5] py-3 mb-2 gap-5 flex flex-col rounded-2xl">
           <PresenceTableWrapper
-            data={filteredData}
-            columns={historyColumns}
+            data={filteredData || []}
+            columns={historyColumns || []}
             loading={false}
-            error={error}
+            error={error || false}
             itemsPerPage={5}
           />
         </div>

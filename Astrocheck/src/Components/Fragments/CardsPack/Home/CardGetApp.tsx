@@ -19,7 +19,7 @@ const CardGetApp = () => {
             </div>
           </div>
           <div className="h-full flex items-center">
-            <SecondaryButton text="Unduh" width="10" height="2"/>
+            <SecondaryButton text="Unduh" width={10} height={2}/>
           </div>
         </div>
       </div>

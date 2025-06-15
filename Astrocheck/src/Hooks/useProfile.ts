@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import type { User } from "@/types/user";
 
 const useFetchProfile = (endpoint = "profile") => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -43,10 +44,9 @@ export const useProfileMostStreak  = () => useFetchProfile("profiles/mostStreak"
 
 export const useAllProfiles = () => {
   const user = useProfile();
-
-  const [users, setUsers] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [users, setUsers] = useState<User[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -77,7 +77,7 @@ export const useAllProfiles = () => {
   }, [user?.data]);
 
   return {
-    user: user.data,
+    user: user.data as User | null,
     users,
     loading: user.loading || loading,
     error: user.error || error,

@@ -11,8 +11,36 @@ import StreakBadge from "@/Components/Elements/Icons/Streak";
 import { PrimaryButton } from "@/Components/Elements/Buttons";
 import ExportExcel from "../../CardsPack/Dashboard/ExportExcel";
 
-const GrafikPresensi = () => {
-  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+interface TableRow {
+  __index?: number;
+  nis?: string;
+  fullName?: string;
+  grade?: string;
+  idMajor?: {
+    major_name: string;
+  };
+  streak?: number;
+  major?: string;
+  totalMembaca?: number;
+  totalMeminjam?: number;
+  totalLainnya?: number;
+}
+
+interface TableColumn {
+  header: string;
+  field?: keyof TableRow;
+  render?: (row: TableRow) => React.ReactNode;
+}
+
+interface YearlyData {
+  logsPerMonth: Array<{
+    month: number;
+    count: number;
+  }>;
+}
+
+const GrafikPresensi: React.FC = () => {
+  const [isExportModalOpen, setIsExportModalOpen] = useState<boolean>(false);
   const { fullYear, mostPresence } = useAllPresence();
   const { setActiveContent } = useDashboardContext();
   const { setSelectedItem } = useItemContext();
@@ -34,11 +62,11 @@ const GrafikPresensi = () => {
     "Desember",
   ];
 
-  const logsPerMonth = fullYear?.logsPerMonth;
-  const labels = logsPerMonth?.map((item) => monthNames[item.month]);
-  const count = logsPerMonth?.map((item) => item.count);
+  const logsPerMonth = (fullYear || {}) as YearlyData;
+  const labels = logsPerMonth?.logsPerMonth?.map((item) => monthNames[item.month]);
+  const count = logsPerMonth?.logsPerMonth?.map((item) => item.count);
 
-  const handleEdit = (row) => {
+  const handleEdit = (row: TableRow) => {
     setSelectedItem(row);
     setActiveContent("Edit Akun");
   };
@@ -46,22 +74,22 @@ const GrafikPresensi = () => {
     setIsExportModalOpen(true);
   };
 
-  const mostStreakColumns = [
+  const mostStreakColumns: TableColumn[] = [
     { header: "ID", field: "__index" },
     { header: "NIS", field: "nis" },
     { header: "Nama Lengkap", field: "fullName" },
     { header: "Kelas", field: "grade" },
     {
       header: "Jurusan",
-      render: (row) => row?.idMajor?.major_name ?? "-",
+      render: (row: TableRow) => row?.idMajor?.major_name ?? "-",
     },
     {
       header: "Streak",
-      render: (row) => <StreakBadge streak={row.streak} />,
+      render: (row: TableRow) => <StreakBadge streak={row.streak} />,
     },
   ];
 
-  const mostPresenceColumns = [
+  const mostPresenceColumns: TableColumn[] = [
     { header: "ID", field: "__index" },
     { header: "Nama Lengkap", field: "fullName" },
     { header: "Kelas", field: "grade" },
@@ -71,7 +99,7 @@ const GrafikPresensi = () => {
     { header: "Lainnya", field: "totalLainnya" },
     {
       header: "Aksi",
-      render: (row) => (
+      render: (row: TableRow) => (
         <div className="flex flex-row gap-2 text-base">
           <button
             onClick={() => handleEdit(row)}
@@ -132,9 +160,9 @@ const GrafikPresensi = () => {
         </div>
         <div className="w-full h-80 px-10 py-5">
           <BarMonthsChart
-            data={count}
-            labels={labels}
-            title={"Rata-rata presensi"}
+            data={count || []}
+            labels={labels || []}
+            title="Rata-rata presensi"
           />
         </div>
       </div>

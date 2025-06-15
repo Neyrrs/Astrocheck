@@ -1,6 +1,16 @@
 import Label from "@/Components/Elements/Labels/Label";
 
-const TextArea = (props) => {
+type TextAreaProps = {
+  placeholder?: string;
+  setDetailAlasan?: string;
+  id?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  height?: string;
+  [key: string]: any;
+};
+
+const TextArea = (props: TextAreaProps) => {
   return (
     <>
       <Label

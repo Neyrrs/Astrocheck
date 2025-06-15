@@ -1,19 +1,33 @@
 import Link from "next/link";
 import React from "react";
 
-const TertiaryButton = (props) => {
+interface TertiaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  text?: string;
+  link?: string;
+  color?: string;
+  fontSize?: string;
+  width?: string;
+  height?: string;
+}
+
+const TertiaryButton: React.FC<TertiaryButtonProps> = ({
+  text = "Button",
+  link = "#",
+  color = "bg-white",
+  fontSize = "sm",
+  width = "px-4",
+  height = "py-2",
+  onClick,
+  ...rest
+}) => {
   return (
-    <Link href={props.link || "#"}>
+    <Link href={link}>
       <button
-        className={`border-2 ${props.color || 'bg-white'} font-normal text-${
-          props.fontSize || "sm"
-        } text-black ${props.width || "px-4"} ${
-          props.height || "py-2"
-        } ease-in duration-200 rounded-md border-transparent hover:opacity-70`}
-        onClick={props.onClick}
-        {...props}
+        className={`border-2 ${color} font-normal text-${fontSize} text-black ${width} ${height} ease-in duration-200 rounded-md border-transparent hover:opacity-70`}
+        onClick={onClick}
+        {...rest}
       >
-        {props.text || "Button"}
+        {text}
       </button>
     </Link>
   );

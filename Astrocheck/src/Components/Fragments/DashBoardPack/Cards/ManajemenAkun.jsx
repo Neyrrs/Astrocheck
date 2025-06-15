@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
 import { useState } from "react";
-import { useAllProfiles } from "@/Hooks/useProfile.js";
+import { useAllProfiles } from "@/Hooks/useProfile";
 import Image from "next/image.js";
 
 const ManajemenAkun = () => {

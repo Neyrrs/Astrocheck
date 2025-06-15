@@ -1,9 +1,14 @@
-import Image from 'next/image';
+import Image, { ImageProps, StaticImageData } from "next/image";
 
-const Icons = ({ image, alt, width, height, ...rest }) => {
-  if (!image) {
-    return null;
-  }
+interface IconsProps extends Omit<ImageProps, "src" | "alt"> {
+  image: string | StaticImageData;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+const Icons: React.FC<IconsProps> = ({ image, alt, width, height, ...rest }) => {
+  if (!image) return null;
 
   return (
     <Image
@@ -11,8 +16,8 @@ const Icons = ({ image, alt, width, height, ...rest }) => {
       alt={alt}
       width={width}
       height={height}
-      quality={75} 
-      {...rest}  
+      quality={75}
+      {...rest}
     />
   );
 };

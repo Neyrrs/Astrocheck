@@ -3,16 +3,14 @@
 import { useEffect, useRef, useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Image from "next/image";
 import { ProfileImage } from "@/Components/Elements/Icons";
 import SuccessButton from "@/Components/Elements/Buttons/SuccessButton";
 import { useAllProfiles } from "@/Hooks/useProfile";
-import Image from "next/image";
 
-const EditProfile: React.FC = () => {
+const EditProfile = () => {
   const { user } = useAllProfiles();
-  const [imagePreview, setImagePreview] = useState<string>(
-    user?.profilePicture?.secure_url || ""
-  );
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -28,52 +26,66 @@ const EditProfile: React.FC = () => {
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setImagePreview(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-      setSelectedImage(file);
+    if (!file) return;
+
+    const isValidType = file.type.startsWith("image/");
+    const isValidSize = file.size <= 2 * 1024 * 1024;
+
+    if (!isValidType || !isValidSize) {
+      Swal.fire({
+        icon: "warning",
+        title: "Gagal memuat gambar",
+        text: "Pastikan file adalah gambar dan ukurannya tidak lebih dari 2MB",
+      });
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        setImagePreview(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+    setSelectedImage(file);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-    const token = localStorage.getItem("Token");
-    const formData = new FormData();
+    e.preventDefault();
 
-    if (selectedImage) {
-      formData.append("profilePicture", selectedImage);
+    if (!user?._id) return;
+
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const token = localStorage.getItem("Token");
+      const formData = new FormData();
+
+      if (selectedImage) {
+        formData.append("profilePicture", selectedImage);
+      }
+
+      await axios.put(`${backendUrl}/user/${user._id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Profil berhasil diperbarui",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      Swal.fire({
+        icon: "error",
+        title: "Gagal memperbarui profil",
+        text: err?.response?.data?.message || "Terjadi kesalahan.",
+      });
     }
-
-    await axios.put(`${backendUrl}/user/${user?._id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    Swal.fire({
-      icon: "success",
-      title: "Profil berhasil diperbarui",
-      timer: 2000,
-      showConfirmButton: false,
-    });
-  } catch (error: unknown) {
-    const axiosError = error as { response?: { data?: { message?: string } } };
-    Swal.fire({
-      icon: "error",
-      title: "Gagal memperbarui profil",
-      text: axiosError?.response?.data?.message || "Terjadi kesalahan",
-    });
-  }
-};
-
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -86,22 +98,22 @@ const EditProfile: React.FC = () => {
           {imagePreview ? (
             <Image
               src={imagePreview}
-              alt="Preview"
+              alt="Foto Profil"
               fill
-              className="object-cover"
               sizes="96px"
-              style={{ borderRadius: "50%" }}
+              className="object-cover rounded-full"
             />
           ) : (
-            <ProfileImage width={100} height={100} />
+            <ProfileImage width={96} height={96} />
           )}
         </div>
+
         <div className="text-lg font-normal">
-          <p>{user?.fullName || "Loading..."}</p>
+          <p>{user?.fullName || "Memuat nama..."}</p>
           <p className="text-gray-500">
             {user?.idMajor?.major_name
               ? `${user.grade} ${user.idMajor.major_name}`
-              : "Loading..."}
+              : "Memuat jurusan..."}
           </p>
         </div>
       </div>
@@ -115,7 +127,7 @@ const EditProfile: React.FC = () => {
       />
 
       <div className="mt-4">
-        <SuccessButton text="Simpan" type="submit" />
+        <SuccessButton text="Simpan" />
       </div>
     </form>
   );

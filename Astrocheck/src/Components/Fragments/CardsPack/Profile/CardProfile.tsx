@@ -18,8 +18,8 @@ const CardProfile = () => {
     }
   }, [showQuery]);
 
-  const handleShow = (e) => {
-    setShow(Number(e.target.value));
+  const handleShow = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setShow(Number((e.target as HTMLButtonElement).value));
     setActive(
       "border-b-2 border-[#729CDA] border-spacing-y-10 duration-300 ease-in-out"
     );

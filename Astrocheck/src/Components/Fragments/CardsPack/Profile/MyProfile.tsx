@@ -1,7 +1,7 @@
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 import DisabledToggleInput from "@/Components/Fragments/InputPack/DisabledToggleInput";
 import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack";
-import { useAllProfiles } from "@/Hooks/useProfile.js";
+import { useAllProfiles } from "@/Hooks/useProfile";
 
 const MyProfile = () => {
   const { user } = useAllProfiles();

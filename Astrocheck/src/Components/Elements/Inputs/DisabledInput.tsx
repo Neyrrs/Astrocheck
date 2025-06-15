@@ -1,10 +1,21 @@
-const DisabledInput = (props) => {
-  return (
-    <>
-      <input type={props.type} disabled={true} placeholder={props.placeholder || "Placeholder"} className={`text-sm font-normal border-[#dbdbdb] bg-[#fafafa] border-2 px-3 w-${props.width || "full"} ease-in-out hover:drop-shadow-md duration-150 border-gray-3
-      00 py-2 rounded-[5px]`} value={props.value}/>
-    </>
-  )
-}
+type DisabledInputProps = {
+  type?: string;
+  placeholder?: string;
+  width?: string | number;
+  value?: string;
+  [key: string]: any;
+};
 
-export default DisabledInput
+const DisabledInput = (props: DisabledInputProps) => {
+  return (
+    <input
+      type={props.type}
+      disabled={true}
+      placeholder={props.placeholder || "Placeholder"}
+      value={props.value}
+      className={`text-sm font-normal border-[#dbdbdb] bg-[#fafafa] border-2 px-3 w-${props.width || "full"} ease-in-out hover:drop-shadow-md duration-150 border-gray-300 py-2 rounded-[5px]`}
+    />
+  );
+};
+
+export default DisabledInput;

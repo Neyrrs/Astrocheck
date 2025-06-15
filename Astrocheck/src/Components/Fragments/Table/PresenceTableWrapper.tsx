@@ -1,13 +1,27 @@
 import { useState } from "react";
 import DynamicTable from "./DynamicTable";
 import SearchPack from "../SearchPack/SearchPack";
+import { PresenceLog } from "@/types/presence";
+
+type TableColumn = {
+  header: string;
+  field: string;
+};
+
+type Props = {
+  data: PresenceLog[];
+  columns: TableColumn[];
+  loading?: boolean;
+  error?: boolean;
+  itemsPerPage?: number;
+};
 
 const PresenceTableWrapper = ({
   data = [],
   columns = [],
   loading = false,
   error = false,
-}) => {
+}: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
@@ -24,7 +38,7 @@ const PresenceTableWrapper = ({
 
   const handlePerPageChange = (e) => {
     setPerPage(Number(e.target.value));
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleNext = () => {

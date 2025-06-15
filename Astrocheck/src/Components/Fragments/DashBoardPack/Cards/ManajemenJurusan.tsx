@@ -1,7 +1,7 @@
-import { useAllMajors } from "@/Hooks/useMajor.js";
+import { useAllMajors } from "@/Hooks/useMajor";
 import { useDashboardContext } from "@/context/DashboardContext";
 import { useItemContext } from "@/context/ItemContext";
-import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper.tsx";
+import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
 import { PrimaryButton } from "@/Components/Elements/Buttons";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";

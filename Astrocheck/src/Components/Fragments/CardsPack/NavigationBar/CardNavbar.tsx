@@ -10,10 +10,11 @@ import {
 import Swal from "sweetalert2";
 import {useAllProfiles} from "@/Hooks/useProfile";
 import Image from "next/image";
+import React from "react";
 
 const CardNavbar = () => {
   const { user } = useAllProfiles();
-  const handleLogout = (e) => {
+  const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     Swal.fire({
       title: "Apakah anda yakin?",

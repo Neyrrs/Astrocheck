@@ -4,9 +4,14 @@ import { useAllPresence } from "@/Hooks/usePresence";
 const styleCard =
   "w-full h-fit rounded-lg px-8 flex-col flex justify-center gap-5 pt-10 pb-15 text-white";
 
-const usePresenceData = (category) => {
+interface CardPresenceProps {
+  title: string;
+  category: "membaca" | "meminjam" | "lainnya";
+}
+
+const usePresenceData = (category: CardPresenceProps["category"]) => {
   const { summary } = useAllPresence();
-  const [presencesIndex, setPresencesIndex] = useState(0);
+  const [presencesIndex, setPresencesIndex] = useState<number>(0);
 
   const handleChange = () => {
     setPresencesIndex((prevIndex) => (prevIndex < 2 ? prevIndex + 1 : 0));
@@ -24,7 +29,7 @@ const usePresenceData = (category) => {
   };
 };
 
-const CardPresence = ({ title, category }) => {
+const CardPresence: React.FC<CardPresenceProps> = ({ title, category }) => {
   const { presencesIndex, handleChange, presenceData, labels } =
     usePresenceData(category);
 
@@ -36,7 +41,10 @@ const CardPresence = ({ title, category }) => {
           {presenceData[presencesIndex]} Orang
         </p>
       </div>
-      <button className="w-fit mt-2 flex items-center gap-3" onClick={handleChange}>
+      <button
+        className="w-fit mt-2 flex items-center gap-3"
+        onClick={handleChange}
+      >
         {labels[presencesIndex]}
         <svg
           width="6"

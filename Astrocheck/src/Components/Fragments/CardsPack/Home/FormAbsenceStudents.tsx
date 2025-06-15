@@ -8,11 +8,17 @@ import {
   DropdownPackAlasan,
   DropdownPackJurusan,
 } from "@/Components/Fragments/DropdownPack";
-import Swal from "sweetalert2";
-import axios from "axios";
-import {useAllProfiles} from "@/Hooks/useProfile";
+import Swal, { SweetAlertIcon } from "sweetalert2";
+import axios, { AxiosError } from "axios";
+import { useAllProfiles } from "@/Hooks/useProfile";
 
-const showToast = (icon = "success", title = "", onClose = () => {}) => {
+interface FormData {
+  nis: string;
+  reason: string;
+  detailReason: string;
+}
+
+const showToast = (icon: SweetAlertIcon, title: string, onClose = () => {}) => {
   let clicked = false;
 
   const Toast = Swal.mixin({
@@ -30,8 +36,8 @@ const showToast = (icon = "success", title = "", onClose = () => {}) => {
     },
   });
 
-  Toast.fire({
-    icon,
+  void Toast.fire({
+    icon: icon as SweetAlertIcon,
     title,
   }).then((result) => {
     if (result.dismiss === Swal.DismissReason.timer && !clicked) {
@@ -43,7 +49,7 @@ const showToast = (icon = "success", title = "", onClose = () => {}) => {
 const FormAbsence = () => {
   const { user } = useAllProfiles();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     nis: "",
     reason: "",
     detailReason: "",
@@ -53,17 +59,17 @@ const FormAbsence = () => {
     if (user) {
       setFormData((prev) => ({
         ...prev,
-        nis: user?.nis,
+        nis: user?.nis || "",
       }));
     }
   }, [user]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.reason) {
@@ -88,13 +94,15 @@ const FormAbsence = () => {
       showToast("success", "Absen berhasil, form akan otomatis ter-reset", () => {});
 
       setFormData({
+        nis: user?.nis || "",
         reason: "",
         detailReason: "",
       });
     } catch (error) {
+      const err = error as AxiosError<{message: string}>;
       showToast(
         "error",
-        error.response?.data?.message || "Gagal mengirim data"
+        err.response?.data?.message || "Gagal mengirim data"
       );
     }
   };
@@ -166,7 +174,7 @@ const FormAbsence = () => {
           </div>
 
           <div className="flex justify-start gap-5">
-            <SuccessButton text="Submit" type="submit" />
+            <SuccessButton text="Submit" />
             <DangerButton
               text="Reset"
               onClick={() =>

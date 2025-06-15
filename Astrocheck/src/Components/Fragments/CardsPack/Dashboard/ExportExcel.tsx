@@ -2,14 +2,24 @@
 
 import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import Label from "@/Components/Elements/Labels/Label";
 import { PrimaryButton, TertiaryButton } from "@/Components/Elements/Buttons";
 import { DisabledInput } from "@/Components/Elements/Inputs";
 import { DropdownExportExcel } from "../../DropdownPack";
 
-const ExportExcel = ({ isOpen, onClose }) => {
-  const modalRef = useRef(null);
+interface ExportExcelProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+interface FormData {
+  jenis: string;
+  tanggal: string;
+}
+
+const ExportExcel: React.FC<ExportExcelProps> = ({ isOpen = false, onClose = () => {} }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
   const currentYear = new Date().getFullYear();
 
   const {
@@ -17,15 +27,15 @@ const ExportExcel = ({ isOpen, onClose }) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
+  } = useForm<FormData>({
     defaultValues: {
       tanggal: currentYear.toString(),
     },
   });
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
     };
@@ -44,12 +54,11 @@ const ExportExcel = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const onSubmit = async (data) => {
-    console.log("Jenis: ",data.jenis)
+  const onSubmit = async (data: FormData) => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      const token = localStorage.getItem("Token")
-      const response = await axios.post(
+      const token = localStorage.getItem("Token");
+      const response: AxiosResponse = await axios.post(
         `${backendUrl}/presence/export`,
         { jenis: data?.jenis },
         {
@@ -58,7 +67,7 @@ const ExportExcel = ({ isOpen, onClose }) => {
         },
       );
 
-      console.log("reponse: ",response)
+      console.log("reponse: ", response);
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -68,7 +77,8 @@ const ExportExcel = ({ isOpen, onClose }) => {
 
       onClose();
     } catch (error) {
-      alert("Gagal export data: " + error.message);
+      const err = error as AxiosError;
+      alert("Gagal export data: " + err.message);
     }
   };
 
@@ -100,7 +110,7 @@ const ExportExcel = ({ isOpen, onClose }) => {
               <DisabledInput
                 width="full"
                 {...register("tanggal", { required: true })}
-                value={currentYear}
+                value={(currentYear).toString()}
               />
             </div>
           </div>

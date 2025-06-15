@@ -1,10 +1,24 @@
 import Icons from "./Icons";
 import { useAllProfiles } from "@/Hooks/useProfile";
 import DefaultImage from "@/assets/Pictures/Images/DefaultImage.png";
+import type { StaticImageData } from 'next/image';
 
-const ProfileImage = ({ width = 50, height = 50, size = "", className = "", ...rest }) => {
+interface ProfileImageProps extends React.HTMLAttributes<HTMLDivElement> {
+  width?: number;
+  height?: number;
+  size?: string;
+  className?: string;
+}
+
+const ProfileImage: React.FC<ProfileImageProps> = ({
+  width = 50,
+  height = 50,
+  size = "",
+  className = "",
+  ...rest
+}) => {
   const { user } = useAllProfiles();
-  const imageSrc = user?.profilePicture?.secure_url ?? DefaultImage;
+  const imageSrc: string = getImageSrc(user?.profilePicture?.secure_url ?? DefaultImage);
 
   return (
     <div
@@ -20,11 +34,19 @@ const ProfileImage = ({ width = 50, height = 50, size = "", className = "", ...r
         alt="Profile picture"
         width={width}
         height={height}
-        className={`object-cover w-full h-full ${className}`} 
+        className={`object-cover w-full h-full ${className}`}
         {...rest}
       />
     </div>
   );
 };
+
+function getImageSrc(image: string | StaticImageData): string {
+  if (typeof image === 'string') {
+    return image;
+  }
+  // StaticImageData has a 'src' property
+  return image.src;
+}
 
 export default ProfileImage;

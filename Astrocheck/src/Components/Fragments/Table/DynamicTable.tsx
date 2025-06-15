@@ -1,6 +1,20 @@
 import React from "react";
+import { PresenceLog } from "@/types/presence";
 
-const DynamicTable = ({
+type TableColumn = {
+  header: string;
+  field: keyof PresenceLog | "__index";
+  render?: (row: PresenceLog) => React.ReactNode;
+};
+
+type DynamicTableProps = {
+  columns: TableColumn[];
+  data: PresenceLog[];
+  error?: boolean;
+  startIndex?: number;
+};
+
+const DynamicTable: React.FC<DynamicTableProps> = ({
   columns,
   data,
   error = false,
@@ -40,7 +54,10 @@ const DynamicTable = ({
                   }
 
                   return (
-                    <td key={idx} className="max-w-[100px] py-3 px-5  overflow-x-auto whitespace-nowrap">
+                    <td
+                      key={idx}
+                      className="max-w-[100px] py-3 px-5 overflow-x-auto whitespace-nowrap"
+                    >
                       {cellContent}
                     </td>
                   );

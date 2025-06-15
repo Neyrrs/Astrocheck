@@ -4,7 +4,7 @@ export {default as CardSiswaTerbanyakAbsen} from "./CardSiswaTerbanyakAbsen.tsx"
 export {default as CardSummary} from "./CardSummary.tsx";
 export {default as DashBoard} from "./DashBoard.tsx";
 export {default as ManajemenAkun} from "./ManajemenAkun.jsx";
-export {default as ManajemenJurusan} from "./ManajemenJurusan.jtx";
+export {default as ManajemenJurusan} from "./ManajemenJurusan.jsx";
 export {default as ManajemenPresensi} from "./ManajemenPresensi.jsx";
 
 // CRUD admin
