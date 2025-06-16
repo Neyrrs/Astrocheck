@@ -6,7 +6,6 @@ import {
   isHolidayOrWeekend,
 } from "../Utils/HolidayChecker.js";
 import * as XLSX from "sheetjs-style";
-import { Readable } from "stream";
 
 const getPresenceCounts = async () => {
   const [membaca, meminjam, lainnya] = await Promise.all([
@@ -97,9 +96,7 @@ export const getLogs = async (req, res) => {
 
     const logs = await Presence.find({ nis });
     if (!logs.length) {
-      return res
-        .status(404)
-        .json({ message: "Tidak ada data presensi untuk user ini" });
+      return res.status(404).json({ message: "Tidak ada data presensi untuk user ini" });
     }
 
     const user = await User.findOne({ nis })
@@ -124,17 +121,33 @@ export const getLogs = async (req, res) => {
     const count = logs.length;
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
 
+    const now = new Date();
+    const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+    const currentYear = String(now.getFullYear());
+    const today = now.toISOString().split("T")[0];
+
+    const monthly = logs.filter((log) => log.date?.split("-")[1] === currentMonth).length;
+    const yearly = logs.filter((log) => log.date?.split("-")[0] === currentYear).length;
+
+    const logHariIni = logs.find((log) => log.date === today);
+    const lastPresence = logHariIni?.time || "-";
+
     res.json({
       count,
+      monthly,
+      yearly,
       membaca,
       meminjam,
       lainnya,
+      lastPresence,
       logs: formattedLogs,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 export const getAllUsersPresence = async (req, res) => {
   try {
@@ -235,12 +248,12 @@ export const getLogsCurrentMonth = async (req, res) => {
   try {
     const now = new Date();
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // JS month starts at 0
+    const month = String(now.getMonth() + 1).padStart(2, "0"); 
 
     const startDate = `${year}-${month}-01`;
     const endDate = new Date(year, now.getMonth() + 1, 0)
       .toISOString()
-      .slice(0, 10); // Akhir bulan
+      .slice(0, 10);
 
     const logs = await Presence.find({
       date: { $gte: startDate, $lte: endDate },

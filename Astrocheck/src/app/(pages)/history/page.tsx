@@ -2,13 +2,22 @@
 
 import { useState } from "react";
 import Navbar from "@/Components/Fragments/Navigation-bar/Navbar";
-import { useAllPresence } from "@/Hooks/usePresence.js";
+import { useAllPresence } from "@/Hooks/usePresence";
 import { useProfile } from "@/Hooks/useProfile";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
-import type {PresenceLog} from "@/types/presence";
+import type { PresenceLog } from "@/types/presence";
 
 type AllPresence = {
+  monthly: number;
+  yearly: number;
+  lastPresence: string;
   logs: PresenceLog[];
+};
+
+type TableColumn = {
+  header: string;
+  field: keyof PresenceLog | "__index";
+  render?: (row: PresenceLog) => React.ReactNode;
 };
 
 type UserProfile = {
@@ -36,12 +45,19 @@ const History = () => {
 
   const [filter] = useState("All");
 
-  const filteredData =
-  filter === "All"
-    ? presenceArray
-    : presenceArray.filter((item) => item.reason === filter);
+  const sortedData = [...presenceArray].sort((a, b) => {
+    const fixTime = (time: string) => time.replace(".", ":");
+    const dateA = new Date(`${a.date}T${fixTime(a.time)}`);
+    const dateB = new Date(`${b.date}T${fixTime(b.time)}`);
+    return dateB.getTime() - dateA.getTime();
+  });
 
-  const historyColumns = [
+  const filteredData =
+    filter === "All"
+      ? sortedData
+      : sortedData.filter((item) => item.reason === filter);
+
+  const historyColumns: TableColumn[] = [
     { header: "ID", field: "__index" },
     { header: "Nama Lengkap", field: "fullName" },
     { header: "Tanggal Presensi", field: "date" },
@@ -63,15 +79,21 @@ const History = () => {
         <div className="flex py-5 flex-row w-full gap-x-5">
           <div className={cardStyle}>
             <h1 className="font-medium text-gray-500">Presensi hari ini</h1>
-            <p className="text-4xl font-semibold">10:50</p>
+            <p className="text-4xl font-semibold">
+              {userPresence?.lastPresence}
+            </p>
           </div>
           <div className={cardStyle}>
             <h1 className="font-medium text-gray-500">Presensi bulan ini</h1>
-            <p className="text-4xl font-semibold">12 Hari</p>
+            <p className="text-4xl font-semibold">
+              {userPresence?.monthly} Hari
+            </p>
           </div>
           <div className={cardStyle}>
             <h1 className="font-medium text-gray-500">Presensi tahun ini</h1>
-            <p className="text-4xl font-semibold">32 Hari</p>
+            <p className="text-4xl font-semibold">
+              {userPresence?.yearly} Hari
+            </p>
           </div>
           <div className={cardStyle}>
             <h1 className="font-medium text-gray-500">Presensi streak</h1>
@@ -109,7 +131,6 @@ const History = () => {
           <PresenceTableWrapper
             data={filteredData || []}
             columns={historyColumns || []}
-            loading={false}
             error={error || false}
             itemsPerPage={5}
           />

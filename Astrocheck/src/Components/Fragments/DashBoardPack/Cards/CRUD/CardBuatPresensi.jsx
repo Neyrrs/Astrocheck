@@ -29,7 +29,7 @@ const CardBuatPresensi = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      nisn: "",
+      nis: "",
       reason: "",
       detailReason: "",
     },
@@ -42,11 +42,11 @@ const CardBuatPresensi = () => {
       setIsLoading(true);
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-      const { nisn, reason, detailReason } = formData;
+      const { nis, reason, detailReason } = formData;
 
       await axios.post(
         `${backendUrl}/presence/`,
-        { nisn, reason, detailReason },
+        { nis, reason, detailReason },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
@@ -101,15 +101,15 @@ const CardBuatPresensi = () => {
           </div>
           <div className="grid cols-2 gap-4 px-5 py-5">
             <div>
-              <Label htmlFor="nisn" text="NISN *" />
+              <Label htmlFor="nis" text="NIS *" />
               <Input
-                {...register("nisn", { required: "NISN wajib diisi" })}
-                placeholder="NISN"
-                value={values.nisn}
-                onChange={(e) => setValue("nisn", e.target.value)}
+                {...register("nis", { required: "NIS wajib diisi" })}
+                placeholder="NIS"
+                value={values.nis}
+                onChange={(e) => setValue("nis", e.target.value)}
               />
-              {errors.nisn && (
-                <p className="text-red-500 text-sm">{errors.nisn.message}</p>
+              {errors.nis && (
+                <p className="text-red-500 text-sm">{errors.nis.message}</p>
               )}
             </div>
           </div>
@@ -133,11 +133,10 @@ const CardBuatPresensi = () => {
 
             <div className="col-span-2">
               <DropdownPackAlasan
-                {...register("reason", { required: "Alasan wajib diisi" })}
-                placeholder="Alasan"
-                value={values.reason}
-                onChange={(e) => setValue("reason", e.target.value)}
-              />
+                register={register}
+                name="reason"
+                error={errors.reason}
+            />
               {errors.reason && (
                 <p className="text-red-500 text-sm">{errors.reason.message}</p>
               )}
@@ -168,8 +167,7 @@ const CardBuatPresensi = () => {
             fontSize="sm"
             text="Simpan"
             type="submit"
-            isLoading={isLoading}
-            onClick={onSubmit}
+            disabled={isLoading}
           />
         </div>
       </form>

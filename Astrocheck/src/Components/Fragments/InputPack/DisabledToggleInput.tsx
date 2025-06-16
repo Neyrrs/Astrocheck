@@ -7,7 +7,7 @@ import { Eye, SlashedEye } from "@/assets/Icons/Index";
 import Image from "next/image";
 
 
-const ToggleInput = (props) => {
+const ToggleInput = ({namaLengkap = "", text = "", value = "", width = ""}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -16,13 +16,13 @@ const ToggleInput = (props) => {
 
   return (
     <div className="relative w-full flex flex-col gap-2">
-      <Label htmlFor={props.namaLengkap || "htmlFor"} text={props.text || "Label"} className="text-base font-normal" />
+      <Label htmlFor={namaLengkap || "htmlFor"} text={text || "Label"} className="text-base font-normal" />
 
       <div className="relative">
         <DisabledInput
           type={showPassword ? "text" : "password"}
-          value={props.value}
-          width={props.width || "full"}
+          value={value}
+          width={width || "full"}
         />
 
         <button

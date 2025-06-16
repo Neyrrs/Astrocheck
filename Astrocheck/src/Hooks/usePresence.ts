@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useAllProfiles } from "./useProfile";
+import type { SummaryPresence } from "@/types/presence";
 
-const useFetchPresence = (endpoint) => {
+const useFetchPresence = (endpoint: string) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAllProfiles();
 
   const fetchData = useCallback(async () => {
@@ -25,7 +26,9 @@ const useFetchPresence = (endpoint) => {
       if (!response) return;
       setData(response.data);
     } catch (err) {
-      setError("Terjadi kesalahan", err);
+      if (err instanceof Error) {
+        setError(`Terjadi kesalahan ${err?.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -71,7 +74,7 @@ export const useAllPresence = () => {
     mostPresence: isAdmin ? mostPresence.data : null,
     summaryMajor: isAdmin ? summaryMajor.data : null,
     lastYear: isAdmin ? lastYear.data : null,
-    summary: summary.data,
+    summary: summary.data as SummaryPresence | null,
     averages: isAdmin ? average.data : null,
     today: isAdmin ? today.data : null,
     fullYear: isAdmin ? fullYear.data : null,

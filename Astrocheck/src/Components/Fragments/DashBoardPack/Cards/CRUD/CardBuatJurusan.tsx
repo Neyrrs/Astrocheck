@@ -9,7 +9,13 @@ import Input from "@/Components/Elements/Inputs/Input";
 import Label from "@/Components/Elements/Labels/Label";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import { DisabledInput } from "@/Components/Elements/Inputs";
+
+interface FormData {
+  major_code: string;
+  major_name: string;
+  majorFullName: string;
+  duration: string;
+}
 
 const CardBuatJurusan = () => {
   const { setActiveContent } = useDashboardContext();
@@ -18,11 +24,11 @@ const CardBuatJurusan = () => {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
+    watch,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     defaultValues: {
       major_code: "",
       major_name: "",
@@ -33,16 +39,19 @@ const CardBuatJurusan = () => {
 
   const values = watch();
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: FormData) => {
     try {
       setIsLoading(true);
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-      const { major_code, major_name, duration, majorFullName } = formData;
-
       await axios.post(
         `${backendUrl}/major/`,
-        { major_code, major_name, duration, majorFullName},
+        {
+          major_code: formData.major_code.trim(),
+          major_name: formData.major_name.trim(),
+          majorFullName: formData.majorFullName.trim(),
+          duration: formData.duration.trim(),
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
@@ -53,7 +62,7 @@ const CardBuatJurusan = () => {
       Swal.fire({
         icon: "success",
         title: "Berhasil!",
-        text: "Presensi berhasil ditambahkan.",
+        text: "Jurusan berhasil ditambahkan.",
         toast: true,
         position: "top-end",
         timer: 3000,
@@ -63,12 +72,12 @@ const CardBuatJurusan = () => {
 
       reset();
       setActiveContent("Manajemen Jurusan");
-    } catch (error) {
-      console.error("Gagal menambahkan presensi:", error);
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.message || "Terjadi kesalahan saat menyimpan jurusan.";
       Swal.fire({
         icon: "error",
         title: "Gagal!",
-        text: "Terjadi kesalahan saat menyimpan presensi.",
+        text: errorMsg,
         toast: true,
         position: "top-end",
         timer: 3000,
@@ -93,57 +102,68 @@ const CardBuatJurusan = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <div className="bg-white rounded-xl shadow-md">
           <div className="px-5 py-3 border-b-2 border-gray-300 font-semibold text-xl">
-            Personal Data
+            Data Jurusan
           </div>
           <div className="grid grid-cols-2 gap-4 px-5 py-5">
+            {/* Nama Lengkap Jurusan */}
             <div className="col-span-2">
-              <Label htmlFor="major_name" text="Nama Jurusan *" />
-              <DisabledInput placeholder="Nama Jurusan" />
-              {errors.major_name && (
-                <p className="text-red-500 text-sm">
-                  {errors.major_name.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="major_name" text="Nama Jurusan *" />
+              <Label htmlFor="majorFullName" text="Nama Lengkap Jurusan *" />
               <Input
-                {...register("major_name", {
+                {...register("majorFullName", {
                   required: "Nama Jurusan wajib diisi",
                 })}
-                placeholder="Nama Jurusan"
-                value={values.major_name}
-                onChange={(e) => setValue("major_name", e.target.value)}
+                placeholder="Contoh: Rekayasa Perangkat Lunak"
+              />
+              {errors.majorFullName && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.majorFullName.message}
+                </p>
+              )}
+            </div>
+
+            {/* Singkatan Jurusan */}
+            <div>
+              <Label htmlFor="major_name" text="Singkatan Jurusan *" />
+              <Input
+                {...register("major_name", {
+                  required: "Singkatan Jurusan wajib diisi",
+                })}
+                value={values.major_name.toUpperCase()}
+                onChange={(e) => setValue("major_name", e.target.value.toUpperCase())}
+                placeholder="Contoh: RPL"
               />
               {errors.major_name && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.major_name.message}
                 </p>
               )}
             </div>
+
+            {/* Kode Jurusan */}
             <div>
               <Label htmlFor="major_code" text="Kode Jurusan *" />
               <Input
                 {...register("major_code", {
                   required: "Kode Jurusan wajib diisi",
                 })}
-                placeholder="Kode Jurusan"
                 value={values.major_code}
                 onChange={(e) => setValue("major_code", e.target.value)}
+                placeholder="Contoh: 12RPL"
               />
               {errors.major_code && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.major_code.message}
                 </p>
               )}
             </div>
+
+            {/* Durasi */}
             <div className="col-span-2">
-              <Label htmlFor="duration" text="Durasi" />
+              <Label htmlFor="duration" text="Durasi (Tahun)" />
               <Input
                 type="number"
-                value={values?.duration}
-                onChange={(e) => setValue("duration", e.target.value)}
-                placeholder="Durasi Jurusan"
+                {...register("duration")}
+                placeholder="Contoh: 3"
               />
             </div>
           </div>
@@ -151,13 +171,7 @@ const CardBuatJurusan = () => {
 
         <div className="flex justify-between gap-4">
           <TertiaryButton fontSize="sm" text="Batal" onClick={handleCancel} />
-          <PrimaryButton
-            fontSize="sm"
-            text="Simpan"
-            type="submit"
-            isLoading={isLoading}
-            onClick={onSubmit}
-          />
+          <PrimaryButton fontSize="sm" text="Simpan" type="submit" disabled={isLoading} />
         </div>
       </form>
     </div>

@@ -121,9 +121,7 @@ const FormAbsence = () => {
               NIS
             </label>
             <DisabledInput
-              disabled
               type="number"
-              name="nis"
               value={user?.nis || ""}
             />
           </div>
@@ -133,9 +131,7 @@ const FormAbsence = () => {
               Nama
             </label>
             <DisabledInput
-              disabled
               type="text"
-              name="fullName"
               value={user?.fullName || ""}
             />
           </div>

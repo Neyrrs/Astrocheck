@@ -41,7 +41,6 @@ const MyProfile = () => {
           <DisabledInputPack
             key={attribute.id}
             value={attribute.value}
-            htmlFor={attribute.htmlFor}
             text={attribute.text}
           />
         ))}
@@ -49,7 +48,6 @@ const MyProfile = () => {
           <DisabledToggleInput
             key={attribute.id}
             value={attribute.value}
-            htmlFor={attribute.htmlFor}
             text={attribute.text}
           />
         ))}

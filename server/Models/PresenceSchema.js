@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const PresenceSchema = new mongoose.Schema(
   {
-    nis:  {type: String, ref: "user"},
+    nis: { type: String, ref: "user" },
     date: {
       type: String,
       required: true,
@@ -28,7 +28,10 @@ const PresenceSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
+    timestamps: {
+      type: Date,
+      default: Date.now,
+    },
   }
 );
 

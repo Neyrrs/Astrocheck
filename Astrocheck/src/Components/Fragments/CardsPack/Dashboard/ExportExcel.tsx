@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FieldError } from "react-hook-form";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import Label from "@/Components/Elements/Labels/Label";
 import { PrimaryButton, TertiaryButton } from "@/Components/Elements/Buttons";
 import { DisabledInput } from "@/Components/Elements/Inputs";
-import { DropdownExportExcel } from "../../DropdownPack";
+import DropdownExportExcel from "../../DropdownPack/DropdownExportExcel";
 
 interface ExportExcelProps {
   isOpen?: boolean;
@@ -60,14 +60,13 @@ const ExportExcel: React.FC<ExportExcelProps> = ({ isOpen = false, onClose = () 
       const token = localStorage.getItem("Token");
       const response: AxiosResponse = await axios.post(
         `${backendUrl}/presence/export`,
-        { jenis: data?.jenis },
+        { jenis: data.jenis },
         {
           responseType: "blob",
           headers: { Authorization: `Bearer ${token}` },
-        },
+        }
       );
 
-      console.log("reponse: ", response);
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -97,8 +96,9 @@ const ExportExcel: React.FC<ExportExcelProps> = ({ isOpen = false, onClose = () 
             <Label text="Jenis *" className="font-semibold" />
             <div className="col-span-2">
               <DropdownExportExcel
+                name="jenis"
                 register={register}
-                error={errors.jenis}
+                error={errors.jenis as FieldError}
                 disabled={false}
               />
             </div>
@@ -110,7 +110,6 @@ const ExportExcel: React.FC<ExportExcelProps> = ({ isOpen = false, onClose = () 
               <DisabledInput
                 width="full"
                 {...register("tanggal", { required: true })}
-                value={(currentYear).toString()}
               />
             </div>
           </div>

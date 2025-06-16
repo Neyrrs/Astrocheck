@@ -4,11 +4,12 @@ type InputProps = {
   type?: string;
   name?: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   disabled?: boolean;
   required?: boolean;
   width?: string | number;
-  [key: string]: any;
+  autoFocus?: boolean;
+  autoComplete?: string;
 };
 
 const Input = (props: InputProps) => {
@@ -22,6 +23,8 @@ const Input = (props: InputProps) => {
       value={props.value}
       disabled={props.disabled}
       required={props.required ?? true}
+      autoFocus={props.autoFocus}
+      autoComplete={props.autoComplete || "off"}
       className={`focus:border-[#6384E9] hover:border-[#6384E9] border-gray-300 focus:shadow-md hover:shadow-md bg-white duration-150 ease-in outline-none border-[2px] px-3 mb-2 py-[1rem] h-[2rem] w-${props.width || "full"} text-sm rounded-[5px] font-normal`}
       {...props}
     />

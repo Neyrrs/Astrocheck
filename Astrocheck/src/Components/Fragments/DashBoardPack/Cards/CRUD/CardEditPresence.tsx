@@ -3,7 +3,7 @@
 import { useDashboardContext } from "@/context/DashboardContext";
 import { useItemContext } from "@/context/ItemContext";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { DangerButton, PrimaryButton, TertiaryButton } from "@/Components/Elements/Buttons";
 import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack";
@@ -17,6 +17,7 @@ import {
 } from "@/Components/Fragments/DropdownPack";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import type {presenceHttpRequest} from "@/types/presence"
 
 const CardEditPresence = () => {
   const { selectedItem } = useItemContext();
@@ -33,7 +34,7 @@ const CardEditPresence = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: "",
+      _id: "",
       fullName: "",
       nis: "",
       date: "",
@@ -61,7 +62,7 @@ const CardEditPresence = () => {
         );
 
         reset({
-          id: data.id || "",
+          _id: data._id || "",
           fullName: data.fullName || "",
           nis: data.nis || "",
           date: data.date || "",
@@ -81,11 +82,11 @@ const CardEditPresence = () => {
     fetchPresenceDetail();
   }, [selectedItem, reset]);
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: presenceHttpRequest) => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       await axios.put(
-        `${backendUrl}/presence/${formData.id}`,
+        `${backendUrl}/presence/${formData?._id}`,
         {
           date: formData.date,
           time: formData.time,
@@ -206,10 +207,9 @@ const CardEditPresence = () => {
               <div className="w-1/2">
                 <DisabledInputPack
                   text="ID"
-                  {...register("id", { required: "ID wajib diisi" })}
+                  {...register("_id", { required: "ID wajib diisi" })}
                   placeholder="ID"
-                  value={values.id}
-                  readOnly
+                  value={values._id}
                 />
               </div>
               <div className="w-1/2">
@@ -218,7 +218,6 @@ const CardEditPresence = () => {
                   {...register("nis", { required: "NIS wajib diisi" })}
                   placeholder="NIS"
                   value={values.nis}
-                  readOnly
                 />
               </div>
             </div>
@@ -229,8 +228,6 @@ const CardEditPresence = () => {
                 {...register("fullName", { required: "Nama wajib diisi" })}
                 placeholder="Nama Lengkap"
                 value={values.fullName}
-                onChange={(e) => setValue("fullName", e.target.value)}
-                readOnly
               />
               {errors.fullName && (
                 <p className="text-red-500 text-sm">
@@ -244,7 +241,7 @@ const CardEditPresence = () => {
                 {...register("grade", { required: "Kelas wajib diisi" })}
                 placeholder="Kelas"
                 value={values.grade}
-                onChange={(e) => setValue("grade", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("grade", e.target.value)}
                 disabled={true}
               />
             </div>
@@ -254,7 +251,7 @@ const CardEditPresence = () => {
                 {...register("major", { required: "Jurusan wajib diisi" })}
                 placeholder="Jurusan"
                 value={values.major}
-                onChange={(e) => setValue("major", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("major", e.target.value)}
                 disabled={true}
               />
             </div>
@@ -293,7 +290,7 @@ const CardEditPresence = () => {
                 {...register("reason", { required: "Alasan wajib diisi" })}
                 placeholder="Alasan"
                 value={values.reason}
-                onChange={(e) => setValue("reason", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("reason", e.target.value)}
               />
             </div>
             <div className="col-span-2">
@@ -312,7 +309,7 @@ const CardEditPresence = () => {
         </div>
 
         <div className="flex justify-start gap-4">
-          <PrimaryButton fontSize="sm" text="Simpan Perubahan" onClick={handleSubmit(onSubmit)}/>
+          <PrimaryButton fontSize="sm" text="Simpan Perubahan"/>
           <TertiaryButton fontSize="sm" text="Cancel" onClick={handleCancel} />
         </div>
       </form>

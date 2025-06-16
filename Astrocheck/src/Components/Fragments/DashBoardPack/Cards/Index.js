@@ -1,16 +1,16 @@
-export {default as CardAdminPanel} from "./CardAdminPanel.tsx";
-export {default as CardPresences} from "./CardPresences.tsx";
-export {default as CardSiswaTerbanyakAbsen} from "./CardSiswaTerbanyakAbsen.tsx";
-export {default as CardSummary} from "./CardSummary.tsx";
-export {default as DashBoard} from "./DashBoard.tsx";
-export {default as ManajemenAkun} from "./ManajemenAkun.jsx";
-export {default as ManajemenJurusan} from "./ManajemenJurusan.jsx";
-export {default as ManajemenPresensi} from "./ManajemenPresensi.jsx";
+export {default as CardAdminPanel} from "./CardAdminPanel";
+export {default as CardPresences} from "./CardPresences";
+export {default as CardSiswaTerbanyakAbsen} from "./CardSiswaTerbanyakAbsen";
+export {default as CardSummary} from "./CardSummary";
+export {default as DashBoard} from "./DashBoard";
+export {default as ManajemenAkun} from "./ManajemenAkun";
+export {default as ManajemenJurusan} from "./ManajemenJurusan";
+export {default as ManajemenPresensi} from "./ManajemenPresensi";
 
 // CRUD admin
-export {default as CardBuatAkun} from "./CRUD/CardBuatAkun.jsx";
-export {default as CardBuatJurusan} from "./CRUD/CardBuatJurusan.jsx";
-export {default as CardBuatPresensi} from "./CRUD/CardBuatPresensi.jsx";
-export {default as CardEditAkun} from "./CRUD/CardEditAkun.jsx";
+export {default as CardBuatAkun} from "./CRUD/CardBuatAkun";
+export {default as CardBuatJurusan} from "./CRUD/CardBuatJurusan";
+export {default as CardBuatPresensi} from "./CRUD/CardBuatPresensi";
+export {default as CardEditAkun} from "./CRUD/CardEditAkun";
 export {default as CardEditJurusan} from "./CRUD/CardEditJurusan";
 export {default as CardEditPresence} from "./CRUD/CardEditPresence";

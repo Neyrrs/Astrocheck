@@ -24,7 +24,7 @@ import { checkLocalIP } from "../Middlewares/LocalIPMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", authenticateUser, checkLocalIP, savePresence);
+router.post("/", authenticateUser, savePresence);
 router.get("/logKehadiran", authenticateUser, getLogs);
 
 router.get(
@@ -36,8 +36,8 @@ router.get(
 router.get("/getPerMonth",  getLogsPerMonth);
 router.get(
   "/getCurrentMonth",
-  // authenticateUser,
-  // authorizeAdmin,
+  authenticateUser,
+  authorizeAdmin,
   getLogsCurrentMonth
 );
 router.get("/getLastYear", authenticateUser, authorizeAdmin, getLogsLastYear);

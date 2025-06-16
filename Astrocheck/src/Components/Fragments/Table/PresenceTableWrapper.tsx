@@ -1,17 +1,17 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import DynamicTable from "./DynamicTable";
 import SearchPack from "../SearchPack/SearchPack";
-import { PresenceLog } from "@/types/presence";
+import { PresenceLog  } from "@/types/presence";
 
 type TableColumn = {
   header: string;
-  field: string;
+  field: keyof PresenceLog | "__index";
+  render?: (row: PresenceLog) => React.ReactNode;
 };
 
 type Props = {
   data: PresenceLog[];
   columns: TableColumn[];
-  loading?: boolean;
   error?: boolean;
   itemsPerPage?: number;
 };
@@ -19,7 +19,6 @@ type Props = {
 const PresenceTableWrapper = ({
   data = [],
   columns = [],
-  loading = false,
   error = false,
 }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,13 +29,13 @@ const PresenceTableWrapper = ({
   const indexOfFirstItem = indexOfLastItem - perPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handlePageClick = (page) => {
+  const handlePageClick = (page: number) => {
     if (page !== currentPage) {
       setCurrentPage(page);
     }
   };
 
-  const handlePerPageChange = (e) => {
+  const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
@@ -82,13 +81,11 @@ const PresenceTableWrapper = ({
       <DynamicTable
         columns={columns}
         data={currentItems}
-        loading={loading}
         error={error}
         startIndex={indexOfFirstItem}
       />
 
       <div className="flex flex-col items-center gap-2 mt-6">
-        {/* Pagination */}
         <div className="flex items-center gap-2 flex-wrap justify-center">
           <button
             onClick={handlePrev}

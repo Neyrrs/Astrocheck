@@ -2,7 +2,7 @@ import { useState } from "react";
 import Label from "@/Components/Elements/Labels/Label";
 import { Input } from "@/Components/Elements/Inputs";
 
-const ToggleInput = (props) => {
+const ToggleInput = ({namaLengkap = "", text = "", placeholder = "", width = ""}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -11,13 +11,13 @@ const ToggleInput = (props) => {
 
   return (
     <div className="relative w-full flex flex-col gap-2">
-      <Label htmlFor={props.namaLengkap || "htmlFor"} text={props.text || "Label"} className="text-base" />
+      <Label htmlFor={namaLengkap || "htmlFor"} text={text || "Label"} className="text-base" />
 
       <div className="relative">
         <Input
           type={showPassword ? "text" : "password"}
-          placeholder={props.placeholder || "Masukkan teks"}
-          width={props.width || "full"}
+          placeholder={placeholder || "Masukkan teks"}
+          width={width || "full"}
           disabled={true}
         />
 

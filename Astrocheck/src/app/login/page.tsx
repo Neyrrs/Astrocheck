@@ -64,8 +64,8 @@ const Login = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setNis(e.target.value)
                 }
-                autoFocus
-                autoComplete="off"
+                autoFocus={true}
+                autoComplete={"off"}
               />
             </div>
             <div className="flex flex-col gap-1 w-full h-fit">
@@ -77,7 +77,6 @@ const Login = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setPassword(e.target.value)
                 }
-                autoComplete="off"
               />
             </div>
           </div>

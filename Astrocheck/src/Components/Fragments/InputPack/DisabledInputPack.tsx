@@ -1,11 +1,11 @@
 import DisabledInput from '@/Components/Elements/Inputs/DisabledInput';
 import Label from '@/Components/Elements/Labels/Label';
 
-const DisabledInputPack = (props) => {
+const DisabledInputPack = ({namaLengkap = "", text = "", value = "", placeholder = "", width = ""}) => {
   return (
     <>
-      <Label htmlFotr={props.namaLengkap || "htmlFor"} text={props.text || "Label"} className="text-base font-normal"/>
-      <DisabledInput value={props.value} placeholder={props.placeholder || "Placeholder"} width={props.width || "full"}/>
+      <Label htmlFotr={namaLengkap || "htmlFor"} text={text || "Label"} className="text-base font-normal"/>
+      <DisabledInput value={value} placeholder={placeholder || "Placeholder"} width={width || "full"} />
     </>
   )
 }

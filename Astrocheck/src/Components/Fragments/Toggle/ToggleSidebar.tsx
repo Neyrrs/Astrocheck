@@ -9,7 +9,11 @@ import {
 import {useAllProfiles} from "@/Hooks/useProfile";
 import Image from "next/image";
 
-const ToggleSidebar = ({ setActiveContent }) => {
+interface ToggleSidebarProps {
+  setActiveContent: (content: string) => void;
+}
+
+const ToggleSidebar:React.FC<ToggleSidebarProps>  = ({ setActiveContent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAllProfiles();
 

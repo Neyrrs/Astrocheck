@@ -4,7 +4,7 @@ import axios from "axios";
 export const useAllMajors = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   const fetchData = useCallback(async () => {
     try {
@@ -27,8 +27,13 @@ export const useAllMajors = () => {
         throw new Error("Gagal memuat data major");
       }
     } catch (err) {
-      const message = err?.response?.data?.message || err.message || "Terjadi kesalahan saat memuat data";
-      setError(message);
+      if (err instanceof Error) {
+        const message =
+          err?.message ||
+          err.message ||
+          "Terjadi kesalahan saat memuat data";
+          setError(message);
+      }
     } finally {
       setLoading(false);
     }

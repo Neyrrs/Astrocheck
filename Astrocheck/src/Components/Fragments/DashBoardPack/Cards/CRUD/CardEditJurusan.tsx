@@ -15,6 +15,7 @@ import Label from "@/Components/Elements/Labels/Label";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import DisabledInput from "@/Components/Elements/Inputs/DisabledInput";
+import type {major} from "@/types/major";
 
 const CardEditJurusan = () => {
   const { selectedItem } = useItemContext();
@@ -33,7 +34,7 @@ const CardEditJurusan = () => {
       major_code: "",
       major_name: "",
       majorFullName: "",
-      duration: "",
+      duration: 0,
     },
   });
 
@@ -46,12 +47,12 @@ const CardEditJurusan = () => {
         major_code: selectedItem.major_code || "",
         major_name: selectedItem.major_name || "",
         majorFullName: selectedItem.majorFullName || "",
-        duration: selectedItem.duration || "",
+        duration: selectedItem.duration || 0,
       });
     }
   }, [selectedItem, reset]);
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: major) => {
     const { major_code, major_name, majorFullName, _id, duration } = formData;
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -114,7 +115,7 @@ const CardEditJurusan = () => {
     if (confirm.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/major/${selectedItem.id}`, {
+        await axios.delete(`${backendUrl}/major/${selectedItem?._id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("Token")}` },
         });
 
@@ -160,7 +161,6 @@ const CardEditJurusan = () => {
               <Label htmlFor="id" text="ID" />
               <DisabledInput
                 value={values?.major_code}
-                onChange={(e) => setValue("major_code", e.target.value)}
               />
             </div>
 
@@ -202,7 +202,7 @@ const CardEditJurusan = () => {
               <Input
                 type="number"
                 value={values?.duration}
-                onChange={(e) => setValue("duration", e.target.value)}
+                onChange={(e) => setValue("duration", parseInt(e.target.value))}
                 placeholder="Durasi Jurusan"
               />
             </div>

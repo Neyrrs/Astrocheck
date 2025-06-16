@@ -17,11 +17,11 @@ const CardBuatAkun = () => {
   const { setActiveContent } = useDashboardContext();
   const [imageFile, setImageFile] = useState(null);
   const [formData, setFormData] = useState({
-    nisn: "",
+    nis: "",
     fullName: "",
     grade: "",
     major: "",
-    generation: "",
+    generation: 0,
     status: "Belum lulus",
     createdAt: new Date().toISOString().split("T")[0],
     profilePicture: null,
@@ -67,7 +67,7 @@ const CardBuatAkun = () => {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const formPayload = new FormData();
 
-      formPayload.append("nisn", formData.nisn);
+      formPayload.append("nis", formData.nis);
       formPayload.append("fullName", formData.fullName);
       formPayload.append("grade", formData.grade);
       formPayload.append("major_name", formData.major);
@@ -127,11 +127,11 @@ const CardBuatAkun = () => {
             <div className="bg-white shadow-md rounded-xl w-full space-y-4">
               <div className="flex flex-col p-5  md:flex-row gap-4">
                 <div className="w-full">
-                  <Label text="NISN" />
+                  <Label text="NIS" />
                   <Input
-                    placeholder="NISN"
-                    name="nisn"
-                    value={formData.nisn}
+                    placeholder="NIS"
+                    name="nis"
+                    value={formData.nis}
                     onChange={handleChange}
                   />
                 </div>
@@ -199,7 +199,8 @@ const CardBuatAkun = () => {
               <Label text="Angkatan" />
               <Input
                 placeholder="Angkatan"
-                name="Creategeneration"
+                name="generation"
+                type="number"
                 value={formData.generation}
                 onChange={handleChange}
               />
@@ -264,7 +265,7 @@ const CardBuatAkun = () => {
               <Input
                 value={formData.password}
                 placeholder="Password"
-                name="Createpassword"
+                name="password"
                 onChange={handleChange}
                 type="password"
                 autoComplete="false"

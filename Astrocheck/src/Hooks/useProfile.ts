@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import type { User } from "@/types/user";
 
 const useFetchProfile = (endpoint = "profile") => {
@@ -23,7 +23,9 @@ const useFetchProfile = (endpoint = "profile") => {
       if (!response) return;
       setData(response.data);
     } catch (err) {
-      setError(err.message || "Terjadi kesalahan saat mengambil data profil");
+      if (err instanceof Error) {
+        setError(err.message || "Terjadi kesalahan saat mengambil data profil");
+      }
     } finally {
       setLoading(false);
     }
@@ -40,7 +42,8 @@ export default useFetchProfile;
 
 export const useProfile = () => useFetchProfile("profile");
 export const useProfiles = () => useFetchProfile("profiles");
-export const useProfileMostStreak  = () => useFetchProfile("profiles/mostStreak");
+export const useProfileMostStreak = () =>
+  useFetchProfile("profiles/mostStreak");
 
 export const useAllProfiles = () => {
   const user = useProfile();
@@ -65,7 +68,11 @@ export const useAllProfiles = () => {
 
         setUsers(response.data);
       } catch (err) {
-        setError(err.message || "Terjadi kesalahan saat mengambil semua profil");
+        if (err instanceof Error) {
+          setError(
+            err.message || "Terjadi kesalahan saat mengambil semua profil"
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -83,4 +90,3 @@ export const useAllProfiles = () => {
     error: user.error || error,
   };
 };
-

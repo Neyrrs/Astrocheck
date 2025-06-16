@@ -64,12 +64,15 @@ const EditProfile = () => {
         formData.append("profilePicture", selectedImage);
       }
 
-      await axios.put(`${backendUrl}/user/${user._id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.put(
+        `${backendUrl}/user/profilePicture/${user._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       Swal.fire({
         icon: "success",

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../Models/AccountSchema.js";
 import Major from "../Models/MajorSchema.js";
-import cloudinary from "../Config/Cloudinary.js";
+import cloudinary from "../Middlewares/CloudinaryUpload.js";
 import multer from "multer";
 
 const storage = multer.memoryStorage();
@@ -84,7 +84,7 @@ export const registerUser = [
       let profilePictureCloud = "";
 
       if (req.file) {
-        const streamUpload = cloudinary.v2.uploader.upload_stream(
+        const streamUpload = cloudinary.uploader.upload_stream(
           { folder: "user_profile_pictures" },
           async (error, result) => {
             if (error) {
@@ -207,13 +207,13 @@ export const updateProfile = [
       if (req.file) {
         if (user.profilePicture?.public_id) {
           try {
-            await cloudinary.v2.uploader.destroy(user.profilePicture.public_id);
+            await cloudinary.uploader.destroy(user.profilePicture.public_id);
           } catch (error) {
             console.warn("Gagal menghapus foto lama:", error.message);
           }
         }
 
-        const uploadStream = cloudinary.v2.uploader.upload_stream(
+        const uploadStream = cloudinary.uploader.upload_stream(
           { folder: "user_profile_pictures" },
           async (error, result) => {
             if (error) {
@@ -252,6 +252,58 @@ export const updateProfile = [
   },
 ];
 
+export const updateProfilePicture = [
+  upload.single("profilePicture"),
+  async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User tidak ditemukan" });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: "Tidak ada file yang dikirim" });
+      }
+
+      if (user.profilePicture?.public_id) {
+        try {
+          await cloudinary.uploader.destroy(user.profilePicture.public_id);
+        } catch (error) {
+          console.warn("Gagal menghapus foto lama:", error.message);
+        }
+      }
+
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "user_profile_pictures" },
+        async (error, result) => {
+          if (error) {
+            return res.status(500).json({ message: "Gagal mengunggah foto profil", error });
+          }
+
+          user.profilePicture = {
+            secure_url: result.secure_url,
+            public_id: result.public_id,
+          };
+
+          await user.save();
+          return res.status(200).json({ message: "Foto profil diperbarui", user });
+        }
+      );
+
+      uploadStream.end(req.file.buffer);
+    } catch (error) {
+      console.error("Error in updateProfilePicture:", error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan saat mengubah foto profil",
+        error: error.message,
+      });
+    }
+  },
+];
+
+
 export const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -264,7 +316,7 @@ export const deleteUser = async (req, res) => {
         .split("/")
         .pop()
         .split(".")[0];
-      await cloudinary.v2.uploader.destroy(publicId);
+      await cloudinary.uploader.destroy(publicId);
     }
 
     await User.findByIdAndDelete(req.params.id);

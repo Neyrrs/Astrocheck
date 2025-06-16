@@ -162,8 +162,6 @@ const DashBoardPack = () => {
           <PresenceTableWrapper
             data={allPresences?.presence}
             columns={dashboardColumns}
-            loading={false}
-            error={false}
             itemsPerPage={5}
           />
         </div>

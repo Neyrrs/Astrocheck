@@ -4,12 +4,22 @@ export const createMajor = async (req, res) => {
   try {
     const { major_code, major_name, majorFullName, duration } = req.body;
 
-    const existingMajor = await Major.findOne({ major_code });
+    if (!major_code || !major_name || !majorFullName) {
+      return res.status(400).json({ message: "Field tidak boleh kosong!" });
+    }
+
+    const existingMajor = await Major.findOne({ major_code: major_code.trim() });
     if (existingMajor) {
       return res.status(400).json({ message: "Kode jurusan sudah ada!" });
     }
 
-    const newMajor = new Major({ major_code, major_name, majorFullName, duration });
+    const newMajor = new Major({
+      major_code: major_code.trim(),
+      major_name: major_name.trim(),
+      majorFullName: majorFullName.trim(),
+      duration: duration?.trim() ?? "",
+    });
+
     await newMajor.save();
 
     res.status(201).json({ message: "Jurusan berhasil dibuat!", major: newMajor });
@@ -17,6 +27,7 @@ export const createMajor = async (req, res) => {
     res.status(500).json({ message: "Server error!", error });
   }
 };
+
 
 export const getAllMajors = async (req, res) => {
   try {
