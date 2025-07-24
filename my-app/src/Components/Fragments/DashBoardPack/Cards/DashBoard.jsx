@@ -48,12 +48,12 @@ const DashBoardPack = () => {
 
   const dashboardColumns = [
     { header: "ID", field: "__index" },
-    { header: "Nama Lengkap", field: "fullName" },
+    { header: "Nama Lengkap", field: "fullname" },
     { header: "Kelas", field: "grade" },
     { header: "Jurusan", field: "major" },
     { header: "Tanggal Presensi", field: "date" },
     { header: "Alasan", field: "reason" },
-    { header: "Spesifik Alasan", field: "detailReason" },
+    { header: "Spesifik Alasan", field: "detail_reason" },
   ];
 
   return (
@@ -64,7 +64,7 @@ const DashBoardPack = () => {
             <ProfileImage size="w-12 h-12" className="rounded-full" />
             <div className="h-fit w-fit">
               <p className="text-lg font-semibold">Welcome</p>
-              <p className="text-slate-500 text-sm">{user?.fullName}</p>
+              <p className="text-slate-500 text-sm">{user?.fullname}</p>
             </div>
           </div>
           <div className="bg-white w-full h-25 gap-3 flex flex-row items-center justify-between rounded-xl px-5 ">

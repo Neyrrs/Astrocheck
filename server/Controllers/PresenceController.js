@@ -193,7 +193,10 @@ export const getAllUsersPresence = async (req, res) => {
   try {
     const { data: presenceList, error: presenceError } = await supabase
       .from("table_guest")
-      .select("*")
+      .select(
+        `*, 
+        user:table_user(fullname, grade, id_major:table_major(major_name))`
+      )
       .order("date", { ascending: false });
 
     if (presenceError) throw presenceError;
@@ -201,28 +204,16 @@ export const getAllUsersPresence = async (req, res) => {
     const count = presenceList.length;
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
 
-    const formattedPresence = await Promise.all(
-      presenceList.map(async (pres) => {
-        const { data: user, error: userError } = await supabase
-          .from("table_user")
-          .select("fullname, grade, id_major")
-          .eq("nis", pres.nis)
-          .single();
-
-        if (userError) throw userError;
-
-        return {
-          id: pres.id,
-          fullName: user?.fullName || "-",
-          grade: user?.grade || "-",
-          major: user?.id_major?.major_name || "-",
-          date: pres.date,
-          time: pres.time,
-          reason: pres.reason,
-          detailReason: pres.detailReason || "-",
-        };
-      })
-    );
+    const formattedPresence = presenceList.map((pres) => ({
+      id: pres.id_user,
+      fullname: pres.user?.fullname || "-",
+      grade: pres.user?.grade || "-",
+      major: pres.user?.id_major?.major_name || "-",
+      date: pres.date,
+      time: pres.time,
+      reason: pres.reason,
+      detailReason: pres.detail_reason || "-",
+    }));
 
     res.json({
       count,
@@ -381,86 +372,53 @@ export const getPresenceSummary = async (req, res) => {
     const year = new Date().getFullYear();
     const month = String(new Date().getMonth() + 1).padStart(2, "0");
 
+    const startOfMonth = `${year}-${month}-01`;
+    const endOfMonth = new Date(year, parseInt(month), 0)
+      .toISOString()
+      .slice(0, 10);
+
+    const startOfYear = `${year}-01-01`;
+    const endOfYear = `${year}-12-31`;
+
+    const rangeCount = async (start, end, reason = null) => {
+      let query = supabase
+        .from("table_guest")
+        .select("*", { count: "exact", head: true })
+        .gte("date", start)
+        .lte("date", end);
+
+      if (reason) {
+        query = query.eq("reason", reason);
+      }
+
+      const { count } = await query;
+      return count || 0;
+    };
+
     const daily = {
-      membaca: await supabase
-        .from("table_guest")
-        .select("*")
-        .eq("date", today)
-        .eq("reason", "Membaca")
-        .count(),
-      meminjam: await supabase
-        .from("table_guest")
-        .select("*")
-        .eq("date", today)
-        .eq("reason", "Meminjam")
-        .count(),
-      lainnya: await supabase
-        .from("table_guest")
-        .select("*")
-        .eq("date", today)
-        .eq("reason", "Lainnya")
-        .count(),
-      count: await supabase
-        .from("table_guest")
-        .select("*")
-        .eq("date", today)
-        .count(),
+      membaca: await rangeCount(today, today, "Membaca"),
+      meminjam: await rangeCount(today, today, "Meminjam"),
+      lainnya: await rangeCount(today, today, "Lainnya"),
+      count: await rangeCount(today, today),
     };
 
     const monthly = {
-      membaca: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-${month}-%`)
-        .eq("reason", "Membaca")
-        .count(),
-      meminjam: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-${month}-%`)
-        .eq("reason", "Meminjam")
-        .count(),
-      lainnya: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-${month}-%`)
-        .eq("reason", "Lainnya")
-        .count(),
-      count: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-${month}-%`)
-        .count(),
+      membaca: await rangeCount(startOfMonth, endOfMonth, "Membaca"),
+      meminjam: await rangeCount(startOfMonth, endOfMonth, "Meminjam"),
+      lainnya: await rangeCount(startOfMonth, endOfMonth, "Lainnya"),
+      count: await rangeCount(startOfMonth, endOfMonth),
     };
 
     const yearly = {
-      membaca: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-%`)
-        .eq("reason", "Membaca")
-        .count(),
-      meminjam: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-%`)
-        .eq("reason", "Meminjam")
-        .count(),
-      lainnya: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-%`)
-        .eq("reason", "Lainnya")
-        .count(),
-      count: await supabase
-        .from("table_guest")
-        .select("*")
-        .ilike("date", `${year}-%`)
-        .count(),
+      membaca: await rangeCount(startOfYear, endOfYear, "Membaca"),
+      meminjam: await rangeCount(startOfYear, endOfYear, "Meminjam"),
+      lainnya: await rangeCount(startOfYear, endOfYear, "Lainnya"),
+      count: await rangeCount(startOfYear, endOfYear),
     };
 
-    res.json({ daily, monthly, yearly });
+    res.status(200).json({ daily, monthly, yearly });
   } catch (error) {
+    console.error("Error in getPresenceSummary:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -502,7 +460,7 @@ export const getAverageTotalLogsPerMonth = async (req, res) => {
     const monthData = Array.from({ length: 12 }, (_, i) => {
       const daysInMonth = new Date(year, i + 1, 0).getDate();
       return {
-        month: String(i + 1).padStart(2, "0"),
+        month: String(i + 1).padStart(2, 0),
         rataRata: 0,
         daysInMonth,
       };
@@ -621,7 +579,7 @@ export const getPresenceById = async (req, res) => {
     res.json({
       id: presence.id,
       nis: presence.nis,
-      fullName: presence.fullName,
+      fullname: presence.fullname,
       grade: presence.grade,
       major: user?.idMajor?.major_name || "-",
       date: presence.date,
@@ -656,14 +614,38 @@ export const getMostAbsentMajors = async (req, res) => {
 
 export const getMostAbsentStudents = async (req, res) => {
   try {
-    const { data: result, error } = await supabase
-      .from("table_guest")
-      .select("nis, count(nis) as totalAbsen, reason")
-      .group("nis, reason")
-      .order("totalAbsen", { ascending: false })
-      .limit(10);
+    const { data: presences } = await supabase.from("table_guest").select(`
+        nis,
+        reason,
+        table_user:table_user(
+          fullname,
+          grade,
+          id_major:table_major(major_name)
+        )
+      `);
 
-    if (error) throw error;
+    // Process the data in memory since Supabase doesn't support complex grouping
+    const studentStats = presences.reduce((acc, presence) => {
+      if (!acc[presence.nis]) {
+        acc[presence.nis] = {
+          nis: presence.nis,
+          fullname: presence.table_user?.fullname,
+          grade: presence.table_user?.grade,
+          major: presence.table_user?.id_major?.major_name,
+          totalAbsen: 0,
+          membaca: 0,
+          meminjam: 0,
+          lainnya: 0,
+        };
+      }
+      acc[presence.nis].totalAbsen++;
+      acc[presence.nis][presence.reason.toLowerCase()]++;
+      return acc;
+    }, {});
+
+    const result = Object.values(studentStats)
+      .sort((a, b) => b.totalAbsen - a.totalAbsen)
+      .slice(0, 10);
 
     res.status(200).json(result);
   } catch (error) {
@@ -676,71 +658,32 @@ export const getMostAbsentStudents = async (req, res) => {
 
 export const getPresenceSummaryByMajor = async (req, res) => {
   try {
-    const result = await Major.aggregate([
-      {
-        $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "idMajor",
-          as: "students",
-        },
-      },
-      {
-        $unwind: {
-          path: "$students",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "presences",
-          localField: "students.nis",
-          foreignField: "nis",
-          as: "presences",
-        },
-      },
-      {
-        $unwind: {
-          path: "$presences",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          major: { $first: "$major_name" },
-          count: {
-            $sum: {
-              $cond: [{ $ifNull: ["$presences._id", false] }, 1, 0],
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          major: 1,
-          count: 1,
-        },
-      },
-    ]);
+    const { data: presences } = await supabase.from("table_guest").select(`
+        *,
+        table_user:nis(
+          table_major:id_major(major_name)
+        )
+      `);
 
-    const mergedMajors = {};
+    // Process in memory to get major summaries
+    const majorStats = presences.reduce((acc, presence) => {
+      const majorName = presence.table_user?.table_major?.major_name?.replace(
+        /\s*\d+$/,
+        ""
+      );
+      if (!majorName) return acc;
 
-    result.forEach(({ major, count }) => {
-      const baseMajor = major.replace(/\s*\d+$/, "");
-
-      if (!mergedMajors[baseMajor]) {
-        mergedMajors[baseMajor] = {
-          major: baseMajor,
+      if (!acc[majorName]) {
+        acc[majorName] = {
+          major: majorName,
           count: 0,
         };
       }
+      acc[majorName].count++;
+      return acc;
+    }, {});
 
-      mergedMajors[baseMajor].count += count;
-    });
-
-    const finalResult = Object.values(mergedMajors);
+    const finalResult = Object.values(majorStats);
 
     res.status(200).json(finalResult);
   } catch (error) {
