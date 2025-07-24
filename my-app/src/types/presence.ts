@@ -1,11 +1,11 @@
 export interface PresenceLog {
-  _id: string;
+  id_guest: string;
   nis: string;
   date: string;
   time: string;
   reason: "Membaca" | "Meminjam" | "Lainnya";
   detailReason?: string;
-  fullName?: string;
+  fullname?: string;
   grade?: string;
   major?: string;
   totalMembaca?: number;
@@ -52,13 +52,13 @@ export interface SummaryPresence {
 }
 
 export interface presenceHttpRequest {
-  _id: string;
+  id_guest: string;
   nis: string;
   date: string;
   time: string;
   reason: string;
-  detailReason?: string;
-  fullName?: string;
+  detail_reason?: string;
+  fullname?: string;
   grade?: string;
   major?: string;
 }

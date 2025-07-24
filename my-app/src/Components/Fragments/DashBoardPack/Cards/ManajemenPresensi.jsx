@@ -25,11 +25,11 @@ const ManajemenPresensi = () => {
 
   const historyColumns = [
     { header: "ID", field: "__index" },
-    { header: "Nama Lengkap", field: "fullName" },
+    { header: "Nama Lengkap", field: "fullname" },
     { header: "Tanggal Presensi", field: "date" },
     { header: "Waktu Masuk", field: "time" },
     { header: "Alasan", field: "reason" },
-    { header: "Spesifik Alasan", field: "detailReason" },
+    { header: "Spesifik Alasan", field: "detail_reason" },
     {
       header: "Aksi",
       render: (row) => (

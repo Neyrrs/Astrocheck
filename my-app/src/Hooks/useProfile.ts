@@ -20,7 +20,12 @@ const useFetchProfile = (endpoint = "profile") => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { data: swrData, error: swrError, isLoading, mutate } = useSWR(
+  const {
+    data: swrData,
+    error: swrError,
+    isLoading,
+    mutate,
+  } = useSWR(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${endpoint}`,
     fetcher
   );
@@ -42,7 +47,12 @@ const useFetchProfile = (endpoint = "profile") => {
     fetchProfile();
   }, [fetchProfile]);
 
-  return { data, loading: isLoading || loading, error: swrError || error, mutate };
+  return {
+    data,
+    loading: isLoading || loading,
+    error: swrError || error,
+    mutate,
+  };
 };
 
 export default useFetchProfile;
@@ -54,7 +64,7 @@ export const useProfileMostStreak = () =>
 
 export const useAllProfiles = () => {
   const user = useProfile();
-  const [users, setUsers] = useState<User[] | null>(null);
+  const [allUsers, setAllUsers] = useState<User[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,7 +83,7 @@ export const useAllProfiles = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setUsers(response.data);
+        setAllUsers(response.data);
       } catch (err) {
         if (err instanceof Error) {
           setError(
@@ -92,7 +102,7 @@ export const useAllProfiles = () => {
 
   return {
     user: user.data as User | null,
-    users,
+    users: allUsers,
     loading: user.loading || loading,
     error: user.error || error,
   };

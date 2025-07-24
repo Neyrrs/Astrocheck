@@ -227,6 +227,7 @@ export const getAllUsersPresence = async (req, res) => {
   }
 };
 
+// !BANNED
 export const getLogsToday = async (req, res) => {
   try {
     const today = new Date().toISOString().slice(0, 10);
@@ -273,26 +274,29 @@ export const getLogsToday = async (req, res) => {
 
 const getLogsPerYear = async (req, res, year) => {
   try {
-    const { data: logsPerMonth, error: logsError } = await supabase
+    const startDate = `${year}-01-01`;
+    const endDate = `${year + 1}-01-01`; // eksklusif
+
+    const { data: logs, error } = await supabase
       .from("table_guest")
-      .select("date", { count: "exact" })
-      .ilike("date", `${year}-%`)
-      .group("date")
+      .select("date")
+      .gte("date", startDate)
+      .lt("date", endDate)
       .order("date", { ascending: true });
 
-    if (logsError) throw logsError;
+    if (error) throw error;
 
     const monthData = Array.from({ length: 12 }, (_, i) => ({
-      month: String(i + 1),
+      month: String(i + 1).padStart(2, "0"),
       count: 0,
     }));
 
-    logsPerMonth.forEach(({ date }) => {
+    logs.forEach(({ date }) => {
       const monthIndex = new Date(date).getMonth();
       monthData[monthIndex].count += 1;
     });
 
-    const totalPresensi = monthData.reduce((acc, cur) => acc + cur.count, 0);
+    const totalPresensi = monthData.reduce((sum, m) => sum + m.count, 0);
 
     res.json({
       year,
@@ -300,12 +304,16 @@ const getLogsPerYear = async (req, res, year) => {
       logsPerMonth: monthData,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "Gagal mengambil data presensi per bulan",
+      error: error.message,
+    });
   }
 };
 
 export const getLogsPerMonth = (req, res) =>
   getLogsPerYear(req, res, new Date().getFullYear());
+
 export const getLogsLastYear = (req, res) =>
   getLogsPerYear(req, res, new Date().getFullYear() - 1);
 
@@ -614,45 +622,56 @@ export const getMostAbsentMajors = async (req, res) => {
 
 export const getMostAbsentStudents = async (req, res) => {
   try {
-    const { data: presences } = await supabase.from("table_guest").select(`
+    const { data, error } = await supabase.from("table_guest").select(`
         nis,
         reason,
         table_user:table_user(
           fullname,
+          streak,
           grade,
           id_major:table_major(major_name)
         )
       `);
 
-    // Process the data in memory since Supabase doesn't support complex grouping
-    const studentStats = presences.reduce((acc, presence) => {
-      if (!acc[presence.nis]) {
-        acc[presence.nis] = {
-          nis: presence.nis,
-          fullname: presence.table_user?.fullname,
-          grade: presence.table_user?.grade,
-          major: presence.table_user?.id_major?.major_name,
+    if (error) throw error;
+
+    const stats = {};
+
+    for (const pres of data) {
+      const nis = pres.nis;
+      const reason = pres.reason?.toLowerCase();
+
+      if (!stats[nis]) {
+        stats[nis] = {
+          nis,
+          fullname: pres.table_user?.fullname || "-",
+          grade: pres.table_user?.grade || "-",
+          major: pres.table_user?.id_major?.major_name || "-",
           totalAbsen: 0,
           membaca: 0,
           meminjam: 0,
           lainnya: 0,
         };
       }
-      acc[presence.nis].totalAbsen++;
-      acc[presence.nis][presence.reason.toLowerCase()]++;
-      return acc;
-    }, {});
 
-    const result = Object.values(studentStats)
+      if (["membaca", "meminjam", "lainnya"].includes(reason)) {
+        stats[nis][reason]++;
+      }
+
+      stats[nis].totalAbsen++;
+    }
+
+    const topAbsentArray = Object.values(stats)
       .sort((a, b) => b.totalAbsen - a.totalAbsen)
       .slice(0, 10);
 
-    res.status(200).json(result);
+    return res.status(200).json(topAbsentArray);
   } catch (error) {
     console.error("Error in getMostAbsentStudents:", error);
-    res
-      .status(500)
-      .json({ message: "Gagal mengambil data siswa terbanyak absen" });
+    res.status(500).json({
+      message: "Gagal mengambil data siswa dengan absen terbanyak",
+      error: error.message,
+    });
   }
 };
 
@@ -665,7 +684,6 @@ export const getPresenceSummaryByMajor = async (req, res) => {
         )
       `);
 
-    // Process in memory to get major summaries
     const majorStats = presences.reduce((acc, presence) => {
       const majorName = presence.table_user?.table_major?.major_name?.replace(
         /\s*\d+$/,
@@ -711,7 +729,8 @@ export const getMonthlyPresenceByMajor = async (req, res) => {
         )
       `
       )
-      .ilike("date", `${year}-%`);
+      .gte("date", `${year}-01-01`)
+      .lt("date", `${year + 1}-01-01`);
 
     if (presenceError) throw presenceError;
 

@@ -26,7 +26,13 @@ router.get(
   authorizeAdmin,
   getMostStreakUsers
 );
-router.put("/:id", authenticateUser, authorizeAdmin, updateProfile);
+router.put(
+  "/:id",
+  authenticateUser,
+  authorizeAdmin,
+  handleProfilePicture,
+  updateProfile
+);
 router.put(
   "/:id/profile-picture",
   authenticateUser,

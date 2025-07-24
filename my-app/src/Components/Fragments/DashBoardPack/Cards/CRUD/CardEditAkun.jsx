@@ -24,15 +24,14 @@ const CardEditAkun = () => {
   const { setActiveContent } = useDashboardContext();
   const [imageFile, setImageFile] = useState(null);
   const [formData, setFormData] = useState({
-    id: user?.id ?? "",
+    id_user: user?.id_user ?? "",
     nis: user?.nis ?? "",
-    fullName: user?.fullName ?? "",
+    fullname: user?.fullname ?? "",
     grade: user?.grade ?? "",
-    major: user?.idMajor?.major_name ?? "",
+    major: user?.major ?? "",
     generation: user?.generation ?? "",
-    status: user?.status ?? "Belum lulus",
-    createdAt: user?.createdAt?.split("T")[0] ?? "",
-    profilePicture: user?.profilePicture?.secure_url ?? null,
+    status: user?.status.toString().toLowerCase() ?? "belum lulus",
+    profile_picture: user?.profile_picture?.secure_url ?? null,
     role: user?.role,
   });
   const fileInputRef = useRef(null);
@@ -48,7 +47,7 @@ const CardEditAkun = () => {
       reader.onloadend = () => {
         setFormData((prev) => ({
           ...prev,
-          profilePicture: reader.result,
+          profile_picture: reader.result,
         }));
         setImageFile(file);
       };
@@ -72,21 +71,25 @@ const CardEditAkun = () => {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const formPayload = new FormData();
 
-      formPayload.append("id", formData.id);
+      formPayload.append("id_user", formData.id_user);
       formPayload.append("nis", formData.nis);
-      formPayload.append("fullName", formData.fullName);
+      formPayload.append("fullname", formData.fullname);
       formPayload.append("grade", formData.grade);
       formPayload.append("major", formData.major);
       formPayload.append("generation", formData.generation);
       formPayload.append("status", formData.status);
-      formPayload.append("createdAt", formData.createdAt);
       formPayload.append("role", formData.role);
 
-      if (imageFile) {
-        formPayload.append("profilePicture", imageFile);
+
+      for (let pair of formPayload.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
       }
 
-      await axios.put(`${backendUrl}/user/${formData.id}`, formPayload, {
+      if (imageFile) {
+        formPayload.append("profile_picture", imageFile);
+      }
+
+      await axios.put(`${backendUrl}/user/${formData.id_user}`, formPayload, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("Token")}`,
@@ -163,7 +166,9 @@ const CardEditAkun = () => {
   return (
     <>
       <div className="flex justify-between items-center flex-wrap gap-3">
-        <h1 className="text-2xl font-semibold">Edit Akun {formData?.id}</h1>
+        <h1 className="text-2xl font-semibold">
+          Edit Akun {formData?.id_user}
+        </h1>
         <DangerButton type="button" text="Hapus" onClick={handleDelete} />
       </div>
 
@@ -176,8 +181,8 @@ const CardEditAkun = () => {
                   <Label text="ID" />
                   <Input
                     label="ID"
-                    name="id"
-                    value={formData.id}
+                    name="id_user"
+                    value={formData.id_user}
                     onChange={handleChange}
                     readOnly
                   />
@@ -214,8 +219,8 @@ const CardEditAkun = () => {
                   <Label text="Nama Lengkap" />
                   <Input
                     label="Nama Lengkap"
-                    name="fullName"
-                    value={formData.fullName}
+                    name="fullname"
+                    value={formData.fullname}
                     onChange={handleChange}
                   />
                 </div>
@@ -260,8 +265,8 @@ const CardEditAkun = () => {
                     <input
                       type="radio"
                       name="status"
-                      value="Belum lulus"
-                      checked={formData.status === "Belum lulus"}
+                      value="belum lulus"
+                      checked={formData.status === "belum lulus"}
                       onChange={handleChange}
                     />
                     Belum lulus
@@ -270,8 +275,8 @@ const CardEditAkun = () => {
                     <input
                       type="radio"
                       name="status"
-                      value="Lulus"
-                      checked={formData.status === "Lulus"}
+                      value="lulus"
+                      checked={formData.status === "lulus"}
                       onChange={handleChange}
                     />
                     Lulus
@@ -294,9 +299,9 @@ const CardEditAkun = () => {
                 onClick={handleImageClick}
                 title="Klik untuk ganti foto"
               >
-                {formData.profilePicture ? (
+                {formData.profile_picture ? (
                   <Image
-                    src={formData.profilePicture}
+                    src={formData.profile_picture}
                     alt="Profile Picture"
                     width={120}
                     height={120}
@@ -315,8 +320,8 @@ const CardEditAkun = () => {
             <Label text="Tanggal Pembuatan" />
             <Input
               label="Tanggal Pembuatan Akun"
-              name="createdAt"
-              value={formData.createdAt}
+              name="date"
+              value={new Date().toISOString().split("T")[0]}
               onChange={handleChange}
               type="date"
             />

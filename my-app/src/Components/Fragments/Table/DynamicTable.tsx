@@ -21,7 +21,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   startIndex = 0,
 }) => {
   return (
-    <div className="w-full mt-3">
+    <div className="w-full overflow-x-scroll mt-3">
       <table className="w-full border-collapse min-w-max">
         <thead>
           <tr className="text-black border-[#e5e5e5] border-1 bg-[#fafafa]">

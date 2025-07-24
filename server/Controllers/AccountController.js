@@ -28,6 +28,8 @@ export const loginUser = async (req, res) => {
       .eq("nis", nis)
       .single();
 
+    console.log(user);
+
     if (!user || error) {
       return res.status(404).json({ message: "Akun tidak ditemukan!" });
     }
@@ -52,15 +54,17 @@ export const loginUser = async (req, res) => {
     return res.status(200).json({
       message: "Login berhasil!",
       token,
-      id_user: user.id_user,
-      nis: user.nis,
-      fullname: user.fullname,
-      grade: user.grade,
-      id_major: user.id_major?.major_name || null,
-      profile_picture: user.profile_picture,
-      nickname: user.nickname || "",
-      role: user.role || "student",
-      streak: user.streak || 0,
+      user: {
+        id_user: user.id_user,
+        nis: user.nis,
+        fullname: user.fullname,
+        grade: user.grade,
+        id_major: user.id_major?.major_name || null,
+        profile_picture: user.profile_picture,
+        nickname: user.nickname || "",
+        role: user.role || "student",
+        streak: user.streak || 0,
+      },
     });
   } catch (error) {
     console.error("Error login:", error);
@@ -152,6 +156,20 @@ export const updateProfile = async (req, res) => {
     const updates = req.body;
     const userId = req.params.id;
 
+    if (updates.major) {
+      const { data: majorData, error: majorError } = await supabase
+        .from("table_major")
+        .select("id_major")
+        .eq("major_name", updates.major)
+        .single();
+
+      if (!majorData || majorError) {
+        return res.status(404).json({ message: "Jurusan tidak ditemukan" });
+      }
+
+      updates.major = majorData.id_major;
+      delete updates.major;
+    }
     const { data: user, error: userError } = await supabase
       .from("table_user")
       .select("*")
@@ -283,8 +301,7 @@ export const getMostStreakUsers = async (req, res) => {
     const { data: users, error } = await supabase
       .from("table_user")
       .select("*, id_major:table_major(major_name)")
-      .order("streak", { ascending: false })
-      .limit(10);
+      .order("streak", { ascending: false });
 
     if (error) throw error;
 
@@ -298,7 +315,7 @@ export const getMostStreakUsers = async (req, res) => {
       streak: user.streak || 0,
     }));
 
-    return res.status(200).json({ users: formattedUsers });
+    return res.status(200).json({ mostStreak: formattedUsers });
   } catch (error) {
     console.error("Error in getMostStreakUsers:", error);
     return res.status(500).json({ message: "Server error!" });

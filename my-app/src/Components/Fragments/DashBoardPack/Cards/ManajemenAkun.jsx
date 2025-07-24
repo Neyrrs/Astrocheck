@@ -20,7 +20,7 @@ const ManajemenAkun = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const { users: rawUsers } = useAllProfiles();
 
-  const users = rawUsers?.map((user) => ({
+  const users = rawUsers?.users?.map((user) => ({
     ...user,
     id: user._id,
   }));
@@ -37,21 +37,22 @@ const ManajemenAkun = () => {
     { header: "ID", field: "__index" },
     { header: "NIS", field: "nis" },
     { header: "Role", field: "role" },
-    { header: "Nama Lengkap", field: "fullName" },
+    { header: "Nama Lengkap", field: "fullname" },
     { header: "Kelas", field: "grade" },
     { header: "Angkatan", field: "generation" },
     { header: "Status", field: "status" },
     {
       header: "Jurusan",
-      render: (row) => row?.idMajor?.major_name ?? "-",
+      field: "major"
     },
     {
       header: "Profile",
       render: (row) =>
-        row?.profilePicture?.secure_url ? (
+        row?.profile_picture ? (
           <Image
-            src={row.profilePicture.secure_url}
+            src={row.profile_picture}
             alt="Profile"
+            className="rounded-"
             width={50}
             height={50}
           />
@@ -172,7 +173,7 @@ const ManajemenAkun = () => {
           data={summary?.yearly?.count}
         />
       </div>
-      <div className="w-full h-fit bg-white shadow-md rounded-xl pb-5 flex-col flex gap-3">
+      <div className="w-full h-fit bg-white shadow-md rounded-xl overflow-x-auto pb-5 flex-col flex gap-3">
         <div className="px-5 w-full h-fit flex items-center py-5 border-b-1 border-gray-300">
           <p className="font-bold text-xl">Akun</p>
         </div>

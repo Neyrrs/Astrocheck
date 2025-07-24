@@ -38,8 +38,8 @@ const CardEditPresence = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      _id: "",
-      fullName: "",
+      id_guest: "",
+      fullname: "",
       nis: "",
       date: "",
       time: "",
@@ -66,8 +66,8 @@ const CardEditPresence = () => {
         );
 
         reset({
-          _id: data._id || "",
-          fullName: data.fullName || "",
+          id_guest: data.id_guest || "",
+          fullname: data.fullname || "",
           nis: data.nis || "",
           date: data.date || "",
           time: data.time || "",
@@ -90,12 +90,12 @@ const CardEditPresence = () => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       await axios.put(
-        `${backendUrl}/presence/${formData?._id}`,
+        `${backendUrl}/presence/${formData?.id_guest}`,
         {
           date: formData.date,
           time: formData.time,
           reason: formData.reason,
-          detailReason: formData.detailReason,
+          detailReason: formData.detail_reason,
         },
         {
           headers: {
@@ -207,9 +207,9 @@ const CardEditPresence = () => {
               <div className="w-1/2">
                 <DisabledInputPack
                   text="ID"
-                  {...register("_id", { required: "ID wajib diisi" })}
+                  {...register("id_guest", { required: "ID wajib diisi" })}
                   placeholder="ID"
-                  value={values._id}
+                  value={values.id_guest}
                 />
               </div>
               <div className="w-1/2">
@@ -225,13 +225,13 @@ const CardEditPresence = () => {
             <div className="col-span-2">
               <DisabledInputPack
                 text="Nama Lengkap *"
-                {...register("fullName", { required: "Nama wajib diisi" })}
+                {...register("fullname", { required: "Nama wajib diisi" })}
                 placeholder="Nama Lengkap"
-                value={values.fullName}
+                value={values.fullname}
               />
-              {errors.fullName && (
+              {errors.fullname && (
                 <p className="text-red-500 text-sm">
-                  {errors.fullName.message}
+                  {errors.fullname.message}
                 </p>
               )}
             </div>
@@ -290,7 +290,12 @@ const CardEditPresence = () => {
               </div>
             </div>
             <div className="col-span-2">
-              <DropdownPackAlasan id={"reason"} error={"Alasan harus diisi!"} name="reason" register={register} />
+              <DropdownPackAlasan
+                id={"reason"}
+                error={"Alasan harus diisi!"}
+                name="reason"
+                register={register}
+              />
             </div>
             <div className="col-span-2">
               <TextArea

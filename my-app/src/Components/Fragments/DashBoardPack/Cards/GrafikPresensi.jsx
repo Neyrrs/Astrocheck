@@ -36,7 +36,7 @@ const GrafikPresensi = () => {
 
   const logsPerMonth = fullYear || {};
   const labels = logsPerMonth?.logsPerMonth?.map(
-    (item) => monthNames[item.month]
+    (item) => monthNames[parseInt(item.month)]
   );
   const count = logsPerMonth?.logsPerMonth?.map((item) => item.count);
 
@@ -51,11 +51,11 @@ const GrafikPresensi = () => {
   const mostStreakColumns = [
     { header: "ID", field: "__index" },
     { header: "NIS", field: "nis" },
-    { header: "Nama Lengkap", field: "fullName" },
+    { header: "Nama Lengkap", field: "fullname" },
     { header: "Kelas", field: "grade" },
     {
       header: "Jurusan",
-      render: (row) => row?.idMajor?.major_name ?? "-",
+      field: "major",
     },
     {
       header: "Streak",
@@ -65,12 +65,12 @@ const GrafikPresensi = () => {
 
   const mostPresenceColumns = [
     { header: "ID", field: "__index" },
-    { header: "Nama Lengkap", field: "fullName" },
+    { header: "Nama Lengkap", field: "fullname" },
     { header: "Kelas", field: "grade" },
     { header: "Jurusan", field: "major" },
-    { header: "Membaca", field: "totalMembaca" },
-    { header: "Meminjam", field: "totalMeminjam" },
-    { header: "Lainnya", field: "totalLainnya" },
+    { header: "Membaca", field: "membaca" },
+    { header: "Meminjam", field: "meminjam" },
+    { header: "Lainnya", field: "lainnya" },
     {
       header: "Aksi",
       render: (row) => (

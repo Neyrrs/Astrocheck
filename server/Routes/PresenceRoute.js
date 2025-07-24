@@ -26,14 +26,34 @@ const router = express.Router();
 
 router.post("/", authenticateUser, savePresence);
 router.get("/logKehadiran", authenticateUser, getLogs);
-
+router.get("/summary", authenticateUser, authorizeAdmin, getPresenceSummary);
 router.get(
   "/allUsersPresence",
   authenticateUser,
   authorizeAdmin,
   getAllUsersPresence
 );
-router.get("/getPerMonth",  getLogsPerMonth);
+router.get(
+  "/analytics/students",
+  authenticateUser,
+  authorizeAdmin,
+  getMostAbsentStudents
+);
+router.get(
+  "/summaryMajor",
+  authenticateUser,
+  authorizeAdmin,
+  getPresenceSummaryByMajor
+);
+router.get(
+  "/majorYearly",
+  authenticateUser,
+  authorizeAdmin,
+  getMonthlyPresenceByMajor
+);
+
+// !CAN'T WORK
+router.get("/getPerMonth", getLogsPerMonth);
 router.get(
   "/getCurrentMonth",
   authenticateUser,
@@ -47,32 +67,8 @@ router.get(
   authorizeAdmin,
   getMostAbsentMajors
 );
-router.get(
-  "/analytics/students",
-  authenticateUser,
-  authorizeAdmin,
-  getMostAbsentStudents
-);
-router.get(
-  "/majorYearly",
-  authenticateUser,
-  authorizeAdmin,
-  getMonthlyPresenceByMajor
-);
-router.get("/summary", authenticateUser, authorizeAdmin, getPresenceSummary);
-router.get(
-  "/summaryMajor",
-  authenticateUser,
-  authorizeAdmin,
-  getPresenceSummaryByMajor
-);
 
-router.post(
-  "/export",
-  authenticateUser,
-  authorizeAdmin,
-  exportPresenceExcel
-);
+router.post("/export", authenticateUser, authorizeAdmin, exportPresenceExcel);
 
 router.get("/:id", authenticateUser, authorizeAdmin, getPresenceById);
 router.put("/:id", authenticateUser, authorizeAdmin, updatePresence);
