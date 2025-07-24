@@ -6,17 +6,17 @@ import Swal from "sweetalert2";
 import Image from "next/image";
 import { ProfileImage } from "@/Components/Elements/Icons";
 import SuccessButton from "@/Components/Elements/Buttons/SuccessButton";
-import { useAllProfiles } from "@/Hooks/useProfile";
+import { useProfile } from "@/Hooks/useProfile";
 
 const EditProfile = () => {
-  const { user } = useAllProfiles();
+  const { data: user, mutate } = useProfile();
   const [imagePreview, setImagePreview] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (user?.profilePicture?.secure_url) {
-      setImagePreview(user.profilePicture.secure_url);
+    if (user?.profile_picture) {
+      setImagePreview(user.profile_picture);
     }
   }, [user]);
 
@@ -52,20 +52,24 @@ const EditProfile = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Form submitted", { user, selectedImage });
 
-    if (!user?._id) return;
+    if (!user?.id_user || !selectedImage) {
+      console.log("Missing data:", { userId: user?.id_user, hasImage: !!selectedImage });
+      return;
+    }
 
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const token = localStorage.getItem("Token");
       const formData = new FormData();
 
-      if (selectedImage) {
-        formData.append("profilePicture", selectedImage);
-      }
+      formData.append("profile_picture", selectedImage);
 
-      await axios.put(
-        `${backendUrl}/user/profilePicture/${user._id}`,
+      console.log("Sending request to:", `${backendUrl}/user/${user.id_user}/profile-picture`);
+
+      const response = await axios.put(
+        `${backendUrl}/user/${user?.id_user}/profile-picture`,
         formData,
         {
           headers: {
@@ -74,6 +78,15 @@ const EditProfile = () => {
         }
       );
 
+      console.log("Response:", response.data);
+
+      if (response.data.profile_picture) {
+        await mutate({
+          ...user,
+          profile_picture: response.data.profile_picture,
+        }, false);
+      }
+
       Swal.fire({
         icon: "success",
         title: "Profil berhasil diperbarui",
@@ -81,6 +94,7 @@ const EditProfile = () => {
         showConfirmButton: false,
       });
     } catch (error: unknown) {
+      console.error("Upload error:", error);
       const err = error as { response?: { data?: { message?: string } } };
       Swal.fire({
         icon: "error",
@@ -91,7 +105,7 @@ const EditProfile = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
       <div className="flex gap-5 items-center">
         <div
           className="w-24 h-24 rounded-full overflow-hidden cursor-pointer border-2 border-gray-500 relative"
@@ -112,11 +126,9 @@ const EditProfile = () => {
         </div>
 
         <div className="text-lg font-normal">
-          <p>{user?.fullName || "Memuat nama..."}</p>
+          <p>{user?.fullname || "Memuat nama..."}</p>
           <p className="text-gray-500">
-            {user?.idMajor?.major_name
-              ? `${user.grade} ${user.idMajor.major_name}`
-              : "Memuat jurusan..."}
+            {user?.major ? `${user.grade} ${user.major}` : "Memuat jurusan..."}
           </p>
         </div>
       </div>

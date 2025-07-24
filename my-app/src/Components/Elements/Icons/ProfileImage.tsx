@@ -18,7 +18,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   ...rest
 }) => {
   const { user } = useAllProfiles();
-  const imageSrc: string = getImageSrc(user?.profilePicture?.secure_url ?? DefaultImage);
+  const imageSrc: string = getImageSrc(user?.profile_picture ?? DefaultImage);
 
   return (
     <div

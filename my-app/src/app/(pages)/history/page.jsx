@@ -7,7 +7,7 @@ import { useProfile } from "@/Hooks/useProfile";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
 
 const History = () => {
-  const { userPresence, error } = useAllPresence()
+  const { userPresence, error } = useAllPresence();
   const { data } = useProfile();
 
   const streakFire = {
@@ -36,11 +36,11 @@ const History = () => {
 
   const historyColumns = [
     { header: "ID", field: "__index" },
-    { header: "Nama Lengkap", field: "fullName" },
+    { header: "Nama Lengkap", field: "fullname" },
     { header: "Tanggal Presensi", field: "date" },
     { header: "Waktu Masuk", field: "time" },
     { header: "Alasan", field: "reason" },
-    { header: "Spesifik Alasan", field: "detailReason" },
+    { header: "Spesifik Alasan", field: "detail_reason" },
   ];
 
   const cardStyle =

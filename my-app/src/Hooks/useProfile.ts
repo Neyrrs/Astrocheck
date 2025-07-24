@@ -2,26 +2,33 @@
 
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import useSWR from "swr";
 import type { User } from "@/types/user";
+
+const fetcher = async (url: string) => {
+  const token = localStorage.getItem("Token");
+  if (!token) throw new Error("Token tidak ditemukan");
+
+  const response = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 
 const useFetchProfile = (endpoint = "profile") => {
   const [data, setData] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { data: swrData, error: swrError, isLoading, mutate } = useSWR(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${endpoint}`,
+    fetcher
+  );
+
   const fetchProfile = useCallback(async () => {
     try {
-      const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-      const token = localStorage.getItem("Token");
-
-      if (!token) throw new Error("Token tidak ditemukan");
-
-      const response = await axios.get(`${BACKEND_URL}/user/${endpoint}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response) return;
-      setData(response.data);
+      if (!swrData) return;
+      setData(swrData);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message || "Terjadi kesalahan saat mengambil data profil");
@@ -29,13 +36,13 @@ const useFetchProfile = (endpoint = "profile") => {
     } finally {
       setLoading(false);
     }
-  }, [endpoint]);
+  }, [swrData]);
 
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
 
-  return { data, loading, error };
+  return { data, loading: isLoading || loading, error: swrError || error, mutate };
 };
 
 export default useFetchProfile;

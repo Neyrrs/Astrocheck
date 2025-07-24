@@ -1,10 +1,10 @@
 import ProfileImage from "@/Components/Elements/Icons/ProfileImage";
 import DisabledToggleInput from "@/Components/Fragments/InputPack/DisabledToggleInput";
 import DisabledInputPack from "@/Components/Fragments/InputPack/DisabledInputPack";
-import { useAllProfiles } from "@/Hooks/useProfile";
+import { useProfile } from "@/Hooks/useProfile";
 
 const MyProfile = () => {
-  const { user } = useAllProfiles();
+  const { data: user } = useProfile();
 
   if (!user) {
     return <p>Loading...</p>;
@@ -16,7 +16,7 @@ const MyProfile = () => {
         id: 1,
         htmlFor: "namaLengkap",
         text: "Nama Lengkap",
-        value: user?.fullName || "None",
+        value: user?.fullname || "None",
       },
     ],
     [
@@ -29,9 +29,9 @@ const MyProfile = () => {
       <div className="flex gap-5 items-center">
         <ProfileImage width={100} height={100} className="rounded-full" />
         <div className="text-lg font-normal">
-          <p>{user?.fullName}</p>
+          <p>{user?.fullname}</p>
           <p className="text-gray-400">
-            {user?.grade + " " + user?.idMajor?.major_name ||
+            {user?.grade + " " + user?.id_major?.major_name ||
               (user?.role != "admin" ? "None" : "Admin")}
           </p>
         </div>

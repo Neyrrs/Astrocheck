@@ -35,7 +35,7 @@ const KartuPerpustakaan = () => {
         className="cursor-pointer h-fit pb-4 w-130 bg-[#f5f5f5] border border-gray-300 rounded-lg"
         onClick={() => setShow(true)}
       >
-        <Kartu />
+        <Card />
       </div>
 
       <p className="font-normal text-center">Klik untuk memperbesar</p>
@@ -46,7 +46,7 @@ const KartuPerpustakaan = () => {
             ref={popupRef}
             className="bg-[#f5f5f5] border border-gray-400 rounded-lg shadow-lg p-4 w-[500px]"
           >
-            <Kartu />
+            <Card />
           </div>
         </div>
       )}
@@ -56,7 +56,7 @@ const KartuPerpustakaan = () => {
 
 export default KartuPerpustakaan;
 
-const Kartu = () => {
+const Card = () => {
   const { data: user } = useProfile();
 
   if(!user) return <div>Loading...</div>

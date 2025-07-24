@@ -8,12 +8,12 @@ import {
   AdminPanel,
 } from "@/assets/Pictures/CardNavbar";
 import Swal from "sweetalert2";
-import {useAllProfiles} from "@/Hooks/useProfile";
+import { useProfile} from "@/Hooks/useProfile";
 import Image from "next/image";
 import React from "react";
 
 const CardNavbar = () => {
-  const { user } = useAllProfiles();
+  const { data: user } = useProfile();
   const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     Swal.fire({
@@ -44,9 +44,9 @@ const CardNavbar = () => {
           <div className="flex items-center gap-3 border-b border-[#d0d5dc] pb-3">
             <ProfileImage size="w-12 object-contain h-fit border-2 border-white rounded-full" />
             <div>
-              <p className="text-black text-sm">{user?.fullName}</p>
+              <p className="text-black text-sm">{user?.fullname}</p>
               <p className="text-sm text-gray-500">
-                {(user.grade + " " + user?.idMajor?.major_name) || (user.role === "admin" && `Admin Astrocheck`)}
+                {(user.grade + " " + user?.major) || (user.role === "admin" && `Admin Astrocheck`)}
               </p>
             </div>
           </div>

@@ -11,7 +11,7 @@ import {
 } from "@/Components/Fragments/DropdownPack";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useAllProfiles } from "@/Hooks/useProfile";
+import { useProfile } from "@/Hooks/useProfile";
 
 const showToast = (icon, title, onClose = () => {}) => {
   let clicked = false;
@@ -39,7 +39,7 @@ const showToast = (icon, title, onClose = () => {}) => {
 };
 
 const FormAbsence = () => {
-  const { user } = useAllProfiles();
+  const { data: user } = useProfile();
 
   const {
     register,
@@ -69,7 +69,7 @@ const FormAbsence = () => {
         `${backendUrl}/presence`,
         {
           reason: data.reason,
-          detailReason: data.detailReason,
+          detail_reason: data.detail_reason,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -81,9 +81,10 @@ const FormAbsence = () => {
       reset({
         nis: user?.nis || "",
         reason: "",
-        detailReason: "",
+        detail_reason: "",
       });
     } catch (error) {
+      console.log(error)
       showToast("error", error?.response?.data?.message || "Gagal mengirim data");
     }
   };
@@ -108,10 +109,10 @@ const FormAbsence = () => {
           </div>
 
           <div>
-            <label htmlFor="fullName" className="text-sm">Nama</label>
+            <label htmlFor="fullname" className="text-sm">Nama</label>
             <DisabledInput
               type="text"
-              value={user?.fullName || ""}
+              value={user?.fullname || ""}
               disabled
             />
           </div>
@@ -124,7 +125,7 @@ const FormAbsence = () => {
 
           <DropdownPackJurusan
             name="jurusan"
-            value={user?.idMajor?.major_name || ""}
+            value={user?.major || ""}
             disabled
           />
 
@@ -134,9 +135,9 @@ const FormAbsence = () => {
           />
 
           <TextArea
-            name="detailReason"
+            name="detail_reason"
             placeholder="Tambahkan alasan spesifik anda di sini"
-            {...register("detailReason")}
+            {...register("detail_reason")}
           />
 
           <div className="flex justify-start gap-5 mt-2">
@@ -147,7 +148,7 @@ const FormAbsence = () => {
                 reset({
                   nis: user?.nis || "",
                   reason: "",
-                  detailReason: "",
+                  detail_reason: "",
                 })
               }
             />

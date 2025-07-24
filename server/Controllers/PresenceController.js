@@ -1,55 +1,74 @@
-import Presence from "../Models/PresenceSchema.js";
-import User from "../Models/AccountSchema.js";
-import Major from "../Models/MajorSchema.js";
+import { supabase } from "../config/Supabase.js";
+import * as XLSX from "sheetjs-style";
 import {
   getPreviousWorkday,
   isHolidayOrWeekend,
 } from "../Utils/HolidayChecker.js";
-import * as XLSX from "sheetjs-style";
 
-const getPresenceCounts = async () => {
-  const [membaca, meminjam, lainnya] = await Promise.all([
-    Presence.countDocuments({ reason: "Membaca" }),
-    Presence.countDocuments({ reason: "Meminjam" }),
-    Presence.countDocuments({ reason: "Lainnya" }),
-  ]);
-  return [membaca, meminjam, lainnya];
+const getPresenceCounts = async (dateFilter = {}) => {
+  try {
+    const { data: counts } = await supabase
+      .from("table_guest")
+      .select("reason", { count: "exact" })
+      .in("reason", ["Membaca", "Meminjam", "Lainnya"]);
+
+    const membaca = counts?.filter((c) => c.reason === "Membaca").length || 0;
+    const meminjam = counts?.filter((c) => c.reason === "Meminjam").length || 0;
+    const lainnya = counts?.filter((c) => c.reason === "Lainnya").length || 0;
+
+    return [membaca, meminjam, lainnya];
+  } catch (error) {
+    console.error("Error getting counts:", error);
+    return [0, 0, 0];
+  }
 };
 
 export const savePresence = async (req, res) => {
   try {
     const { nis } = req.user;
+    const today = new Date().toISOString().slice(0, 10);
 
-    const user = await User.findOne({ nis });
-    if (!user) {
+    const { data: user, error: userError } = await supabase
+      .from("table_user")
+      .select("*")
+      .eq("nis", nis)
+      .single();
+
+    if (!user || userError) {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
 
     const now = new Date();
-    const formattedDate = now
-      .toLocaleDateString("id-ID", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-      .split("/")
-      .reverse()
-      .join("-");
     const formattedTime = now.toLocaleTimeString("id-ID", {
       hour: "2-digit",
       minute: "2-digit",
     });
 
-    let newStreak = user.streak;
+    const { data: todayPresences } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("nis", nis)
+      .eq("date", today);
 
-    if (!isHolidayOrWeekend(formattedDate)) {
-      const lastPresence = await Presence.findOne({ nis }).sort({ date: -1 });
+    let newStreak = user.streak || 0;
+
+    if (
+      (!todayPresences || todayPresences.length === 0) &&
+      !isHolidayOrWeekend(today)
+    ) {
+      const { data: lastPresence } = await supabase
+        .from("table_guest")
+        .select("date")
+        .eq("nis", nis)
+        .lt("date", today)
+        .order("date", { ascending: false })
+        .limit(1)
+        .single();
 
       if (lastPresence) {
-        const prevWorkday = await getPreviousWorkday(formattedDate);
-
+        const prevWorkday = await getPreviousWorkday(today);
         if (lastPresence.date === prevWorkday) {
-          newStreak = user.streak + 1;
+          newStreak += 1;
         } else {
           newStreak = 1;
         }
@@ -57,22 +76,31 @@ export const savePresence = async (req, res) => {
         newStreak = 1;
       }
 
-      user.streak = newStreak;
-      await user.save();
+      await supabase
+        .from("table_user")
+        .update({ streak: newStreak })
+        .eq("nis", nis);
     }
 
-    const newPresence = new Presence({
-      nis: user.nis,
-      status: user.status,
-      ...req.body,
-      date: formattedDate,
-      time: formattedTime,
-    });
+    const { data: newPresence, error } = await supabase
+      .from("table_guest")
+      .insert([
+        {
+          nis: user.nis,
+          ...req.body,
+          date: today,
+          time: formattedTime,
+        },
+      ])
+      .select()
+      .single();
 
-    await newPresence.save();
+    if (error) throw error;
 
-    const count = await Presence.countDocuments();
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
+    const { count } = await supabase
+      .from("table_guest")
+      .select("*", { count: "exact" });
 
     res.status(201).json({
       message: "Presensi berhasil disimpan",
@@ -81,12 +109,13 @@ export const savePresence = async (req, res) => {
       membaca,
       meminjam,
       lainnya,
-      streak: user.streak,
+      streak: newStreak,
     });
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Gagal menyimpan data", error: error.message });
+    console.error("Error in savePresence:", error);
+    res.status(400).json({
+      message: error.message || "Gagal menyimpan data",
+    });
   }
 };
 
@@ -94,24 +123,33 @@ export const getLogs = async (req, res) => {
   try {
     const { nis } = req.user || "";
 
-    const logs = await Presence.find({ nis });
+    const { data: logs, error: logsError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("nis", nis);
+
+    if (logsError) throw logsError;
     if (!logs.length) {
-      return res.status(404).json({ message: "Tidak ada data presensi untuk user ini" });
+      return res
+        .status(404)
+        .json({ message: "Tidak ada data presensi untuk user ini" });
     }
 
-    const user = await User.findOne({ nis })
-      .select("fullName grade idMajor")
-      .populate("idMajor", "major_name");
+    const { data: user, error: userError } = await supabase
+      .from("table_user")
+      .select("fullname, grade, id_major:table_major(major_name)")
+      .eq("nis", nis)
+      .single();
 
-    if (!user) {
+    if (!user || userError) {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
 
     const formattedLogs = logs.map((log) => ({
-      id: log._id,
-      fullName: user.fullName,
+      id: log.id,
+      fullname: user.fullname,
       grade: user.grade,
-      major: user.idMajor?.major_name || "-",
+      major: user.id_major?.major_name || "-",
       date: log.date,
       time: log.time,
       reason: log.reason,
@@ -126,8 +164,12 @@ export const getLogs = async (req, res) => {
     const currentYear = String(now.getFullYear());
     const today = now.toISOString().split("T")[0];
 
-    const monthly = logs.filter((log) => log.date?.split("-")[1] === currentMonth).length;
-    const yearly = logs.filter((log) => log.date?.split("-")[0] === currentYear).length;
+    const monthly = logs.filter(
+      (log) => log.date?.split("-")[1] === currentMonth
+    ).length;
+    const yearly = logs.filter(
+      (log) => log.date?.split("-")[0] === currentYear
+    ).length;
 
     const logHariIni = logs.find((log) => log.date === today);
     const lastPresence = logHariIni?.time || "-";
@@ -147,24 +189,33 @@ export const getLogs = async (req, res) => {
   }
 };
 
-
-
 export const getAllUsersPresence = async (req, res) => {
   try {
-    const presenceList = await Presence.find().sort({ date: -1 });
+    const { data: presenceList, error: presenceError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .order("date", { ascending: false });
+
+    if (presenceError) throw presenceError;
 
     const count = presenceList.length;
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
 
     const formattedPresence = await Promise.all(
       presenceList.map(async (pres) => {
-        const user = await User.findOne({ nis: pres.nis }).populate("idMajor");
+        const { data: user, error: userError } = await supabase
+          .from("table_user")
+          .select("fullname, grade, id_major")
+          .eq("nis", pres.nis)
+          .single();
+
+        if (userError) throw userError;
 
         return {
-          id: pres._id,
+          id: pres.id,
           fullName: user?.fullName || "-",
           grade: user?.grade || "-",
-          major: user?.idMajor?.major_name || "-",
+          major: user?.id_major?.major_name || "-",
           date: pres.date,
           time: pres.time,
           reason: pres.reason,
@@ -188,12 +239,32 @@ export const getAllUsersPresence = async (req, res) => {
 export const getLogsToday = async (req, res) => {
   try {
     const today = new Date().toISOString().slice(0, 10);
-    const logs = await Presence.find({ date: today });
+    const { data: logs, error: logsError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("date", today);
+
+    if (logsError) throw logsError;
 
     const [membaca, meminjam, lainnya] = await Promise.all([
-      Presence.countDocuments({ date: today, reason: "Membaca" }),
-      Presence.countDocuments({ date: today, reason: "Meminjam" }),
-      Presence.countDocuments({ date: today, reason: "Lainnya" }),
+      supabase
+        .from("table_guest")
+        .select("*")
+        .eq("date", today)
+        .eq("reason", "Membaca")
+        .count(),
+      supabase
+        .from("table_guest")
+        .select("*")
+        .eq("date", today)
+        .eq("reason", "Meminjam")
+        .count(),
+      supabase
+        .from("table_guest")
+        .select("*")
+        .eq("date", today)
+        .eq("reason", "Lainnya")
+        .count(),
     ]);
 
     res.json({
@@ -211,20 +282,23 @@ export const getLogsToday = async (req, res) => {
 
 const getLogsPerYear = async (req, res, year) => {
   try {
-    const logsPerMonth = await Presence.aggregate([
-      { $match: { date: { $regex: `^${year}-` } } },
-      { $group: { _id: { $substr: ["$date", 5, 2] }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } },
-    ]);
+    const { data: logsPerMonth, error: logsError } = await supabase
+      .from("table_guest")
+      .select("date", { count: "exact" })
+      .ilike("date", `${year}-%`)
+      .group("date")
+      .order("date", { ascending: true });
+
+    if (logsError) throw logsError;
 
     const monthData = Array.from({ length: 12 }, (_, i) => ({
       month: String(i + 1),
       count: 0,
     }));
 
-    logsPerMonth.forEach(({ _id, count }) => {
-      const monthIndex = parseInt(_id, 10) - 1;
-      monthData[monthIndex].count = count;
+    logsPerMonth.forEach(({ date }) => {
+      const monthIndex = new Date(date).getMonth();
+      monthData[monthIndex].count += 1;
     });
 
     const totalPresensi = monthData.reduce((acc, cur) => acc + cur.count, 0);
@@ -248,30 +322,43 @@ export const getLogsCurrentMonth = async (req, res) => {
   try {
     const now = new Date();
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); 
+    const month = String(now.getMonth() + 1).padStart(2, "0");
 
     const startDate = `${year}-${month}-01`;
     const endDate = new Date(year, now.getMonth() + 1, 0)
       .toISOString()
       .slice(0, 10);
 
-    const logs = await Presence.find({
-      date: { $gte: startDate, $lte: endDate },
-    });
+    const { data: logs, error: logsError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .gte("date", startDate)
+      .lte("date", endDate);
+
+    if (logsError) throw logsError;
 
     const [membaca, meminjam, lainnya] = await Promise.all([
-      Presence.countDocuments({
-        date: { $gte: startDate, $lte: endDate },
-        reason: "Membaca",
-      }),
-      Presence.countDocuments({
-        date: { $gte: startDate, $lte: endDate },
-        reason: "Meminjam",
-      }),
-      Presence.countDocuments({
-        date: { $gte: startDate, $lte: endDate },
-        reason: "Lainnya",
-      }),
+      supabase
+        .from("table_guest")
+        .select("*")
+        .gte("date", startDate)
+        .lte("date", endDate)
+        .eq("reason", "Membaca")
+        .count(),
+      supabase
+        .from("table_guest")
+        .select("*")
+        .gte("date", startDate)
+        .lte("date", endDate)
+        .eq("reason", "Meminjam")
+        .count(),
+      supabase
+        .from("table_guest")
+        .select("*")
+        .gte("date", startDate)
+        .lte("date", endDate)
+        .eq("reason", "Lainnya")
+        .count(),
     ]);
 
     res.json({
@@ -295,53 +382,81 @@ export const getPresenceSummary = async (req, res) => {
     const month = String(new Date().getMonth() + 1).padStart(2, "0");
 
     const daily = {
-      membaca: await Presence.countDocuments({
-        date: today,
-        reason: "Membaca",
-      }),
-      meminjam: await Presence.countDocuments({
-        date: today,
-        reason: "Meminjam",
-      }),
-      lainnya: await Presence.countDocuments({
-        date: today,
-        reason: "Lainnya",
-      }),
-      count: await Presence.countDocuments({ date: today }),
+      membaca: await supabase
+        .from("table_guest")
+        .select("*")
+        .eq("date", today)
+        .eq("reason", "Membaca")
+        .count(),
+      meminjam: await supabase
+        .from("table_guest")
+        .select("*")
+        .eq("date", today)
+        .eq("reason", "Meminjam")
+        .count(),
+      lainnya: await supabase
+        .from("table_guest")
+        .select("*")
+        .eq("date", today)
+        .eq("reason", "Lainnya")
+        .count(),
+      count: await supabase
+        .from("table_guest")
+        .select("*")
+        .eq("date", today)
+        .count(),
     };
 
     const monthly = {
-      membaca: await Presence.countDocuments({
-        date: { $regex: `^${year}-${month}` },
-        reason: "Membaca",
-      }),
-      meminjam: await Presence.countDocuments({
-        date: { $regex: `^${year}-${month}` },
-        reason: "Meminjam",
-      }),
-      lainnya: await Presence.countDocuments({
-        date: { $regex: `^${year}-${month}` },
-        reason: "Lainnya",
-      }),
-      count: await Presence.countDocuments({
-        date: { $regex: `^${year}-${month}` },
-      }),
+      membaca: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-${month}-%`)
+        .eq("reason", "Membaca")
+        .count(),
+      meminjam: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-${month}-%`)
+        .eq("reason", "Meminjam")
+        .count(),
+      lainnya: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-${month}-%`)
+        .eq("reason", "Lainnya")
+        .count(),
+      count: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-${month}-%`)
+        .count(),
     };
 
     const yearly = {
-      membaca: await Presence.countDocuments({
-        date: { $regex: `^${year}-` },
-        reason: "Membaca",
-      }),
-      meminjam: await Presence.countDocuments({
-        date: { $regex: `^${year}-` },
-        reason: "Meminjam",
-      }),
-      lainnya: await Presence.countDocuments({
-        date: { $regex: `^${year}-` },
-        reason: "Lainnya",
-      }),
-      count: await Presence.countDocuments({ date: { $regex: `^${year}-` } }),
+      membaca: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-%`)
+        .eq("reason", "Membaca")
+        .count(),
+      meminjam: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-%`)
+        .eq("reason", "Meminjam")
+        .count(),
+      lainnya: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-%`)
+        .eq("reason", "Lainnya")
+        .count(),
+      count: await supabase
+        .from("table_guest")
+        .select("*")
+        .ilike("date", `${year}-%`)
+        .count(),
     };
 
     res.json({ daily, monthly, yearly });
@@ -352,7 +467,13 @@ export const getPresenceSummary = async (req, res) => {
 
 const getLogsByReason = async (req, res, reason) => {
   try {
-    const logs = await Presence.find({ reason });
+    const { data: logs, error: logsError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("reason", reason);
+
+    if (logsError) throw logsError;
+
     const count = logs.length;
 
     res.json({ count, data: logs });
@@ -369,16 +490,14 @@ export const getAverageTotalLogsPerMonth = async (req, res) => {
   try {
     const year = new Date().getFullYear();
 
-    const logsPerMonth = await Presence.aggregate([
-      { $match: { date: { $regex: `^${year}-` } } },
-      {
-        $group: {
-          _id: { month: { $substr: ["$date", 5, 2] } },
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { "_id.month": 1 } },
-    ]);
+    const { data: logsPerMonth, error: logsError } = await supabase
+      .from("table_guest")
+      .select("date")
+      .ilike("date", `${year}-%`)
+      .group("date")
+      .order("date", { ascending: true });
+
+    if (logsError) throw logsError;
 
     const monthData = Array.from({ length: 12 }, (_, i) => {
       const daysInMonth = new Date(year, i + 1, 0).getDate();
@@ -389,11 +508,9 @@ export const getAverageTotalLogsPerMonth = async (req, res) => {
       };
     });
 
-    logsPerMonth.forEach(({ _id, count }) => {
-      const monthIndex = parseInt(_id.month, 10) - 1;
-      monthData[monthIndex].rataRata = Math.round(
-        count / monthData[monthIndex].daysInMonth
-      );
+    logsPerMonth.forEach(({ date }) => {
+      const monthIndex = new Date(date).getMonth();
+      monthData[monthIndex].rataRata += 1 / monthData[monthIndex].daysInMonth;
     });
 
     const totalPresensi = logsPerMonth.reduce((acc, cur) => acc + cur.count, 0);
@@ -407,7 +524,7 @@ export const getAverageTotalLogsPerMonth = async (req, res) => {
       lainnya,
       logsPerMonth: monthData.map(({ month, rataRata }) => ({
         month,
-        rataRata,
+        rataRata: Math.round(rataRata),
       })),
     });
   } catch (error) {
@@ -417,8 +534,13 @@ export const getAverageTotalLogsPerMonth = async (req, res) => {
 
 export const updatePresence = async (req, res) => {
   try {
-    const presence = await Presence.findById(req.params.id);
-    if (!presence) {
+    const { data: presence, error: presenceError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("id", req.params.id)
+      .single();
+
+    if (presenceError) {
       return res.status(404).json({ message: "Data presensi tidak ditemukan" });
     }
 
@@ -428,9 +550,14 @@ export const updatePresence = async (req, res) => {
         .json({ message: "Tidak memiliki akses untuk mengedit data ini" });
     }
 
-    const updated = await Presence.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const { data: updated, error: updateError } = await supabase
+      .from("table_guest")
+      .update(req.body)
+      .eq("id", req.params.id)
+      .select()
+      .single();
+
+    if (updateError) throw updateError;
 
     res.json({ message: "Presensi berhasil diperbarui", data: updated });
   } catch (error) {
@@ -440,8 +567,13 @@ export const updatePresence = async (req, res) => {
 
 export const deletePresence = async (req, res) => {
   try {
-    const presence = await Presence.findById(req.params.id);
-    if (!presence) {
+    const { data: presence, error: presenceError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("id", req.params.id)
+      .single();
+
+    if (presenceError) {
       return res.status(404).json({ message: "Data presensi tidak ditemukan" });
     }
 
@@ -451,7 +583,13 @@ export const deletePresence = async (req, res) => {
         .json({ message: "Tidak memiliki akses untuk menghapus data ini" });
     }
 
-    await Presence.findByIdAndDelete(req.params.id);
+    const { error: deleteError } = await supabase
+      .from("table_guest")
+      .delete()
+      .eq("id", req.params.id);
+
+    if (deleteError) throw deleteError;
+
     res.json({ message: "Presensi berhasil dihapus" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -462,19 +600,29 @@ export const getPresenceById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const presence = await Presence.findById(id);
+    const { data: presence, error: presenceError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-    if (!presence) {
+    if (presenceError) {
       return res.status(404).json({ message: "Data presensi tidak ditemukan" });
     }
 
-    const user = await User.findOne({ nis: presence.nis }).populate("idMajor");
+    const { data: user, error: userError } = await supabase
+      .from("table_user")
+      .select("idMajor")
+      .eq("nis", presence.nis)
+      .single();
+
+    if (userError) throw userError;
 
     res.json({
-      id: presence._id,
+      id: presence.id,
       nis: presence.nis,
-      fullName: user?.fullName || "-",
-      grade: user?.grade || "-",
+      fullName: presence.fullName,
+      grade: presence.grade,
       major: user?.idMajor?.major_name || "-",
       date: presence.date,
       time: presence.time,
@@ -491,33 +639,13 @@ export const getPresenceById = async (req, res) => {
 
 export const getMostAbsentMajors = async (req, res) => {
   try {
-    const result = await Presence.aggregate([
-      {
-        $lookup: {
-          from: "users",
-          localField: "nis",
-          foreignField: "nis",
-          as: "userData",
-        },
-      },
-      { $unwind: "$userData" },
-      {
-        $lookup: {
-          from: "majors",
-          localField: "userData.idMajor",
-          foreignField: "_id",
-          as: "majorData",
-        },
-      },
-      { $unwind: "$majorData" },
-      {
-        $group: {
-          _id: "$majorData.major_name",
-          totalAbsen: { $sum: 1 },
-        },
-      },
-      { $sort: { totalAbsen: -1 } },
-    ]);
+    const { data: result, error } = await supabase
+      .from("table_guest")
+      .select("nis, count(nis) as totalAbsen")
+      .group("nis")
+      .order("totalAbsen", { ascending: false });
+
+    if (error) throw error;
 
     res.status(200).json(result);
   } catch (error) {
@@ -528,60 +656,14 @@ export const getMostAbsentMajors = async (req, res) => {
 
 export const getMostAbsentStudents = async (req, res) => {
   try {
-    const result = await Presence.aggregate([
-      {
-        $group: {
-          _id: "$nis",
-          totalAbsen: { $sum: 1 },
-          totalMembaca: {
-            $sum: { $cond: [{ $eq: ["$reason", "Membaca"] }, 1, 0] },
-          },
-          totalMeminjam: {
-            $sum: { $cond: [{ $eq: ["$reason", "Meminjam"] }, 1, 0] },
-          },
-          totalLainnya: {
-            $sum: { $cond: [{ $eq: ["$reason", "Lainnya"] }, 1, 0] },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "nis",
-          as: "userData",
-        },
-      },
-      {
-        $match: {
-          userData: { $ne: [] },
-        },
-      },
-      { $unwind: "$userData" },
-      {
-        $lookup: {
-          from: "majors",
-          localField: "userData.idMajor",
-          foreignField: "_id",
-          as: "majorData",
-        },
-      },
-      { $unwind: "$majorData" },
-      {
-        $project: {
-          nis: "$_id",
-          fullName: "$userData.fullName",
-          grade: "$userData.grade",
-          major: "$majorData.major_name",
-          totalAbsen: 1,
-          totalMembaca: 1,
-          totalMeminjam: 1,
-          totalLainnya: 1,
-        },
-      },
-      { $sort: { totalAbsen: -1 } },
-      { $limit: 10 },
-    ]);
+    const { data: result, error } = await supabase
+      .from("table_guest")
+      .select("nis, count(nis) as totalAbsen, reason")
+      .group("nis, reason")
+      .order("totalAbsen", { ascending: false })
+      .limit(10);
+
+    if (error) throw error;
 
     res.status(200).json(result);
   } catch (error) {
@@ -673,44 +755,22 @@ export const getMonthlyPresenceByMajor = async (req, res) => {
       ? parseInt(req.query.year, 10)
       : new Date().getFullYear();
 
-    const aggregationResult = await Presence.aggregate([
-      {
-        $match: { date: { $regex: `^${year}-` } },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "nis",
-          foreignField: "nis",
-          as: "user",
-        },
-      },
-      { $unwind: "$user" },
-      {
-        $lookup: {
-          from: "majors",
-          localField: "user.idMajor",
-          foreignField: "_id",
-          as: "major",
-        },
-      },
-      { $unwind: "$major" },
-      {
-        $addFields: {
-          month: { $substr: ["$date", 5, 2] },
-        },
-      },
-      {
-        $group: {
-          _id: {
-            month: "$month",
-            major: "$major.major_name",
-            reason: "$reason",
-          },
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+    const { data: presences, error: presenceError } = await supabase
+      .from("table_guest")
+      .select(
+        `
+        *,
+        table_user:nis (
+          *,
+          table_major:id_major (
+            major_name
+          )
+        )
+      `
+      )
+      .ilike("date", `${year}-%`);
+
+    if (presenceError) throw presenceError;
 
     const monthNames = {
       "01": "januari",
@@ -728,30 +788,27 @@ export const getMonthlyPresenceByMajor = async (req, res) => {
     };
 
     const resultData = {};
-
     Object.values(monthNames).forEach((monthName) => {
       resultData[monthName] = {};
     });
 
-    aggregationResult.forEach((item) => {
-      const { month, major, reason } = item._id;
-      const count = item.count;
-      const monthName = monthNames[month] || month;
+    presences.forEach((presence) => {
+      const month = presence.date.split("-")[1];
+      const monthName = monthNames[month];
+      const major = presence.table_user?.table_major?.major_name;
+      const reason = presence.reason.toLowerCase();
 
-      if (!resultData[monthName][major]) {
-        resultData[monthName][major] = {
-          count: 0,
-          meminjam: 0,
-          membaca: 0,
-          lainnya: 0,
-        };
-      }
-
-      resultData[monthName][major].count += count;
-
-      const reasonKey = reason.toLowerCase();
-      if (["meminjam", "membaca", "lainnya"].includes(reasonKey)) {
-        resultData[monthName][major][reasonKey] += count;
+      if (major && monthName) {
+        if (!resultData[monthName][major]) {
+          resultData[monthName][major] = {
+            count: 0,
+            meminjam: 0,
+            membaca: 0,
+            lainnya: 0,
+          };
+        }
+        resultData[monthName][major].count++;
+        resultData[monthName][major][reason]++;
       }
     });
 
@@ -794,174 +851,87 @@ export const exportPresenceExcel = async (req, res) => {
 
   try {
     let data = [];
-
-    const bulanMap = {
-      "01": "Januari",
-      "02": "Februari",
-      "03": "Maret",
-      "04": "April",
-      "05": "Mei",
-      "06": "Juni",
-      "07": "Juli",
-      "08": "Agustus",
-      "09": "September",
-      "10": "Oktober",
-      "11": "November",
-      "12": "Desember",
-    };
-
-    const bulanUrut = [
-      "01", "02", "03", "04", "05", "06",
-      "07", "08", "09", "10", "11", "12"
-    ];
+    const year = new Date().getFullYear();
 
     if (jenis === "tahunan") {
-      const year = new Date().getFullYear();
+      const { data: majors } = await supabase
+        .from("table_major")
+        .select("major_name");
 
-      const allMajorsRaw = await Major.find({}, "major_name").lean();
       const uniqueMajors = [
         ...new Set(
-          allMajorsRaw.map((m) => m.major_name.replace(/\s*\d+$/, "").trim())
+          majors.map((m) => m.major_name.replace(/\s*\d+$/, "").trim())
         ),
       ];
 
-      const logsPerMajorAndMonth = await Presence.aggregate([
-        {
-          $match: {
-            date: { $regex: `^${year}-` },
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "nis",
-            foreignField: "nis",
-            as: "user",
-          },
-        },
-        { $unwind: "$user" },
-        {
-          $lookup: {
-            from: "majors",
-            localField: "user.idMajor",
-            foreignField: "_id",
-            as: "major",
-          },
-        },
-        { $unwind: "$major" },
-        {
-          $project: {
-            jurusan: {
-              $let: {
-                vars: {
-                  regexResult: {
-                    $regexFind: {
-                      input: "$major.major_name",
-                      regex: /^[^\d]+/,
-                    },
-                  },
-                },
-                in: {
-                  $trim: {
-                    input: "$$regexResult.match",
-                  },
-                },
-              },
-            },
-            bulan: { $substr: ["$date", 5, 2] },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              jurusan: "$jurusan",
-              bulan: "$bulan",
-            },
-            count: { $sum: 1 },
-          },
-        },
-      ]);
+      const { data: presences } = await supabase
+        .from("table_guest")
+        .select(
+          `
+          date,
+          table_user:nis (
+            table_major:id_major (
+              major_name
+            )
+          )
+        `
+        )
+        .ilike("date", `${year}-%`);
+
+      const monthlyData = {};
+      presences.forEach((presence) => {
+        const month = presence.date.split("-")[1];
+        const majorName = presence.table_user?.table_major?.major_name
+          ?.replace(/\s*\d+$/, "")
+          .trim();
+
+        if (majorName) {
+          if (!monthlyData[majorName]) {
+            monthlyData[majorName] = {};
+          }
+          monthlyData[majorName][month] =
+            (monthlyData[majorName][month] || 0) + 1;
+        }
+      });
 
       data = uniqueMajors.map((majorName) => {
         const row = { Jurusan: majorName };
-
-        bulanUrut.forEach((kodeBulan) => {
-          const namaBulan = bulanMap[kodeBulan];
-          row[namaBulan] = 0;
+        bulanMap.forEach((namaBulan, kodeBulan) => {
+          row[namaBulan] = monthlyData[majorName]?.[kodeBulan] || 0;
         });
-
-        logsPerMajorAndMonth.forEach(({ _id, count }) => {
-          if (_id.jurusan && _id.jurusan.trim() === majorName) {
-            const namaBulan = bulanMap[_id.bulan];
-            row[namaBulan] = count;
-          }
-        });
-
         return row;
       });
     } else if (jenis === "bulanan") {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const startDate = `${year}-${month}-01`;
-      const endDate = new Date(year, now.getMonth() + 1, 0)
-        .toISOString()
-        .slice(0, 10);
+      const month = String(new Date().getMonth() + 1).padStart(2, "0");
 
-      const rawLogs = await Presence.aggregate([
-        {
-          $match: {
-            date: { $gte: startDate, $lte: endDate },
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "nis",
-            foreignField: "nis",
-            as: "user",
-          },
-        },
-        { $unwind: "$user" },
-        {
-          $lookup: {
-            from: "majors",
-            localField: "user.idMajor",
-            foreignField: "_id",
-            as: "major",
-          },
-        },
-        { $unwind: "$major" },
-        {
-          $project: {
-            jurusan: "$major.major_name",
-          },
-        },
-      ]);
+      const { data: presences } = await supabase
+        .from("table_guest")
+        .select(
+          `
+          table_user:nis (
+            table_major:id_major (
+              major_name
+            )
+          )
+        `
+        )
+        .ilike("date", `${year}-${month}-%`);
 
       const countMap = {};
+      presences.forEach((presence) => {
+        const majorName = presence.table_user?.table_major?.major_name
+          ?.replace(/\s*\d+$/, "")
+          .trim();
 
-      rawLogs.forEach(({ jurusan }) => {
-        const jurusanBase = jurusan.replace(/\s*\d+$/, "").trim();
-        if (!countMap[jurusanBase]) {
-          countMap[jurusanBase] = { Jurusan: jurusanBase, Jumlah: 0 };
-        }
-        countMap[jurusanBase].Jumlah += 1;
-      });
-
-      const allMajors = await Major.find({}, "major_name").lean();
-      allMajors.forEach((m) => {
-        const jurusanBase = m.major_name.replace(/\s*\d+$/, "").trim();
-        if (!countMap[jurusanBase]) {
-          countMap[jurusanBase] = { Jurusan: jurusanBase, Jumlah: 0 };
+        if (majorName) {
+          if (!countMap[majorName]) {
+            countMap[majorName] = { Jurusan: majorName, Jumlah: 0 };
+          }
+          countMap[majorName].Jumlah++;
         }
       });
 
       data = Object.values(countMap);
-    } else {
-      return res.status(400).json({
-        message: "Jenis tidak valid. Gunakan 'bulanan' atau 'tahunan'.",
-      });
     }
 
     const buffer = createExcelBufferFromJSON(data, `Presensi-${jenis}`);

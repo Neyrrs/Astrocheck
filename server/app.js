@@ -1,17 +1,11 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 import PresenceRoute from "./Routes/PresenceRoute.js";
 import AccountRoute from "./Routes/AccountRoute.js";
 import MajorRoute from "./Routes/MajorRoute.js";
 import dotenv from "dotenv";
 
 dotenv.config();
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Koneksi berhasil ke database!"))
-  .catch((err) => console.error("Koneksi gagal:", err));
 
 const app = express();
 app.use(cors());
