@@ -206,13 +206,14 @@ export const getAllUsersPresence = async (req, res) => {
 
     const formattedPresence = presenceList.map((pres) => ({
       id: pres.id_user,
+      id_guest: pres.id_guest,
       fullname: pres.user?.fullname || "-",
       grade: pres.user?.grade || "-",
       major: pres.user?.id_major?.major_name || "-",
       date: pres.date,
       time: pres.time,
       reason: pres.reason,
-      detailReason: pres.detail_reason || "-",
+      detail_reason: pres.detail_reason || "-",
     }));
 
     res.json({
@@ -500,10 +501,11 @@ export const getAverageTotalLogsPerMonth = async (req, res) => {
 
 export const updatePresence = async (req, res) => {
   try {
+    const id_guest = req.params.id;
     const { data: presence, error: presenceError } = await supabase
       .from("table_guest")
       .select("*")
-      .eq("id", req.params.id)
+      .eq("id_guest", id_guest)
       .single();
 
     if (presenceError) {
@@ -519,7 +521,7 @@ export const updatePresence = async (req, res) => {
     const { data: updated, error: updateError } = await supabase
       .from("table_guest")
       .update(req.body)
-      .eq("id", req.params.id)
+      .eq("id_guest", req.params.id)
       .select()
       .single();
 
@@ -532,11 +534,12 @@ export const updatePresence = async (req, res) => {
 };
 
 export const deletePresence = async (req, res) => {
+  const id_guest = req.params.id
   try {
     const { data: presence, error: presenceError } = await supabase
       .from("table_guest")
       .select("*")
-      .eq("id", req.params.id)
+      .eq("id_guest", id_guest)
       .single();
 
     if (presenceError) {
@@ -552,7 +555,7 @@ export const deletePresence = async (req, res) => {
     const { error: deleteError } = await supabase
       .from("table_guest")
       .delete()
-      .eq("id", req.params.id);
+      .eq("id_guest", id_guest);
 
     if (deleteError) throw deleteError;
 
@@ -564,12 +567,12 @@ export const deletePresence = async (req, res) => {
 
 export const getPresenceById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
 
     const { data: presence, error: presenceError } = await supabase
       .from("table_guest")
       .select("*")
-      .eq("id", id)
+      .eq("id_guest", id)
       .single();
 
     if (presenceError) {
@@ -578,18 +581,18 @@ export const getPresenceById = async (req, res) => {
 
     const { data: user, error: userError } = await supabase
       .from("table_user")
-      .select("idMajor")
+      .select("*, id_major:table_major(major_name)")
       .eq("nis", presence.nis)
       .single();
 
     if (userError) throw userError;
 
     res.json({
-      id: presence.id,
+      id_guest: presence.id_guest,
       nis: presence.nis,
-      fullname: presence.fullname,
-      grade: presence.grade,
-      major: user?.idMajor?.major_name || "-",
+      fullname: user.fullname,
+      grade: user.grade,
+      major: user?.id_major?.major_name || "-",
       date: presence.date,
       time: presence.time,
       reason: presence.reason,

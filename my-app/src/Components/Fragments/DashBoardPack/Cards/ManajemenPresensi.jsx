@@ -35,7 +35,7 @@ const ManajemenPresensi = () => {
       render: (row) => (
         <div className="flex flex-row gap-2 text-base">
           <button
-            onClick={() => handleEdit(row)}
+            onClick={() => {handleEdit(row); console.log(row)}}
             className="text-blue-600 hover:underline flex items-center gap-1"
           >
             <svg
@@ -84,7 +84,7 @@ const ManajemenPresensi = () => {
   const handleDelete = async (row) => {
     const confirm = await Swal.fire({
       title: "Yakin ingin menghapus?",
-      text: `Presensi ${row.fullName} pada ${row.date} akan dihapus.`,
+      text: `Presensi ${row.fullname} pada ${row.date} akan dihapus.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -96,7 +96,7 @@ const ManajemenPresensi = () => {
     if (confirm.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/presence/${row.id}`, {
+        await axios.delete(`${backendUrl}/presence/${row.id_guest}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },

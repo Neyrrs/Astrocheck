@@ -39,7 +39,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
           {data.length > 0 ? (
             data.map((item, index) => (
               <tr
-                key={item._id || `row-${index}`}
+                key={item.id_guest || `row-${index}`}
                 className="border-b font-normal text-lg border-y-2 border-[#e5e5e5]"
               >
                 {columns.map((col, idx) => {

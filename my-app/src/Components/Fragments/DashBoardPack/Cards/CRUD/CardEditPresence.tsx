@@ -23,6 +23,9 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import type { presenceHttpRequest } from "@/types/presence";
 
+// TODO Buat major jadi ke supabase juga
+// TODO Buat response APInya ada paginationnya
+// !Hapus fetch dari hook yang sekiranya gak kepake dan cari solusi lain biar hooknya gak akan terpanggil terus ketika di salah satu page yang menggunakan salah saatunya
 const CardEditPresence = () => {
   const { selectedItem } = useItemContext();
   const { setActiveContent } = useDashboardContext();
@@ -44,7 +47,7 @@ const CardEditPresence = () => {
       date: "",
       time: "",
       reason: "",
-      detailReason: "",
+      detail_reason: "",
       grade: "",
       major: "",
     },
@@ -52,14 +55,14 @@ const CardEditPresence = () => {
 
   useEffect(() => {
     const fetchPresenceDetail = async () => {
-      if (!selectedItem?.id) return;
+      if (!selectedItem?.id_guest) return;
 
       setIsLoading(true);
       try {
         const token = localStorage.getItem("Token");
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
         const { data } = await axios.get(
-          `${backendUrl}/presence/${selectedItem.id}`,
+          `${backendUrl}/presence/${selectedItem.id_guest}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -72,7 +75,7 @@ const CardEditPresence = () => {
           date: data.date || "",
           time: data.time || "",
           reason: data.reason || "",
-          detailReason: data.detailReason || "",
+          detail_reason: data.detail_reason || "",
           grade: data.grade || "",
           major: data.major || "",
         });
@@ -89,13 +92,14 @@ const CardEditPresence = () => {
   const onSubmit = async (formData: presenceHttpRequest) => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      console.log("Form data: ", formData);
       await axios.put(
         `${backendUrl}/presence/${formData?.id_guest}`,
         {
           date: formData.date,
           time: formData.time,
           reason: formData.reason,
-          detailReason: formData.detail_reason,
+          detail_reason: formData.detail_reason,
         },
         {
           headers: {
@@ -115,7 +119,7 @@ const CardEditPresence = () => {
         timerProgressBar: true,
       });
 
-      setActiveContent("Manajemen Absen");
+      setActiveContent("Manajemen Presensi");
     } catch (error) {
       console.error("Gagal menyimpan data:", error);
 
@@ -145,7 +149,7 @@ const CardEditPresence = () => {
     if (result.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/presence/${selectedItem.id}`, {
+        await axios.delete(`${backendUrl}/presence/${selectedItem.id_guest}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },
@@ -162,7 +166,7 @@ const CardEditPresence = () => {
           timerProgressBar: true,
         });
 
-        setActiveContent("Manajemen Absen");
+        setActiveContent("Manajemen Presensi");
       } catch (error) {
         console.error("Gagal menghapus data:", error);
 
@@ -300,12 +304,10 @@ const CardEditPresence = () => {
             <div className="col-span-2">
               <TextArea
                 height="h-40"
-                {...register("detailReason", {
-                  required: "Alasan wajib diisi",
-                })}
+                {...register("detail_reason")}
                 placeholder="Detail Alasan"
-                value={values.detailReason}
-                onChange={(e) => setValue("detailReason", e.target.value)}
+                value={values.detail_reason}
+                onChange={(e) => setValue("detail_reason", e.target.value)}
                 {...(values.reason === "Lainnya" ? {} : { readOnly: true })}
               />
             </div>
