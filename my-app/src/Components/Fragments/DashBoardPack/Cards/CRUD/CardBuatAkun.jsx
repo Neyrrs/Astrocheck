@@ -18,13 +18,12 @@ const CardBuatAkun = () => {
   const [imageFile, setImageFile] = useState(null);
   const [formData, setFormData] = useState({
     nis: "",
-    fullName: "",
+    fullname: "",
     grade: "",
     major: "",
     generation: 0,
     status: "Belum lulus",
-    createdAt: new Date().toISOString().split("T")[0],
-    profilePicture: null,
+    profile_picture: null,
     role: "",
     password: "",
   });
@@ -38,13 +37,13 @@ const CardBuatAkun = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prev) => ({
           ...prev,
-          profilePicture: reader.result,
+          profile_picture_preview: reader.result,
         }));
-        setImageFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -61,29 +60,31 @@ const CardBuatAkun = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Jurusan yang dipilih:", formData.major);
+    console.log("Formdata ", formData);
 
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const formPayload = new FormData();
 
       formPayload.append("nis", formData.nis);
-      formPayload.append("fullName", formData.fullName);
+      formPayload.append("fullname", formData.fullname);
       formPayload.append("grade", formData.grade);
       formPayload.append("major_name", formData.major);
       formPayload.append("generation", formData.generation);
       formPayload.append("status", formData.status);
-      formPayload.append("createdAt", formData.createdAt);
       formPayload.append("role", formData.role);
       formPayload.append("password", formData.password);
 
       if (imageFile) {
-        formPayload.append("profilePicture", imageFile);
+        formPayload.append("profile_picture", imageFile);
+      }
+
+      for (let pair of formPayload.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
       }
 
       await axios.post(`${backendUrl}/user/register`, formPayload, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("Token")}`,
         },
       });
@@ -162,8 +163,8 @@ const CardBuatAkun = () => {
                     <Label text="Nama Lengkap" />
                     <Input
                       placeholder="Nama Lengkap"
-                      name="fullName"
-                      value={formData.fullName}
+                      name="fullname"
+                      value={formData.fullname}
                       onChange={handleChange}
                       autoComplete="false"
                     />
@@ -211,8 +212,8 @@ const CardBuatAkun = () => {
                     <input
                       type="radio"
                       name="status"
-                      value="Belum lulus"
-                      checked={formData.status === "Belum lulus"}
+                      value="belum lulus"
+                      checked={formData.status === "belum lulus"}
                       onChange={handleChange}
                     />
                     Belum lulus
@@ -221,8 +222,8 @@ const CardBuatAkun = () => {
                     <input
                       type="radio"
                       name="status"
-                      value="Lulus"
-                      checked={formData.status === "Lulus"}
+                      value="lulus"
+                      checked={formData.status === "lulus"}
                       onChange={handleChange}
                     />
                     Lulus
@@ -245,9 +246,9 @@ const CardBuatAkun = () => {
                 onClick={handleImageClick}
                 title="Klik untuk ganti foto"
               >
-                {formData.profilePicture ? (
+                {formData.profile_picture ? (
                   <Image
-                    src={formData.profilePicture}
+                    src={formData.profile_picture}
                     alt="Profile Picture"
                     width={120}
                     height={120}
@@ -277,9 +278,7 @@ const CardBuatAkun = () => {
             <Label text="Tanggal Pembuatan" />
             <Input
               label="Tanggal Pembuatan Akun"
-              name="createdAt"
-              value={formData.createdAt}
-              onChange={handleChange}
+              value={new Date().toISOString().split("T")[0]}
               type="date"
             />
           </div>

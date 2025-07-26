@@ -30,10 +30,10 @@ const CardEditJurusan = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      _id: "",
+      id_major: "",
       major_code: "",
       major_name: "",
-      majorFullName: "",
+      major_fullname: "",
       duration: 0,
     },
   });
@@ -41,27 +41,27 @@ const CardEditJurusan = () => {
   const values = watch();
 
   useEffect(() => {
-    if (selectedItem?._id) {
+    if (selectedItem?.id_major) {
       reset({
-        _id: selectedItem._id || "",
+        id_major: selectedItem.id_major || "",
         major_code: selectedItem.major_code || "",
         major_name: selectedItem.major_name || "",
-        majorFullName: selectedItem.majorFullName || "",
+        major_fullname: selectedItem.major_fullname || "",
         duration: selectedItem.duration || 0,
       });
     }
   }, [selectedItem, reset]);
 
   const onSubmit = async (formData: major) => {
-    const { major_code, major_name, majorFullName, _id, duration } = formData;
+    const { major_code, major_name, major_fullname, id_major, duration } = formData;
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       await axios.put(
-        `${backendUrl}/major/${_id}`,
+        `${backendUrl}/major/${id_major}`,
         {
           major_code,
           major_name,
-          majorFullName,
+          major_fullname,
           duration,
         },
         {
@@ -115,7 +115,7 @@ const CardEditJurusan = () => {
     if (confirm.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/major/${selectedItem?._id}`, {
+        await axios.delete(`${backendUrl}/major/${selectedItem?.id_major}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("Token")}` },
         });
 
@@ -167,16 +167,16 @@ const CardEditJurusan = () => {
             <div>
               <Label htmlFor="majorFullName" text="Nama Jurusan *" />
               <Input
-                {...register("majorFullName", {
+                {...register("major_fullname", {
                   required: "Nama Jurusan wajib diisi",
                 })}
-                value={values?.majorFullName}
-                onChange={(e) => setValue("majorFullName", e.target.value)}
+                value={values?.major_fullname}
+                onChange={(e) => setValue("major_fullname", e.target.value)}
                 placeholder="Nama Jurusan"
               />
-              {errors.majorFullName && (
+              {errors.major_fullname && (
                 <p className="text-red-500 text-sm">
-                  {errors.majorFullName.message}
+                  {errors.major_fullname.message}
                 </p>
               )}
             </div>

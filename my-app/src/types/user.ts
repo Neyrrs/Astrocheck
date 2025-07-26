@@ -2,7 +2,7 @@ export interface Major {
   id_major?: string;
   major_code?: string;
   major_name: string;
-  majorFullName?: string;
+  major_fullname?: string;
   duration?: number;
 }
 

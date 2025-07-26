@@ -31,7 +31,7 @@ const CardBuatPresensi = () => {
     defaultValues: {
       nis: "",
       reason: "",
-      detailReason: "",
+      detail_reason: "",
     },
   });
 
@@ -42,11 +42,11 @@ const CardBuatPresensi = () => {
       setIsLoading(true);
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-      const { nis, reason, detailReason } = formData;
+      const { nis, reason, detail_reason } = formData;
 
       await axios.post(
         `${backendUrl}/presence/`,
-        { nis, reason, detailReason },
+        { nis, reason, detail_reason },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
@@ -145,16 +145,16 @@ const CardBuatPresensi = () => {
             <div className="col-span-2">
               <TextArea
                 height="h-40"
-                {...register("detailReason", {
+                {...register("detail_reason", {
                 })}
                 placeholder="Detail Alasan"
-                value={values.detailReason}
-                onChange={(e) => setValue("detailReason", e.target.value)}
+                value={values.detail_reason}
+                onChange={(e) => setValue("detail_reason", e.target.value)}
                 readOnly={values.reason !== "Lainnya"}
               />
-              {errors.detailReason && (
+              {errors.detail_reason && (
                 <p className="text-red-500 text-sm">
-                  {errors.detailReason.message}
+                  {errors.detail_reason.message}
                 </p>
               )}
             </div>

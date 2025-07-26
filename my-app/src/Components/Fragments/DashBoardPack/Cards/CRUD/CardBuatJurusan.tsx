@@ -9,13 +9,7 @@ import Input from "@/Components/Elements/Inputs/Input";
 import Label from "@/Components/Elements/Labels/Label";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-
-interface FormData {
-  major_code: string;
-  major_name: string;
-  majorFullName: string;
-  duration: string;
-}
+import type { Major as FormData } from "@/types";
 
 const CardBuatJurusan = () => {
   const { setActiveContent } = useDashboardContext();
@@ -32,8 +26,8 @@ const CardBuatJurusan = () => {
     defaultValues: {
       major_code: "",
       major_name: "",
-      majorFullName: "",
-      duration: "",
+      major_fullname: "",
+      duration: 0,
     },
   });
 
@@ -49,8 +43,8 @@ const CardBuatJurusan = () => {
         {
           major_code: formData.major_code.trim(),
           major_name: formData.major_name.trim(),
-          majorFullName: formData.majorFullName.trim(),
-          duration: formData.duration.trim(),
+          major_fullname: formData.major_fullname.trim(),
+          duration: formData.duration.toString().trim(),
         },
         {
           headers: {
@@ -73,7 +67,9 @@ const CardBuatJurusan = () => {
       reset();
       setActiveContent("Manajemen Jurusan");
     } catch (error: any) {
-      const errorMsg = error.response?.data?.message || "Terjadi kesalahan saat menyimpan jurusan.";
+      const errorMsg =
+        error.response?.data?.message ||
+        "Terjadi kesalahan saat menyimpan jurusan.";
       Swal.fire({
         icon: "error",
         title: "Gagal!",
@@ -107,16 +103,16 @@ const CardBuatJurusan = () => {
           <div className="grid grid-cols-2 gap-4 px-5 py-5">
             {/* Nama Lengkap Jurusan */}
             <div className="col-span-2">
-              <Label htmlFor="majorFullName" text="Nama Lengkap Jurusan *" />
+              <Label htmlFor="major_fullname" text="Nama Lengkap Jurusan *" />
               <Input
-                {...register("majorFullName", {
+                {...register("major_fullname", {
                   required: "Nama Jurusan wajib diisi",
                 })}
                 placeholder="Contoh: Rekayasa Perangkat Lunak"
               />
-              {errors.majorFullName && (
+              {errors.major_fullname && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.majorFullName.message}
+                  {errors.major_fullname.message}
                 </p>
               )}
             </div>
@@ -129,7 +125,9 @@ const CardBuatJurusan = () => {
                   required: "Singkatan Jurusan wajib diisi",
                 })}
                 value={values.major_name.toUpperCase()}
-                onChange={(e) => setValue("major_name", e.target.value.toUpperCase())}
+                onChange={(e) =>
+                  setValue("major_name", e.target.value.toUpperCase())
+                }
                 placeholder="Contoh: RPL"
               />
               {errors.major_name && (
@@ -171,7 +169,12 @@ const CardBuatJurusan = () => {
 
         <div className="flex justify-between gap-4">
           <TertiaryButton fontSize="sm" text="Batal" onClick={handleCancel} />
-          <PrimaryButton fontSize="sm" text="Simpan" type="submit" disabled={isLoading} />
+          <PrimaryButton
+            fontSize="sm"
+            text="Simpan"
+            type="submit"
+            disabled={isLoading}
+          />
         </div>
       </form>
     </div>

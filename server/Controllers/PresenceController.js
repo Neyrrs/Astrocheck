@@ -228,6 +228,220 @@ export const getAllUsersPresence = async (req, res) => {
   }
 };
 
+export const updatePresence = async (req, res) => {
+  try {
+    const id_guest = req.params.id;
+    const { data: presence, error: presenceError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("id_guest", id_guest)
+      .single();
+
+    if (presenceError) {
+      return res.status(404).json({ message: "Data presensi tidak ditemukan" });
+    }
+
+    if (req.user.nis !== presence.nis && req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Tidak memiliki akses untuk mengedit data ini" });
+    }
+
+    const { data: updated, error: updateError } = await supabase
+      .from("table_guest")
+      .update(req.body)
+      .eq("id_guest", req.params.id)
+      .select()
+      .single();
+
+    if (updateError) throw updateError;
+
+    res.json({ message: "Presensi berhasil diperbarui", data: updated });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deletePresence = async (req, res) => {
+  const id_guest = req.params.id;
+  try {
+    const { data: presence, error: presenceError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("id_guest", id_guest)
+      .single();
+
+    if (presenceError) {
+      return res.status(404).json({ message: "Data presensi tidak ditemukan" });
+    }
+
+    if (req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Tidak memiliki akses untuk menghapus data ini" });
+    }
+
+    const { error: deleteError } = await supabase
+      .from("table_guest")
+      .delete()
+      .eq("id_guest", id_guest);
+
+    if (deleteError) throw deleteError;
+
+    res.json({ message: "Presensi berhasil dihapus" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getPresenceById = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const { data: presence, error: presenceError } = await supabase
+      .from("table_guest")
+      .select("*")
+      .eq("id_guest", id)
+      .single();
+
+    if (presenceError) {
+      return res.status(404).json({ message: "Data presensi tidak ditemukan" });
+    }
+
+    const { data: user, error: userError } = await supabase
+      .from("table_user")
+      .select("*, id_major:table_major(major_name)")
+      .eq("nis", presence.nis)
+      .single();
+
+    if (userError) throw userError;
+
+    res.json({
+      id_guest: presence.id_guest,
+      nis: presence.nis,
+      fullname: user.fullname,
+      grade: user.grade,
+      major: user?.id_major?.major_name || "-",
+      date: presence.date,
+      time: presence.time,
+      reason: presence.reason,
+      detailReason: presence.detailReason || "-",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Terjadi kesalahan saat mengambil data presensi",
+      error: error.message,
+    });
+  }
+};
+
+export const getMostAbsentMajors = async (req, res) => {
+  try {
+    const { data: result, error } = await supabase.rpc(
+      "get_most_frequent_guests"
+    );
+
+    if (error) throw error;
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error in getMostFrequentGuests:", error);
+    res
+      .status(500)
+      .json({ message: "Gagal mengambil data kehadiran terbanyak" });
+  }
+};
+
+export const getMostAbsentStudents = async (req, res) => {
+  try {
+    const { data, error } = await supabase.from("table_guest").select(`
+        nis,
+        reason,
+        table_user:table_user(
+          fullname,
+          streak,
+          grade,
+          id_major:table_major(major_name)
+        )
+      `);
+
+    if (error) throw error;
+
+    const stats = {};
+
+    for (const pres of data) {
+      const nis = pres.nis;
+      const reason = pres.reason?.toLowerCase();
+
+      if (!stats[nis]) {
+        stats[nis] = {
+          nis,
+          fullname: pres.table_user?.fullname || "-",
+          grade: pres.table_user?.grade || "-",
+          major: pres.table_user?.id_major?.major_name || "-",
+          totalAbsen: 0,
+          membaca: 0,
+          meminjam: 0,
+          lainnya: 0,
+        };
+      }
+
+      if (["membaca", "meminjam", "lainnya"].includes(reason)) {
+        stats[nis][reason]++;
+      }
+
+      stats[nis].totalAbsen++;
+    }
+
+    const topAbsentArray = Object.values(stats)
+      .sort((a, b) => b.totalAbsen - a.totalAbsen)
+      .slice(0, 10);
+
+    return res.status(200).json(topAbsentArray);
+  } catch (error) {
+    console.error("Error in getMostAbsentStudents:", error);
+    res.status(500).json({
+      message: "Gagal mengambil data siswa dengan absen terbanyak",
+      error: error.message,
+    });
+  }
+};
+
+export const getPresenceSummaryByMajor = async (req, res) => {
+  try {
+    const { data: presences } = await supabase.from("table_guest").select(`
+        *,
+        table_user:nis(
+          table_major:id_major(major_name)
+        )
+      `);
+
+    const majorStats = presences.reduce((acc, presence) => {
+      const majorName = presence.table_user?.table_major?.major_name?.replace(
+        /\s*\d+$/,
+        ""
+      );
+      if (!majorName) return acc;
+
+      if (!acc[majorName]) {
+        acc[majorName] = {
+          major: majorName,
+          count: 0,
+        };
+      }
+      acc[majorName].count++;
+      return acc;
+    }, {});
+
+    const finalResult = Object.values(majorStats);
+
+    res.status(200).json(finalResult);
+  } catch (error) {
+    console.error("Error while summarizing presence:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // !BANNED
 export const getLogsToday = async (req, res) => {
   try {
@@ -284,6 +498,7 @@ const getLogsPerYear = async (req, res, year) => {
       .gte("date", startDate)
       .lt("date", endDate)
       .order("date", { ascending: true });
+
 
     if (error) throw error;
 
@@ -496,220 +711,6 @@ export const getAverageTotalLogsPerMonth = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
-};
-
-export const updatePresence = async (req, res) => {
-  try {
-    const id_guest = req.params.id;
-    const { data: presence, error: presenceError } = await supabase
-      .from("table_guest")
-      .select("*")
-      .eq("id_guest", id_guest)
-      .single();
-
-    if (presenceError) {
-      return res.status(404).json({ message: "Data presensi tidak ditemukan" });
-    }
-
-    if (req.user.nis !== presence.nis && req.user.role !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Tidak memiliki akses untuk mengedit data ini" });
-    }
-
-    const { data: updated, error: updateError } = await supabase
-      .from("table_guest")
-      .update(req.body)
-      .eq("id_guest", req.params.id)
-      .select()
-      .single();
-
-    if (updateError) throw updateError;
-
-    res.json({ message: "Presensi berhasil diperbarui", data: updated });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const deletePresence = async (req, res) => {
-  const id_guest = req.params.id
-  try {
-    const { data: presence, error: presenceError } = await supabase
-      .from("table_guest")
-      .select("*")
-      .eq("id_guest", id_guest)
-      .single();
-
-    if (presenceError) {
-      return res.status(404).json({ message: "Data presensi tidak ditemukan" });
-    }
-
-    if (req.user.role !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Tidak memiliki akses untuk menghapus data ini" });
-    }
-
-    const { error: deleteError } = await supabase
-      .from("table_guest")
-      .delete()
-      .eq("id_guest", id_guest);
-
-    if (deleteError) throw deleteError;
-
-    res.json({ message: "Presensi berhasil dihapus" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getPresenceById = async (req, res) => {
-  try {
-    const id = req.params.id;
-
-    const { data: presence, error: presenceError } = await supabase
-      .from("table_guest")
-      .select("*")
-      .eq("id_guest", id)
-      .single();
-
-    if (presenceError) {
-      return res.status(404).json({ message: "Data presensi tidak ditemukan" });
-    }
-
-    const { data: user, error: userError } = await supabase
-      .from("table_user")
-      .select("*, id_major:table_major(major_name)")
-      .eq("nis", presence.nis)
-      .single();
-
-    if (userError) throw userError;
-
-    res.json({
-      id_guest: presence.id_guest,
-      nis: presence.nis,
-      fullname: user.fullname,
-      grade: user.grade,
-      major: user?.id_major?.major_name || "-",
-      date: presence.date,
-      time: presence.time,
-      reason: presence.reason,
-      detailReason: presence.detailReason || "-",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Terjadi kesalahan saat mengambil data presensi",
-      error: error.message,
-    });
-  }
-};
-
-export const getMostAbsentMajors = async (req, res) => {
-  try {
-    const { data: result, error } = await supabase
-      .from("table_guest")
-      .select("nis, count(nis) as totalAbsen")
-      .group("nis")
-      .order("totalAbsen", { ascending: false });
-
-    if (error) throw error;
-
-    res.status(200).json(result);
-  } catch (error) {
-    console.error("Error in getMostAbsentMajors:", error);
-    res.status(500).json({ message: "Gagal mengambil data absen per jurusan" });
-  }
-};
-
-export const getMostAbsentStudents = async (req, res) => {
-  try {
-    const { data, error } = await supabase.from("table_guest").select(`
-        nis,
-        reason,
-        table_user:table_user(
-          fullname,
-          streak,
-          grade,
-          id_major:table_major(major_name)
-        )
-      `);
-
-    if (error) throw error;
-
-    const stats = {};
-
-    for (const pres of data) {
-      const nis = pres.nis;
-      const reason = pres.reason?.toLowerCase();
-
-      if (!stats[nis]) {
-        stats[nis] = {
-          nis,
-          fullname: pres.table_user?.fullname || "-",
-          grade: pres.table_user?.grade || "-",
-          major: pres.table_user?.id_major?.major_name || "-",
-          totalAbsen: 0,
-          membaca: 0,
-          meminjam: 0,
-          lainnya: 0,
-        };
-      }
-
-      if (["membaca", "meminjam", "lainnya"].includes(reason)) {
-        stats[nis][reason]++;
-      }
-
-      stats[nis].totalAbsen++;
-    }
-
-    const topAbsentArray = Object.values(stats)
-      .sort((a, b) => b.totalAbsen - a.totalAbsen)
-      .slice(0, 10);
-
-    return res.status(200).json(topAbsentArray);
-  } catch (error) {
-    console.error("Error in getMostAbsentStudents:", error);
-    res.status(500).json({
-      message: "Gagal mengambil data siswa dengan absen terbanyak",
-      error: error.message,
-    });
-  }
-};
-
-export const getPresenceSummaryByMajor = async (req, res) => {
-  try {
-    const { data: presences } = await supabase.from("table_guest").select(`
-        *,
-        table_user:nis(
-          table_major:id_major(major_name)
-        )
-      `);
-
-    const majorStats = presences.reduce((acc, presence) => {
-      const majorName = presence.table_user?.table_major?.major_name?.replace(
-        /\s*\d+$/,
-        ""
-      );
-      if (!majorName) return acc;
-
-      if (!acc[majorName]) {
-        acc[majorName] = {
-          major: majorName,
-          count: 0,
-        };
-      }
-      acc[majorName].count++;
-      return acc;
-    }, {});
-
-    const finalResult = Object.values(majorStats);
-
-    res.status(200).json(finalResult);
-  } catch (error) {
-    console.error("Error while summarizing presence:", error);
-    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

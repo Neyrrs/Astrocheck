@@ -22,13 +22,13 @@ const ManajemenAkun = () => {
 
   const users = rawUsers?.users?.map((user) => ({
     ...user,
-    id: user._id,
+    id_user: user.id_user,
   }));
   const presences = allPresences?.presence;
   if (!presences) return null;
 
   const handleEdit = (row) => {
-    const userWithId = { ...row, id: row._id };
+    const userWithId = { ...row, id: row.id_user };
     setSelectedItem(userWithId);
     setActiveContent("Edit Akun");
   };
@@ -114,7 +114,7 @@ const ManajemenAkun = () => {
   const handleDelete = async (row) => {
     const confirm = await Swal.fire({
       title: "Yakin ingin menghapus?",
-      text: `Akun dengan nama ${row.fullName} akan dihapus.`,
+      text: `Akun dengan nama ${row.fullname} akan dihapus.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -126,7 +126,7 @@ const ManajemenAkun = () => {
     if (confirm.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/user/${row?._id}`, {
+        await axios.delete(`${backendUrl}/user/${row?.id_user}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },

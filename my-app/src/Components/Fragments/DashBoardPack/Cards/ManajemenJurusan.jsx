@@ -21,7 +21,7 @@ const ManajemenJurusan = () => {
 
   const historyColumns = [
     { header: "ID", field: "__index" },
-    { header: "Nama Jurusan", field: "majorFullName" },
+    { header: "Nama Jurusan", field: "major_fullname" },
     { header: "Panggilan Jurusan", field: "major_name" },
     { header: "Durasi", field: "duration" },
     {
@@ -90,7 +90,7 @@ const ManajemenJurusan = () => {
     if (confirm.isConfirmed) {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        await axios.delete(`${backendUrl}/major/${row._id}`, {
+        await axios.delete(`${backendUrl}/major/${row.id_major}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },

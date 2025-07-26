@@ -51,16 +51,9 @@ router.get(
   authorizeAdmin,
   getMonthlyPresenceByMajor
 );
-
-// !CAN'T WORK
-router.get("/getPerMonth", getLogsPerMonth);
-router.get(
-  "/getCurrentMonth",
-  authenticateUser,
-  authorizeAdmin,
-  getLogsCurrentMonth
-);
-router.get("/getLastYear", authenticateUser, authorizeAdmin, getLogsLastYear);
+router.get("/:id", authenticateUser, authorizeAdmin, getPresenceById);
+router.put("/:id", authenticateUser, authorizeAdmin, updatePresence);
+router.delete("/:id", authenticateUser, authorizeAdmin, deletePresence);
 router.get(
   "/analytics/majors",
   authenticateUser,
@@ -68,10 +61,20 @@ router.get(
   getMostAbsentMajors
 );
 
+// !CAN'T WORK
+// router.get("/getPerMonth", authenticateUser, getLogsPerMonth);
+router.get(
+  "/getCurrentMonth",
+  authenticateUser,
+  authorizeAdmin,
+  getLogsCurrentMonth
+);
+router.get("/getLastYear", authenticateUser, authorizeAdmin, getLogsLastYear);
+
+
+
 router.post("/export", authenticateUser, authorizeAdmin, exportPresenceExcel);
 
-router.get("/:id", authenticateUser, authorizeAdmin, getPresenceById);
-router.put("/:id", authenticateUser, authorizeAdmin, updatePresence);
-router.delete("/:id", authenticateUser, authorizeAdmin, deletePresence);
+
 
 export default router;
