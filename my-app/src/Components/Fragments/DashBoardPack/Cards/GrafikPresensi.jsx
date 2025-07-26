@@ -33,13 +33,14 @@ const GrafikPresensi = () => {
     "November",
     "Desember",
   ];
-
+  console.log(fullYear);
   const logsPerMonth = fullYear || {};
   const labels = logsPerMonth?.logsPerMonth?.map(
     (item) => monthNames[parseInt(item.month)]
   );
   const count = logsPerMonth?.logsPerMonth?.map((item) => item.count);
 
+  console.log(count);
   const handleEdit = (row) => {
     setSelectedItem(row);
     setActiveContent("Edit Akun");
