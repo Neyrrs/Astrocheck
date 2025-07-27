@@ -31,7 +31,7 @@ const MyProfile = () => {
         <div className="text-lg font-normal">
           <p>{user?.fullname}</p>
           <p className="text-gray-400">
-            {user?.grade + " " + user?.id_major?.major_name ||
+            {user?.grade + " " + user?.major ||
               (user?.role != "admin" ? "None" : "Admin")}
           </p>
         </div>

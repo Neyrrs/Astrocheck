@@ -6,14 +6,14 @@ import {
   Dasbor,
   GrafikAbsensi,
 } from "@/assets/Icons/Index";
-import {useAllProfiles} from "@/Hooks/useProfile";
+import { useAllProfiles } from "@/Hooks/useProfile";
 import Image from "next/image";
 
 interface ToggleSidebarProps {
   setActiveContent: (content: string) => void;
 }
 
-const ToggleSidebar:React.FC<ToggleSidebarProps>  = ({ setActiveContent }) => {
+const ToggleSidebar: React.FC<ToggleSidebarProps> = ({ setActiveContent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAllProfiles();
 
@@ -38,7 +38,7 @@ const ToggleSidebar:React.FC<ToggleSidebarProps>  = ({ setActiveContent }) => {
             <div className="flex h-fit pb-4 gap-5 items-center border-b-2 border-gray-300">
               <ProfileImage size="w-18 h-18" className="rounded-full" />
               <div className="h-fit flex flex-col">
-                <p className="text-sm text-black">{user?.fullName}</p>
+                <p className="text-sm text-black">{user?.fullname}</p>
                 <p className="text-xs text-gray-500">Admin Astrocheck</p>
               </div>
             </div>
@@ -72,7 +72,6 @@ const ToggleSidebar:React.FC<ToggleSidebarProps>  = ({ setActiveContent }) => {
                     />
                     <p className="text-sm">Grafik Presensi</p>
                   </li>
-                 
                 </ul>
 
                 <ul className="w-full h-fit py-2 gap-2 flex flex-col border-b-2 border-gray-300">

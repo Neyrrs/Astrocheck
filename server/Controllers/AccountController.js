@@ -301,7 +301,7 @@ export const getMostStreakUsers = async (req, res) => {
     const { data: users, error } = await supabase
       .from("table_user")
       .select("*, id_major:table_major(major_name)")
-      .order("streak", { ascending: false });
+      .order("streak", { ascending: true });
 
     if (error) throw error;
 

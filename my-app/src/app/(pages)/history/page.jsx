@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Navbar from "@/Components/Fragments/Navigation-bar/Navbar";
-import { useAllPresence } from "@/Hooks/usePresence";
+import { useTodayPresence, useUserPresence } from "@/Hooks/usePresence";
 import { useProfile } from "@/Hooks/useProfile";
 import PresenceTableWrapper from "@/Components/Fragments/Table/PresenceTableWrapper";
 
 const History = () => {
-  const { userPresence, error } = useAllPresence();
+  const { data: userPresence, error: error } = useUserPresence();
   const { data } = useProfile();
 
   const streakFire = {

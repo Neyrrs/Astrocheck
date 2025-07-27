@@ -489,63 +489,47 @@ export const getLogsToday = async (req, res) => {
 
 const getLogsPerYear = async (req, res, year) => {
   try {
-    // Validasi tahun: harus integer
-    if (!Number.isInteger(year)) {
-      return res.status(400).json({ message: "Tahun tidak valid." });
-    }
+    const startDate = new Date(`${year}-01-01`);
+    const endDate = new Date(`${year + 1}-01-01`);
 
-    const startDate = `${year}-01-01`;
-    const endDate = `${year + 1}-01-01`;
-
-    const { data: logs, error } = await supabase
+    const { data, error } = await supabase
       .from("table_guest")
       .select("date")
-      .gte("date", startDate)
-      .lt("date", endDate)
-      .order("date", { ascending: true });
+      .gte("date", startDate.toISOString().split("T")[0])
+      .lt("date", endDate.toISOString().split("T")[0]);
 
     if (error) throw error;
 
-    // Inisialisasi data bulan
     const monthData = Array.from({ length: 12 }, (_, i) => ({
-      month: String(i + 1).padStart(2, "0"), // "01", "02", ...
+      month: String(i + 1).padStart(2, "0"),
       count: 0,
     }));
 
-    // Akumulasi kehadiran per bulan
-    logs.forEach(({ date }) => {
-      const monthIndex = new Date(date).getMonth();
+    data.forEach(({ date }) => {
+      const monthIndex = new Date(date).getMonth(); // 0–11
       monthData[monthIndex].count += 1;
     });
 
-    const total = monthData.reduce((sum, m) => sum + m.count, 0);
+    const total = monthData.reduce((acc, curr) => acc + curr.count, 0);
 
-    res.status(200).json({
-      status: "success",
+    return res.json({
       year,
       total,
       logsPerMonth: monthData,
     });
   } catch (error) {
     res.status(500).json({
-      status: "error",
       message: "Gagal mengambil data presensi per bulan",
       error: error.message,
     });
   }
 };
 
-// Untuk tahun ini
-export const getLogsPerMonth = (req, res) => {
-  const currentYear = new Date().getFullYear();
-  return getLogsPerYear(req, res, currentYear);
-};
+export const getLogsPerMonth = (req, res) =>
+  getLogsPerYear(req, res, new Date().getFullYear());
 
-// Untuk tahun sebelumnya
-export const getLogsLastYear = (req, res) => {
-  const lastYear = new Date().getFullYear() - 1;
-  return getLogsPerYear(req, res, lastYear);
-};
+export const getLogsLastYear = (req, res) =>
+  getLogsPerYear(req, res, new Date().getFullYear() - 1);
 
 export const getLogsCurrentMonth = async (req, res) => {
   try {
