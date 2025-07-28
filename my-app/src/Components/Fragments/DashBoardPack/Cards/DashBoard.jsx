@@ -11,9 +11,11 @@ import { useAllProfiles } from "@/Hooks/useProfile";
 const DashBoardPack = () => {
   const { user } = useAllProfiles();
   const { fullYear, allPresences } = useAllPresence();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [currentDate, setCurrentDate] = useState("");
 
   const fullYearData = fullYear?.logsPerMonth?.map((item) => item.count) ?? [];
-  const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {
     const date = new Date();
@@ -45,6 +47,8 @@ const DashBoardPack = () => {
     ],
     datasets: [{ label: "Absen Bulanan", data: fullYearData }],
   };
+
+  console.log(allPresences);
 
   const dashboardColumns = [
     { header: "ID", field: "__index" },
@@ -162,7 +166,13 @@ const DashBoardPack = () => {
           <PresenceTableWrapper
             data={allPresences?.presence}
             columns={dashboardColumns}
-            itemsPerPage={5}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            totalPages={Math.ceil((allPresences?.presence?.length || 0) / itemsPerPage)}
+            onPageChange={setCurrentPage}
+            onPerPageChange={setItemsPerPage}
+            loading={!allPresences}
+            error={false}
           />
         </div>
       </div>

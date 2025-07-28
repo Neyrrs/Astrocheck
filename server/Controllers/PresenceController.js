@@ -122,17 +122,19 @@ export const savePresence = async (req, res) => {
 export const getLogs = async (req, res) => {
   try {
     const { nis } = req.user || "";
+    const { page = 1, limit = 5 } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const to = offset + parseInt(limit) - 1;
 
-    const { data: logs, error: logsError } = await supabase
+    const { data: logs, error: logsError, count } = await supabase
       .from("table_guest")
-      .select("*")
-      .eq("nis", nis);
+      .select("*", { count: "exact" })
+      .eq("nis", nis)
+      .range(offset, to);
 
     if (logsError) throw logsError;
     if (!logs.length) {
-      return res
-        .status(404)
-        .json({ message: "Tidak ada data presensi untuk user ini" });
+      return res.status(404).json({ message: "Tidak ada data presensi untuk user ini" });
     }
 
     const { data: user, error: userError } = await supabase
@@ -156,7 +158,6 @@ export const getLogs = async (req, res) => {
       detailReason: log.detailReason || "-",
     }));
 
-    const count = logs.length;
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
 
     const now = new Date();
@@ -164,18 +165,13 @@ export const getLogs = async (req, res) => {
     const currentYear = String(now.getFullYear());
     const today = now.toISOString().split("T")[0];
 
-    const monthly = logs.filter(
-      (log) => log.date?.split("-")[1] === currentMonth
-    ).length;
-    const yearly = logs.filter(
-      (log) => log.date?.split("-")[0] === currentYear
-    ).length;
-
+    const monthly = logs.filter((log) => log.date?.split("-")[1] === currentMonth).length;
+    const yearly = logs.filter((log) => log.date?.split("-")[0] === currentYear).length;
     const logHariIni = logs.find((log) => log.date === today);
     const lastPresence = logHariIni?.time || "-";
 
     res.json({
-      count,
+      count: count,
       monthly,
       yearly,
       membaca,
@@ -183,6 +179,9 @@ export const getLogs = async (req, res) => {
       lainnya,
       lastPresence,
       logs: formattedLogs,
+      currentPage: parseInt(page),
+      perPage: parseInt(limit),
+      totalPage: Math.ceil(count / parseInt(limit))
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -191,17 +190,18 @@ export const getLogs = async (req, res) => {
 
 export const getAllUsersPresence = async (req, res) => {
   try {
-    const { data: presenceList, error: presenceError } = await supabase
+    const { page = 1, limit = 5 } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const to = offset + parseInt(limit) - 1;
+
+    const { data: presenceList, error: presenceError, count } = await supabase
       .from("table_guest")
-      .select(
-        `*, 
-        user:table_user(fullname, grade, id_major:table_major(major_name))`
-      )
-      .order("date", { ascending: false });
+      .select(`*, user:table_user(fullname, grade, id_major:table_major(major_name))`, { count: "exact" })
+      .order("date", { ascending: false })
+      .range(offset, to);
 
     if (presenceError) throw presenceError;
 
-    const count = presenceList.length;
     const [membaca, meminjam, lainnya] = await getPresenceCounts();
 
     const formattedPresence = presenceList.map((pres) => ({
@@ -222,6 +222,9 @@ export const getAllUsersPresence = async (req, res) => {
       meminjam,
       lainnya,
       presence: formattedPresence,
+      currentPage: parseInt(page),
+      perPage: parseInt(limit),
+      totalPage: Math.ceil(count / parseInt(limit))
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -442,7 +445,6 @@ export const getPresenceSummaryByMajor = async (req, res) => {
   }
 };
 
-// !BANNED
 export const getLogsToday = async (req, res) => {
   try {
     const today = new Date().toISOString().slice(0, 10);
@@ -506,7 +508,7 @@ const getLogsPerYear = async (req, res, year) => {
     }));
 
     data.forEach(({ date }) => {
-      const monthIndex = new Date(date).getMonth(); // 0–11
+      const monthIndex = new Date(date).getMonth();
       monthData[monthIndex].count += 1;
     });
 

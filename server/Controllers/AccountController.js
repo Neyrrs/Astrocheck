@@ -28,8 +28,6 @@ export const loginUser = async (req, res) => {
       .eq("nis", nis)
       .single();
 
-    console.log(user);
-
     if (!user || error) {
       return res.status(404).json({ message: "Akun tidak ditemukan!" });
     }
@@ -268,10 +266,19 @@ export const getUserProfile = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const { data: users, error } = await supabase
+    const { page = 1, limit = 5 } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const to = offset + parseInt(limit) - 1;
+
+    const {
+      data: users,
+      error,
+      count,
+    } = await supabase
       .from("table_user")
-      .select("*, id_major:table_major(major_name)")
-      .order("fullname", { ascending: true });
+      .select("*, id_major:table_major(major_name)", { count: "exact" })
+      .order("fullname", { ascending: true })
+      .range(offset, to);
 
     if (error) throw error;
 
@@ -289,10 +296,16 @@ export const getAllUsers = async (req, res) => {
       graduation_year: user.graduation_year,
     }));
 
-    return res.status(200).json({ users: formattedUsers });
+    res.status(200).json({
+      users: formattedUsers,
+      currentPage: parseInt(page),
+      perPage: parseInt(limit),
+      totalData: count,
+      totalPage: Math.ceil(count / limit),
+    });
   } catch (error) {
     console.error("Error in getAllUsers:", error);
-    return res.status(500).json({ message: "Server error!" });
+    res.status(500).json({ message: "Server error!", error: error.message });
   }
 };
 

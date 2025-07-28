@@ -9,9 +9,9 @@ export const createMajor = async (req, res) => {
     }
 
     const { data: existingMajor } = await supabase
-      .from('table_major')
-      .select('*')
-      .eq('major_code', major_code.trim())
+      .from("table_major")
+      .select("*")
+      .eq("major_code", major_code.trim())
       .single();
 
     if (existingMajor) {
@@ -19,19 +19,23 @@ export const createMajor = async (req, res) => {
     }
 
     const { data: newMajor, error } = await supabase
-      .from('table_major')
-      .insert([{
-        major_code: major_code.trim(),
-        major_name: major_name.trim(),
-        major_fullname: major_fullname.trim(),
-        duration: duration?.trim() ?? "",
-      }])
+      .from("table_major")
+      .insert([
+        {
+          major_code: major_code.trim(),
+          major_name: major_name.trim(),
+          major_fullname: major_fullname.trim(),
+          duration: duration?.trim() ?? "",
+        },
+      ])
       .select()
       .single();
 
     if (error) throw error;
 
-    res.status(201).json({ message: "Jurusan berhasil dibuat!", major: newMajor });
+    res
+      .status(201)
+      .json({ message: "Jurusan berhasil dibuat!", major: newMajor });
   } catch (error) {
     res.status(500).json({ message: "Server error!", error: error.message });
   }
@@ -39,14 +43,33 @@ export const createMajor = async (req, res) => {
 
 export const getAllMajors = async (req, res) => {
   try {
-    const { data: majors, error } = await supabase
-      .from('table_major')
-      .select('*');
+    const { page = 1, limit = 10 } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const to = offset + parseInt(limit) - 1;
+
+    const {
+      data: majors,
+      error,
+      count,
+    } = await supabase
+      .from("table_major")
+      .select("*", { count: "exact" })
+      .range(offset, to);
 
     if (error) throw error;
-    res.status(200).json(majors);
+
+    res.status(200).json({
+      data: majors,
+      currentPage: parseInt(page),
+      perPage: parseInt(limit),
+      totalData: count,
+      totalPage: Math.ceil(count / limit),
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error!", error: error.message });
+    res.status(500).json({
+      message: "Server error!",
+      error: error.message,
+    });
   }
 };
 
@@ -56,9 +79,9 @@ export const updateMajor = async (req, res) => {
     const { major_code, major_name, major_fullname, duration } = req.body;
 
     const { data: updatedMajor, error } = await supabase
-      .from('table_major')
+      .from("table_major")
       .update({ major_code, major_name, major_fullname, duration })
-      .eq('id_major', id)
+      .eq("id_major", id)
       .select()
       .single();
 
@@ -67,7 +90,9 @@ export const updateMajor = async (req, res) => {
       return res.status(404).json({ message: "Jurusan tidak ditemukan!" });
     }
 
-    res.status(200).json({ message: "Jurusan berhasil diperbarui!", major: updatedMajor });
+    res
+      .status(200)
+      .json({ message: "Jurusan berhasil diperbarui!", major: updatedMajor });
   } catch (error) {
     res.status(500).json({ message: "Server error!", error: error.message });
   }
@@ -78,9 +103,9 @@ export const deleteMajor = async (req, res) => {
     const { id } = req.params;
 
     const { error } = await supabase
-      .from('table_major')
+      .from("table_major")
       .delete()
-      .eq('id_major', id);
+      .eq("id_major", id);
 
     if (error) throw error;
 
@@ -95,9 +120,9 @@ export const getMajorById = async (req, res) => {
     const { id } = req.params;
 
     const { data: major, error } = await supabase
-      .from('table_major')
-      .select('*')
-      .eq('id_major', id)
+      .from("table_major")
+      .select("*")
+      .eq("id_major", id)
       .single();
 
     if (error) throw error;

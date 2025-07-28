@@ -27,11 +27,10 @@ const Login = () => {
       const token = response.data.token;
       localStorage.setItem("Token", token);
       const userData = response.data.user;
-      console.log(response.data)
 
       Swal.fire({
         title: "Login berhasil!",
-        text: `Selamat datang, ${userData.nickname || userData.fullName}!`,
+        text: `Selamat datang, ${userData.nickname || userData.fullname}!`,
         icon: "success",
       }).then(() => {
         window.location.href = "/";

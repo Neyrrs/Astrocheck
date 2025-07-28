@@ -8,6 +8,8 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
 import { useState } from "react";
 
+// TODO BUAT SELURUH TABLE YANG ADA JADI MENGGUNAKAN PAGINATION SESUAI DENGAN RESPONSE DARI BE-NYA
+
 const ManajemenJurusan = () => {
   const { setActiveContent } = useDashboardContext();
   const { setSelectedItem } = useItemContext();
@@ -133,7 +135,7 @@ const ManajemenJurusan = () => {
       <div className="w-full h-fit py-2 bg-white shadow-md rounded-xl flex-col flex gap-1">
         <PresenceTableWrapper
           key={refreshKey}
-          data={data}
+          data={data?.data}
           columns={historyColumns}
           loading={false}
           itemsPerPage={5}

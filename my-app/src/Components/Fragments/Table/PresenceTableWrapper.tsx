@@ -1,35 +1,40 @@
-import React, { useState } from "react";
+import SearchPack from "@/Components/Fragments/SearchPack/SearchPack";
+import React from "react";
 import DynamicTable from "./DynamicTable";
-import SearchPack from "../SearchPack/SearchPack";
 
-const PresenceTableWrapper = ({ data = [], columns = [], error = false, itemsPerPage = 5 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(itemsPerPage);
+type Major = {
+  id_major: number;
+  nis: string;
+  fullname: string;
+};
 
-  const totalPages = Math.ceil(data.length / perPage);
-  const indexOfLastItem = currentPage * perPage;
-  const indexOfFirstItem = indexOfLastItem - perPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+type TableColumn = {
+  header: string;
+  field: keyof Major | "__index";
+  render?: (row: Major) => React.ReactNode;
+};
 
-  const handlePageClick = (page) => {
-    if (page !== currentPage) {
-      setCurrentPage(page);
-    }
-  };
-
-  const handlePerPageChange = (e) => {
-    setPerPage(Number(e.target.value));
-    setCurrentPage(1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
+const PresenceTableWrapper = ({
+  columns = [],
+  itemsPerPage = 5,
+  data,
+  totalPages,
+  loading,
+  error,
+  currentPage,
+  onPageChange,
+  onPerPageChange,
+}: {
+  columns: TableColumn[];
+  itemsPerPage?: number;
+  data: Major[];
+  totalPages: number;
+  loading: boolean;
+  error: boolean;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  onPerPageChange: (perPage: number) => void;
+}) => {
   const renderPageNumbers = () => {
     const pageButtons = [];
 
@@ -37,7 +42,7 @@ const PresenceTableWrapper = ({ data = [], columns = [], error = false, itemsPer
       pageButtons.push(
         <button
           key={i}
-          onClick={() => handlePageClick(i)}
+          onClick={() => onPageChange(i)}
           className={`px-3 py-1 border border-gray-300 rounded-md text-sm ${
             currentPage === i
               ? "bg-blue-500 text-white"
@@ -62,15 +67,16 @@ const PresenceTableWrapper = ({ data = [], columns = [], error = false, itemsPer
 
       <DynamicTable
         columns={columns}
-        data={currentItems}
+        data={data}
         error={error}
-        startIndex={indexOfFirstItem}
+        startIndex={(currentPage - 1) * itemsPerPage}
+        loading={loading}
       />
 
       <div className="flex flex-col items-center gap-2 mt-6">
         <div className="flex items-center gap-2 flex-wrap justify-center">
           <button
-            onClick={handlePrev}
+            onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
             disabled={currentPage === 1}
             className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white text-black disabled:opacity-50"
           >
@@ -80,7 +86,7 @@ const PresenceTableWrapper = ({ data = [], columns = [], error = false, itemsPer
           {renderPageNumbers()}
 
           <button
-            onClick={handleNext}
+            onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
             disabled={currentPage === totalPages}
             className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white text-black disabled:opacity-50"
           >
@@ -91,8 +97,8 @@ const PresenceTableWrapper = ({ data = [], columns = [], error = false, itemsPer
         <div className="flex items-center gap-2 text-sm mt-2">
           <span className="text-gray-500">Per page</span>
           <select
-            value={perPage}
-            onChange={handlePerPageChange}
+            value={itemsPerPage}
+            onChange={(e) => onPerPageChange(Number(e.target.value))}
             className="border border-gray-300 rounded-md px-2 py-1 text-sm"
           >
             {[5, 10, 15, 20, 25, 50, 100].map((val) => (
@@ -107,4 +113,4 @@ const PresenceTableWrapper = ({ data = [], columns = [], error = false, itemsPer
   );
 };
 
-export default PresenceTableWrapper;
+export default PresenceTableWrapper
