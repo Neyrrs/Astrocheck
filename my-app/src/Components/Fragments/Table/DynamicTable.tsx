@@ -28,7 +28,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   loading = false,
 }) => {
   if (loading) {
-    return <div className="text-center py-4">Loading...</div>;
+    return <div className="text-center py-4"></div>;
   }
 
   if (error) {

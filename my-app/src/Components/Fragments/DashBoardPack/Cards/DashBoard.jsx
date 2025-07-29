@@ -48,8 +48,6 @@ const DashBoardPack = () => {
     datasets: [{ label: "Absen Bulanan", data: fullYearData }],
   };
 
-  console.log(allPresences);
-
   const dashboardColumns = [
     { header: "ID", field: "__index" },
     { header: "Nama Lengkap", field: "fullname" },

@@ -63,7 +63,7 @@ export const getAllMajors = async (req, res) => {
       currentPage: parseInt(page),
       perPage: parseInt(limit),
       totalData: count,
-      totalPage: Math.ceil(count / limit),
+      totalPages: Math.ceil(count / limit),
     });
   } catch (error) {
     res.status(500).json({
